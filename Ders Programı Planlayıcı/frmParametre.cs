@@ -1,0 +1,273 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Ders_Programı_Planlayıcı
+{
+    public partial class frmParametre : Form
+    {
+        public frmParametre()
+        {
+            InitializeComponent();
+
+            #region Görsel Ayarlar
+
+            tabSihirbaz.Appearance = TabAppearance.FlatButtons;
+            tabSihirbaz.ItemSize = new Size(0, 1);
+            tabSihirbaz.SizeMode = TabSizeMode.Fixed;
+
+            #endregion
+        }
+
+        bool veriCekildi = false;
+
+        private void frmParametre_Load(object sender, EventArgs e)
+        {
+            cmbGunSayisi.SelectedIndex = 4;
+            cmbGunlukDersSayisi.SelectedIndex = 7;
+            cmbOgleArasiZamani.SelectedIndex = 3;
+        }
+
+        #region Parametreler
+
+        private void cmbGunSayisi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int secilenGunSayisi = cmbGunSayisi.SelectedIndex + 1;
+
+            if (frmAna.gunSayisi > secilenGunSayisi)
+            {
+                frmAna.secilenGunler.RemoveRange(secilenGunSayisi, frmAna.gunSayisi - secilenGunSayisi);
+            }
+            else if (frmAna.gunSayisi < secilenGunSayisi)
+            {
+                frmAna.secilenGunler.AddRange(frmAna.haftaninGunleri.GetRange(frmAna.gunSayisi, secilenGunSayisi - frmAna.gunSayisi));
+            }
+
+            frmAna.gunSayisi = secilenGunSayisi;
+        }
+
+        private void cmbGunlukDersSayisi_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            frmAna.gunlukDersSayisi = cmbGunlukDersSayisi.SelectedIndex + 1;
+
+            cmbOgleArasiZamani.Items.Clear();
+            for (int saat = 1; saat < frmAna.gunlukDersSayisi; saat++)
+                cmbOgleArasiZamani.Items.Add(saat);
+        }
+
+        private void chkOgleArasi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkOgleArasi.Checked)
+            {
+                frmAna.ogleArasiVar = true;
+                cmbOgleArasiZamani.SelectedIndex = 0;
+            }
+            else
+            {
+                frmAna.ogleArasiVar = false; ;
+                frmAna.ogleArasiBlokDersleriBolebilir = false;
+                chkDerslerOgleArasindaBolunebilir.Checked = false;
+            }
+
+            cmbOgleArasiZamani.Enabled = chkOgleArasi.Checked ? true : false;
+            cmbOgleArasiZamani.Visible = chkOgleArasi.Checked ? true : false;
+            lblKacinciDerstenSonra.Visible = chkOgleArasi.Checked ? true : false;
+            chkDerslerOgleArasindaBolunebilir.Visible = chkOgleArasi.Checked ? true : false;
+        }
+
+        private void cmbOgleArasiZamani_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            frmAna.ogleArasiKacinciDerstenSonra = cmbOgleArasiZamani.SelectedIndex + 1;
+        }
+
+        private void chkDerslerOgleArasindaBolunebilir_CheckedChanged(object sender, EventArgs e)
+        {
+            frmAna.ogleArasiBlokDersleriBolebilir = chkDerslerOgleArasindaBolunebilir.Checked ? true : false;
+        }
+
+        private void btnDersSaatleriniDuzenle_Click(object sender, EventArgs e)
+        {
+            frmSaat frmSaat = new frmSaat();
+            frmSaat.ShowDialog();
+        }
+
+        private void btnHaftaninGunleriniGuncelle_Click(object sender, EventArgs e)
+        {
+            frmGunler frmGunler = new frmGunler();
+            frmGunler.ShowDialog();
+        }
+
+        #endregion
+
+        #region Veritabanı
+
+        private void btnBaglanVerileriCek_Click(object sender, EventArgs e)
+        {
+            SqlConnection baglanti = new SqlConnection();
+
+            if (rdoWinAuto.Checked)
+            {
+                baglanti.ConnectionString = @"Server=" + txtServerAdresi.Text + ";Database=" +
+                    txtVeritabaniAdi.Text + ";User Id=" + txtKullaniciAdi.Text + ";Password=" + txtSifre.Text
+                    + ";MultipleActiveResultSets=True";
+            }
+            else if (rdoSqlServerAuto.Checked)
+            {
+                baglanti.ConnectionString = @"Server=" + txtServerAdresi.Text + ";Database=" +
+                    txtVeritabaniAdi.Text + ";Integrated Security=true;MultipleActiveResultSets=True";
+            }
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = baglanti;
+            baglanti.Open();
+            
+            cmd.CommandText = "SELECT * FROM dersler";
+            SqlDataReader dr = cmd.ExecuteReader();
+            Ders ders;
+            while (dr.Read())
+            {
+                string ad = dr["ad"].ToString().Trim();
+                string kod = dr["ders_kodu"].ToString().Trim();
+                string dagilim = dr["dagilim_sekli"].ToString().Trim();
+                ders = new Ders(ad, kod, dagilim);
+                frmAna.dersler.Add(ders);
+            }
+            dr.Close();
+            
+            cmd.CommandText = "SELECT * FROM siniflar";
+            dr = cmd.ExecuteReader();
+            Sinif sinif;
+            while (dr.Read())
+            {
+                string ad = dr["ad"].ToString();
+                string kod = dr["sinif_kodu"].ToString();
+                ad.Trim(); kod.Trim();
+                sinif = new Sinif(ad, kod);
+                frmAna.siniflar.Add(sinif);
+            }
+            dr.Close();
+
+            cmd.CommandText = "SELECT * FROM derslikler";
+            dr = cmd.ExecuteReader();
+            Derslik derslik;
+            while (dr.Read())
+            {
+                string ad = dr["ad"].ToString();
+                string kod = dr["derslik_kodu"].ToString();
+                ad.Trim(); kod.Trim();
+                derslik = new Derslik(ad, kod);
+                frmAna.derslikler.Add(derslik);
+            }
+            dr.Close();
+
+            cmd.CommandText = "SELECT * FROM ogretmenler";
+            dr = cmd.ExecuteReader();
+            Ogretmen ogretmen;
+            int r = 0;
+            while (dr.Read())
+            {
+                string ad = dr["ad"].ToString();
+                string soyad = dr["soyad"].ToString();
+                string kod = dr["ogretmen_kodu"].ToString();
+                ad.Trim(); soyad.Trim(); kod.Trim();
+                Color renk = frmAna.renkler[r++];
+                
+                ogretmen = new Ogretmen(ad, soyad, kod, renk);
+                frmAna.ogretmenler.Add(ogretmen);
+            }
+            dr.Close();
+
+
+
+            cmd.CommandText = "SELECT * FROM atanan_dersler";
+            dr = cmd.ExecuteReader();
+            AtananDers atananDers;
+            List<Ogretmen> ogretmenler;
+            List<Sinif> siniflar;
+            List<Derslik> derslikler;
+            SqlCommand sqlCmd = new SqlCommand();
+            sqlCmd.Connection = baglanti;
+            SqlDataReader sqlDr;
+
+            while (dr.Read())
+            {
+                string ad_ID = dr["ad_ID"].ToString().Trim();
+                string dersKodu = dr["ders_kodu"].ToString().Trim();
+                Ders drs = frmAna.dersler.Where(d => d.kod == dersKodu).First();
+                ogretmenler = new List<Ogretmen>();
+                siniflar = new List<Sinif>();
+                derslikler = new List<Derslik>();
+                string dagilim = dr["dagilim_sekli"].ToString().Trim();
+
+                sqlCmd.CommandText = "SELECT * FROM ad_ogretmenler WHERE ad_ID=" + ad_ID;
+                sqlDr = sqlCmd.ExecuteReader();
+                while (sqlDr.Read())
+                {
+                    string ogretmen_kodu = sqlDr["ogretmen_kodu"].ToString().Trim();
+                    ogretmenler.Add(frmAna.ogretmenler.Where(ogrtmn => ogrtmn.kod == ogretmen_kodu).First());
+                }
+                sqlDr.Close();
+
+                sqlCmd.CommandText = "SELECT * FROM ad_siniflar WHERE ad_ID=" + ad_ID;
+                sqlDr = sqlCmd.ExecuteReader();
+                while (sqlDr.Read())
+                {
+                    string sinif_kodu = sqlDr["sinif_kodu"].ToString().Trim();
+                    siniflar.Add(frmAna.siniflar.Where(snf => snf.kod == sinif_kodu).First());
+                }
+                sqlDr.Close();
+
+                sqlCmd.CommandText = "SELECT * FROM ad_derslikler WHERE ad_ID=" + ad_ID;
+                sqlDr = sqlCmd.ExecuteReader();
+                while (sqlDr.Read())
+                {
+                    string derslikKodu = sqlDr["derslik_kodu"].ToString().Trim();
+                    derslikler.Add(frmAna.derslikler.Where(drslk => drslk.kod == derslikKodu).First());
+                }
+                sqlDr.Close();
+
+                atananDers = new AtananDers(drs, ogretmenler, siniflar, derslikler, dagilim);
+            }
+            dr.Close();
+
+            baglanti.Close();
+            veriCekildi = true;
+            MessageBox.Show("İşlem tamamlandı!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        #endregion
+
+        private void btnTamam_Click(object sender, EventArgs e)
+        {
+
+
+            switch (tabSihirbaz.SelectedIndex)
+            {
+                case 0:
+                    tabSihirbaz.SelectedIndex++;
+                    btnTamam.Text = "Tamam";
+                    break;
+                case 1:
+                    if (!veriCekildi)
+                    {
+                        DialogResult ds = MessageBox.Show("Veritabanından veri çekilmeden devam edilsin mi?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        if (ds == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+                    Close();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+}
