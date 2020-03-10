@@ -312,7 +312,6 @@ namespace Ders_Programı_Planlayıcı
         }
 
         int yerlestirilen = 0;
-        int maxyerlestirilen = 0;
 
         /// <summary>
         /// Ana fonksiyon, ön kontrolü ve düzenlemeleri yapar. Daha sonra algoritmayı çalıştırır
@@ -323,19 +322,78 @@ namespace Ders_Programı_Planlayıcı
             if (!Kontrol()) { return; }
 
             //Ders bloklarını büyükten küçüğe sıralandı
-            dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk)); 
+            dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk));
+
+            foreach (var db in dersBloklari)
+            {
+                int doluluk = 0;
+
+                for (int i = 0; i < db.atananDers.ders.uygunZamanlar.GetLength(0); i++)
+                {
+                    for (int j = 0; j < db.atananDers.ders.uygunZamanlar.GetLength(1); j++)
+                    {
+                        if (db.atananDers.ders.uygunZamanlar[i, j] == false)
+                        {
+                            doluluk++;
+                        }
+                    }
+                }
+                foreach (var derslik in db.atananDers.derslikler)
+                {
+                    for (int i = 0; i < derslik.uygunZamanlar.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < derslik.uygunZamanlar.GetLength(1); j++)
+                        {
+                            if (derslik.uygunZamanlar[i,j] == false)
+                            {
+                                doluluk++;
+                            }
+                        }
+                    }
+                }
+                foreach (var ogretmen in db.atananDers.ogretmenler)
+                {
+                    for (int i = 0; i < ogretmen.uygunZamanlar.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < ogretmen.uygunZamanlar.GetLength(1); j++)
+                        {
+                            if (ogretmen.uygunZamanlar[i, j] == false)
+                            {
+                                doluluk++;
+                            }
+                        }
+                    }
+                }
+                foreach (var sinif in db.atananDers.siniflar)
+                {
+                    for (int i = 0; i < sinif.uygunZamanlar.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < sinif.uygunZamanlar.GetLength(1); j++)
+                        {
+                            if (sinif.uygunZamanlar[i, j] == false)
+                            {
+                                doluluk++;
+                            }
+                        }
+                    }
+                }
+
+                db.doluluk = doluluk;
+            }
+
+            dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
+            //dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk));
 
             //Gün ve saatleri güncel şekilde listede tutma
             gunler.Clear(); for (int gun = 0; gun < gunSayisi; gun++) { gunler.Add(gun); }
             saatler.Clear(); for (int saat = 0; saat < gunlukDersSayisi; saat++) { saatler.Add(saat); }
 
-            // Otomatik düzenleme her başlatıldığında, ders bloklarının eklendi değişkeni false yapılır
-            foreach (var db in dersBloklari) { db.eklendi = false; }
-
             int counter = 0;
-            //Tüm ders blokları eklenene kadar algoritma sürekli çalışır
+            foreach (var db in dersBloklari) { db.eklendi = false; }
             while (dersBloklari.Any(db => db.eklendi == false))
             {
+                foreach (var db in dersBloklari) { db.eklendi = false; }
+
                 yerlestirilen = 0;
                 counter++;
                 int sutunAdeti = gunSayisi * gunlukDersSayisi;
@@ -360,21 +418,87 @@ namespace Ders_Programı_Planlayıcı
 
                 foreach (var dersBlogu in dersBloklari)
                 {
-                    dersBlogu.eklendi = false;
                     Algoritma(dersBlogu);
                 }
-                lblBasari.Text = yerlestirilen + "/" + dersBloklari.Count;
-                break; ////////////////////////////////////////////////////////////////
-                if (maxyerlestirilen < yerlestirilen)
+
+                while (dersBloklari.Any(db => db.eklendi == false))
                 {
-                    maxyerlestirilen = yerlestirilen;
+                    counter++;
+                    foreach (var eklenemeyenDB in dersBloklari.Where(db => db.eklendi == false))
+                    {
+                        foreach (var gun in gunler.ToList())
+                        {
+                            foreach (var saat in saatler.ToList())
+                            {
+                                if (saat + eklenemeyenDB.uzunluk > gunlukDersSayisi) { continue; }
+                                if (eklenemeyenDB.uzunluk > 1) { if (OgleArasiKontrol(eklenemeyenDB, saat)) { continue; } }
+
+                                if (UygunZamanlariKontrolEt(eklenemeyenDB, gun, saat))
+                                {
+                                    int s = ((gun * saatler.Count) + saat);
+                                    DersBlogu hedefDersBlogu = dbSinif[siniflar.IndexOf(eklenemeyenDB.atananDers.siniflar[0]), s];
+                                    if (hedefDersBlogu == null) { continue; }
+                                    int hgun = hedefDersBlogu.gun;
+                                    int hsaat = hedefDersBlogu.saat;
+                                    if (Algoritma(hedefDersBlogu))
+                                    {
+                                        for (int i = hsaat; i < hsaat + hedefDersBlogu.uzunluk; i++)
+                                        {
+                                            foreach (var derslik in hedefDersBlogu.atananDers.derslikler)
+                                            { derslik.bosSaatler[hgun, i] = true; }
+
+                                            foreach (var ogretmen in hedefDersBlogu.atananDers.ogretmenler)
+                                            { ogretmen.bosSaatler[hgun, i] = true; }
+
+                                            foreach (var sinif in hedefDersBlogu.atananDers.siniflar)
+                                            { sinif.bosSaatler[hgun, i] = true; }
+                                        }
+
+                                        foreach (var sinif in hedefDersBlogu.atananDers.siniflar)
+                                        {
+                                            for (int i = s; i < s + hedefDersBlogu.uzunluk; i++)
+                                            {
+                                                dbSinif[siniflar.IndexOf(sinif), i] = null;
+                                            }
+                                        }
+                                        foreach (var ogretmen in hedefDersBlogu.atananDers.ogretmenler)
+                                        {
+                                            for (int i = s; i < s + hedefDersBlogu.uzunluk; i++)
+                                            {
+                                                dbOgretmen[ogretmenler.IndexOf(ogretmen), i] = null;
+                                            }
+                                        }
+                                        foreach (var derslik in hedefDersBlogu.atananDers.derslikler)
+                                        {
+                                            for (int i = s; i < s + hedefDersBlogu.uzunluk; i++)
+                                            {
+                                                dbDerslik[derslikler.IndexOf(derslik), i] = null;
+                                            }
+                                        }
+
+                                        Algoritma(eklenemeyenDB);
+                                        yerlestirilen--;
+                                        goto digerEklenemeyenBlogaGec;
+                                    }
+                                }
+                            }
+                        }
+                    digerEklenemeyenBlogaGec:;
+                    }
+                    if (counter > 500)
+                    {
+                        break;
+                    }
                 }
-                if (counter > 1 && maxyerlestirilen <= yerlestirilen)
+                if (counter>2000)
                 {
-                    lblBasari.Text = yerlestirilen + "/" + dersBloklari.Count;
                     break;
-                } 
+                }
             }
+
+            lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
+
+            #region FlowLayoutPanel İşlemleri
 
             flpDersEtiketleri.Controls.Clear();
             foreach (var db in dersBloklari)
@@ -386,6 +510,8 @@ namespace Ders_Programı_Planlayıcı
             }
             flpDersEtiketleri.Controls.Add(new Label());
             //flpDersEtiketleri.Controls.RemoveAt(flpDersEtiketleri.Controls.Count - 1);
+
+            #endregion
 
             #region DataGridView İşlemleri
 
@@ -598,7 +724,7 @@ namespace Ders_Programı_Planlayıcı
         /// Algoritma, ders bloklarını verilen kriterlere göre yerleştirir
         /// </summary>
         /// <param name="dersBlogu"></param>
-        void Algoritma(DersBlogu dersBlogu)
+        bool Algoritma(DersBlogu dersBlogu)
         {
             Karistir(gunler);
             Karistir(saatler);
@@ -608,49 +734,44 @@ namespace Ders_Programı_Planlayıcı
                 foreach (var saat in saatler)
                 {
                     if (saat + dersBlogu.uzunluk> gunlukDersSayisi) { continue; }
-
                     if (dersBlogu.uzunluk > 1) { if (OgleArasiKontrol(dersBlogu, saat)) { continue; } }
+                    if (!BosZamanlariKontrolEt(dersBlogu, gun, saat)) { continue; }
 
-                    if (BosZamanlariKontrolEt(dersBlogu, gun, saat))
+                    int s = ((gun * saatler.Count) + saat);
+                    foreach (var sinif in dersBlogu.atananDers.siniflar)
                     {
-                        int s = ((gun * saatler.Count) + saat);
-                        foreach (var sinif in dersBlogu.atananDers.siniflar)
-                        {
-                            dbSinif[siniflar.IndexOf(sinif), s] = dersBlogu;
-                        }
-                        foreach (var ogretmen in dersBlogu.atananDers.ogretmenler)
-                        {
-                            dbOgretmen[ogretmenler.IndexOf(ogretmen), s] = dersBlogu;
-                        }
-                        foreach (var derslik in dersBlogu.atananDers.derslikler)
-                        {
-                            dbDerslik[derslikler.IndexOf(derslik), s] = dersBlogu;
-                        }
-
-                        dersBlogu.atananDers.ders.tds += dersBlogu.uzunluk;
-                        dersBlogu.eklendi = true;
-                        dersBlogu.gun = gun;
-                        dersBlogu.saat = saat;
-
-                        for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
-                        {
-                            foreach (var derslik in dersBlogu.atananDers.derslikler)
-                            { derslik.bosSaatler[gun, i] = false; }
-
-                            foreach (var ogretmen in dersBlogu.atananDers.ogretmenler)
-                            { ogretmen.bosSaatler[gun, i] = false; }
-
-                            foreach (var sinif in dersBlogu.atananDers.siniflar)
-                            { sinif.bosSaatler[gun, i] = false; }
-                        }
-
-                        yerlestirilen++;
-
-                        return;
+                        dbSinif[siniflar.IndexOf(sinif), s] = dersBlogu;
                     }
-                    else { continue; }
+                    foreach (var ogretmen in dersBlogu.atananDers.ogretmenler)
+                    {
+                        dbOgretmen[ogretmenler.IndexOf(ogretmen), s] = dersBlogu;
+                    }
+                    foreach (var derslik in dersBlogu.atananDers.derslikler)
+                    {
+                        dbDerslik[derslikler.IndexOf(derslik), s] = dersBlogu;
+                    }
+
+                    //dersBlogu.atananDers.ders.tds += dersBlogu.uzunluk;
+                    dersBlogu.eklendi = true;
+                    dersBlogu.gun = gun;
+                    dersBlogu.saat = saat;
+
+                    for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
+                    {
+                        foreach (var derslik in dersBlogu.atananDers.derslikler)
+                        { derslik.bosSaatler[gun, i] = false; }
+
+                        foreach (var ogretmen in dersBlogu.atananDers.ogretmenler)
+                        { ogretmen.bosSaatler[gun, i] = false; }
+
+                        foreach (var sinif in dersBlogu.atananDers.siniflar)
+                        { sinif.bosSaatler[gun, i] = false; }
+                    }
+                    yerlestirilen++;
+                    return true;
                 }
             }
+            return false;
         }
 
         /// <summary>
@@ -673,7 +794,7 @@ namespace Ders_Programı_Planlayıcı
         }
 
         /// <summary>
-        /// Dersin, öğretmenlerin, dersliklerin ve sınıfların zamanlarını kontrol eder. Eğer uygunsa true döndürür
+        /// Dersin, öğretmenlerin, dersliklerin ve sınıfların boş zamanlarını kontrol eder. Eğer uygunsa true döndürür
         /// </summary>
         /// <param name="dersBlogu">Mevcut dersin bir bloğu</param>
         /// <param name="gun">Kontrol edilecek gün</param>
@@ -683,8 +804,32 @@ namespace Ders_Programı_Planlayıcı
         {
             for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
             {
-                if (dersBlogu.atananDers.ders.uygunZamanlar[gun, i] == true && !dersBlogu.atananDers.derslikler.Any(d => d.bosSaatler[gun, i] == false) &&
-                    !dersBlogu.atananDers.ogretmenler.Any(d => d.bosSaatler[gun, i] == false) && !dersBlogu.atananDers.siniflar.Any(d => d.bosSaatler[gun, i] == false))
+                if (dersBlogu.atananDers.ders.uygunZamanlar[gun, i] == true &&
+                    !dersBlogu.atananDers.derslikler.Any(d => d.bosSaatler[gun, i] == false) &&
+                    !dersBlogu.atananDers.ogretmenler.Any(d => d.bosSaatler[gun, i] == false) &&
+                    !dersBlogu.atananDers.siniflar.Any(d => d.bosSaatler[gun, i] == false))
+                    continue;
+                else
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Dersin, öğretmenlerin, dersliklerin ve sınıfların uygun zamanlarını kontrol eder. Eğer uygunsa true döndürür
+        /// </summary>
+        /// <param name="dersBlogu">Mevcut dersin bir bloğu</param>
+        /// <param name="gun">Kontrol edilecek gün</param>
+        /// <param name="saat">Kontrol edilecek saat</param>
+        /// <returns></returns>
+        bool UygunZamanlariKontrolEt(DersBlogu dersBlogu, int gun, int saat)
+        {
+            for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
+            {
+                if (dersBlogu.atananDers.ders.uygunZamanlar[gun, i] == true &&
+                    !dersBlogu.atananDers.derslikler.Any(d => d.uygunZamanlar[gun, i] == false) &&
+                    !dersBlogu.atananDers.ogretmenler.Any(d => d.uygunZamanlar[gun, i] == false) &&
+                    !dersBlogu.atananDers.siniflar.Any(d => d.uygunZamanlar[gun, i] == false))
                     continue;
                 else
                     return false;

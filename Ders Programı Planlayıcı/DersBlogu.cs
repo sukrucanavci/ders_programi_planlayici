@@ -13,7 +13,7 @@ namespace Ders_Programı_Planlayıcı
         public int gun;
         public int saat;
         public int uzunluk;
-
+        public int doluluk;
         public LabelKart kart;
 
         /// <summary>
