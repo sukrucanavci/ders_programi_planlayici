@@ -12,10 +12,10 @@ namespace Ders_Programı_Planlayıcı
         public LabelKart(DersBlogu dersBlogu)
         {
             AutoSize = false;
-            Size = new Size(35 * dersBlogu.uzunluk, 24);
-            Dock = DockStyle.Fill;
-            Text = dersBlogu.uzunluk.ToString();
-            //Text = dersBlogu.atananDers.ders.kod;
+            Size = new Size(75 * dersBlogu.uzunluk, 30);
+            //Dock = DockStyle.Fill;
+            //Text = dersBlogu.uzunluk.ToString();
+            Text = dersBlogu.atananDers.ders.kod;
             TextAlign = ContentAlignment.MiddleCenter;
             BackColor = dersBlogu.atananDers.ogretmenler[0].renk;
 

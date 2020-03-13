@@ -88,6 +88,7 @@
             this.lblTur = new System.Windows.Forms.Label();
             this.dgwGunler3 = new System.Windows.Forms.TabControl();
             this.lblBasari = new System.Windows.Forms.Label();
+            this.lblAnaTur = new System.Windows.Forms.Label();
             this.pnlAlt.SuspendLayout();
             this.pnlDersBilgi.SuspendLayout();
             this.tpAnaMenu.SuspendLayout();
@@ -477,7 +478,7 @@
             this.dgwDerslikDP.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgwDerslikDP.Size = new System.Drawing.Size(1114, 352);
             this.dgwDerslikDP.TabIndex = 9;
-            this.dgwDerslikDP.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgwDerslikDP_CellClick);
+            this.dgwDerslikDP.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgwDerslikDP_CellEnter);
             // 
             // dgwGunler2
             // 
@@ -573,7 +574,7 @@
             this.dgwOgretmenDP.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgwOgretmenDP.Size = new System.Drawing.Size(1114, 352);
             this.dgwOgretmenDP.TabIndex = 14;
-            this.dgwOgretmenDP.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgwOgretmenDP_CellClick);
+            this.dgwOgretmenDP.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgwOgretmenDP_CellEnter);
             // 
             // dgwGunler1
             // 
@@ -669,7 +670,7 @@
             this.dgwSinifDP.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgwSinifDP.Size = new System.Drawing.Size(1114, 352);
             this.dgwSinifDP.TabIndex = 13;
-            this.dgwSinifDP.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgwSinifDP_CellClick);
+            this.dgwSinifDP.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgwSinifDP_CellEnter);
             // 
             // dgwGunler0
             // 
@@ -749,11 +750,22 @@
             this.lblBasari.Text = "0/0";
             this.lblBasari.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lblAnaTur
+            // 
+            this.lblAnaTur.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.lblAnaTur.Location = new System.Drawing.Point(967, -5);
+            this.lblAnaTur.Name = "lblAnaTur";
+            this.lblAnaTur.Size = new System.Drawing.Size(100, 23);
+            this.lblAnaTur.TabIndex = 5;
+            this.lblAnaTur.Text = "anafonktur";
+            this.lblAnaTur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmAna
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1163, 685);
+            this.Controls.Add(this.lblAnaTur);
             this.Controls.Add(this.lblBasari);
             this.Controls.Add(this.lblTur);
             this.Controls.Add(this.dgwGunler3);
@@ -829,6 +841,7 @@
         private System.Windows.Forms.Label lblTur;
         private System.Windows.Forms.Label lblBasari;
         private System.Windows.Forms.FlowLayoutPanel flpDersEtiketleri;
+        private System.Windows.Forms.Label lblAnaTur;
     }
 }
 

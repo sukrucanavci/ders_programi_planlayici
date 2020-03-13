@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -312,6 +313,7 @@ namespace Ders_Programı_Planlayıcı
         }
 
         int yerlestirilen = 0;
+        int anafonktur = 0;
 
         /// <summary>
         /// Ana fonksiyon, ön kontrolü ve düzenlemeleri yapar. Daha sonra algoritmayı çalıştırır
@@ -381,8 +383,7 @@ namespace Ders_Programı_Planlayıcı
                 db.doluluk = doluluk;
             }
 
-            dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
-            //dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk));
+            //dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
 
             //Gün ve saatleri güncel şekilde listede tutma
             gunler.Clear(); for (int gun = 0; gun < gunSayisi; gun++) { gunler.Add(gun); }
@@ -485,16 +486,25 @@ namespace Ders_Programı_Planlayıcı
                         }
                     digerEklenemeyenBlogaGec:;
                     }
-                    if (counter > 500)
+                    //Thread.Sleep(1);
+                    if (counter > 654)
                     {
+                        
                         break;
                     }
                 }
-                if (counter>2000)
+                //Thread.Sleep(1);
+                if (counter>654)
                 {
-                    break;
+                    anafonktur++;
+                    AnaFonk();
+                    return;
                 }
             }
+
+            //dgwOgretmenDP.Visible = false;
+            //dgwSinifDP.Visible = false;
+            //dgwDerslikDP.Visible = false;
 
             lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
 
@@ -505,7 +515,9 @@ namespace Ders_Programı_Planlayıcı
             {
                 if (db.eklendi == false)
                 {
+                    
                     flpDersEtiketleri.Controls.Add(db.kart);
+                    flpDersEtiketleri.Controls.Add(new Label() { Size = new Size(0, 26) });
                 }
             }
             flpDersEtiketleri.Controls.Add(new Label());
@@ -726,6 +738,7 @@ namespace Ders_Programı_Planlayıcı
         /// <param name="dersBlogu"></param>
         bool Algoritma(DersBlogu dersBlogu)
         {
+            //Thread.Sleep(1);
             Karistir(gunler);
             Karistir(saatler);
 
@@ -791,6 +804,20 @@ namespace Ders_Programı_Planlayıcı
                 list[k] = list[n];
                 list[n] = value;
             }
+
+            //RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+            //int n = list.Count;
+            //while (n > 1)
+            //{
+            //    byte[] box = new byte[1];
+            //    do provider.GetBytes(box);
+            //    while (!(box[0] < n * (Byte.MaxValue / n)));
+            //    int k = (box[0] % n);
+            //    n--;
+            //    T value = list[k];
+            //    list[k] = list[n];
+            //    list[n] = value;
+            //}
         }
 
         /// <summary>
@@ -976,6 +1003,8 @@ namespace Ders_Programı_Planlayıcı
         {
             Hide();
             AnaFonk();
+            lblAnaTur.Text = anafonktur.ToString();
+            anafonktur = 0;
             Show();
         }
 
@@ -988,7 +1017,7 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dgwDerslikDP_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgwDerslikDP_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             lblEtiket.Controls.Clear();
             if (e.RowIndex == -1 || e.ColumnIndex == -1) { return; };
@@ -1021,9 +1050,9 @@ namespace Ders_Programı_Planlayıcı
             foreach (var drslk in dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
                 lblDerslik.Text += drslk.kod + " ";
 
-            lblEtiket.Controls.Add(dbDerslik[e.RowIndex, e.ColumnIndex].kart);
-
-            //flpDersEtiketleri.Controls.Add(dbMatrix[e.RowIndex, e.ColumnIndex].kart);
+            Label etiket = dbDerslik[e.RowIndex, e.ColumnIndex].kart;
+            etiket.Dock = DockStyle.Fill;
+            lblEtiket.Controls.Add(etiket);
         }
 
         /// <summary>
@@ -1031,7 +1060,7 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dgwOgretmenDP_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgwOgretmenDP_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             lblEtiket.Controls.Clear();
             if (e.RowIndex == -1 || e.ColumnIndex == -1) { return; };
@@ -1064,7 +1093,9 @@ namespace Ders_Programı_Planlayıcı
             foreach (var drslk in dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
                 lblDerslik.Text += drslk.kod + " ";
 
-            lblEtiket.Controls.Add(dbOgretmen[e.RowIndex, e.ColumnIndex].kart);
+            Label etiket = dbOgretmen[e.RowIndex, e.ColumnIndex].kart;
+            etiket.Dock = DockStyle.Fill;
+            lblEtiket.Controls.Add(etiket);
         }
 
         /// <summary>
@@ -1072,7 +1103,7 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dgwSinifDP_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgwSinifDP_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             lblEtiket.Controls.Clear();
 
@@ -1106,12 +1137,9 @@ namespace Ders_Programı_Planlayıcı
 
             foreach (var drslk in dbSinif[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
                 lblDerslik.Text += drslk.kod + " ";
-
-            lblEtiket.Controls.Add(dbSinif[e.RowIndex, e.ColumnIndex].kart);
-
-            //flpDersEtiketleri.Controls.Add(dbMatrix[e.RowIndex, e.ColumnIndex].kart);
+            Label etiket = dbSinif[e.RowIndex, e.ColumnIndex].kart;
+            etiket.Dock = DockStyle.Fill;
+            lblEtiket.Controls.Add(etiket);
         }
-
-
     }
 }
