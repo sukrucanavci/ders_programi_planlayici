@@ -260,7 +260,7 @@ namespace Ders_Programı_Planlayıcı
             dgwGunler2.Height = dgwGunler0.Height;
 
             #endregion
-
+            
             //Ders saatleri
             dtDersSaatleri = new DataTable("ders_saatleri");
             dtDersSaatleri.Columns.AddRange(new DataColumn[] 
@@ -310,6 +310,15 @@ namespace Ders_Programı_Planlayıcı
                 }
             }
 
+            #region TableLayoutPanel
+
+            tlpSiniflar.ResumeLayout();
+            tlpSiniflar.Hide();
+
+
+            tlpSiniflar.SuspendLayout();
+            tlpSiniflar.Show();
+            #endregion
         }
 
         int yerlestirilen = 0;
@@ -320,11 +329,10 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         void AnaFonk()
         {
+            #region İlk
+
             //Algoritmayı engelleyecek bir durumun olup olmadığını kontrol edilir, başarısızsa algoritma çalıştırılmaz
             if (!Kontrol()) { return; }
-
-            //Ders bloklarını büyükten küçüğe sıralandı
-            dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk));
 
             foreach (var db in dersBloklari)
             {
@@ -383,14 +391,16 @@ namespace Ders_Programı_Planlayıcı
                 db.doluluk = doluluk;
             }
 
-            //dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
+            //dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk));
+            dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
+            //Karistir(dersBloklari);
 
-            //Gün ve saatleri güncel şekilde listede tutma
             gunler.Clear(); for (int gun = 0; gun < gunSayisi; gun++) { gunler.Add(gun); }
             saatler.Clear(); for (int saat = 0; saat < gunlukDersSayisi; saat++) { saatler.Add(saat); }
 
             int counter = 0;
             foreach (var db in dersBloklari) { db.eklendi = false; }
+
             while (dersBloklari.Any(db => db.eklendi == false))
             {
                 foreach (var db in dersBloklari) { db.eklendi = false; }
@@ -486,20 +496,18 @@ namespace Ders_Programı_Planlayıcı
                         }
                     digerEklenemeyenBlogaGec:;
                     }
-                    //Thread.Sleep(1);
                     if (counter > 654)
                     {
-                        
                         break;
                     }
                 }
-                //Thread.Sleep(1);
                 if (counter>654)
                 {
                     anafonktur++;
                     AnaFonk();
                     return;
                 }
+
             }
 
             //dgwOgretmenDP.Visible = false;
@@ -507,6 +515,9 @@ namespace Ders_Programı_Planlayıcı
             //dgwDerslikDP.Visible = false;
 
             lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
+            lblTur.Text = counter.ToString();
+
+            #endregion
 
             #region FlowLayoutPanel İşlemleri
 
@@ -515,7 +526,7 @@ namespace Ders_Programı_Planlayıcı
             {
                 if (db.eklendi == false)
                 {
-                    
+                    //MessageBox.Show(db.atananDers.siniflar[0].ad + " " + db.atananDers.ogretmenler[0].ad);
                     flpDersEtiketleri.Controls.Add(db.kart);
                     flpDersEtiketleri.Controls.Add(new Label() { Size = new Size(0, 26) });
                 }
@@ -540,7 +551,7 @@ namespace Ders_Programı_Planlayıcı
                 row.HeaderCell.Value = derslikler[i].kod;
                 row.Height = 35;
 
-                int sutunAdeti = gunSayisi* gunlukDersSayisi;
+                int sutunAdeti = gunSayisi * gunlukDersSayisi;
                 for (int j = 0; j < sutunAdeti;)
                 {
                     if (dbDerslik[i, j] != null)
@@ -587,10 +598,10 @@ namespace Ders_Programı_Planlayıcı
                         cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                         int bölüm = j / gunlukDersSayisi;
                         int kalan = j % gunlukDersSayisi;
-                        if (!derslikler[i].uygunZamanlar[bölüm, kalan]) 
+                        if (!derslikler[i].uygunZamanlar[bölüm, kalan])
                         {
                             cell.Value = "X";
-                            cell.Style.BackColor = Color.DarkGray; 
+                            cell.Style.BackColor = Color.DarkGray;
                         }
                         row.Cells.Add(cell);
                         j++;
@@ -729,8 +740,90 @@ namespace Ders_Programı_Planlayıcı
 
             #endregion
 
-            lblTur.Text = counter.ToString();
+            #region TableLayoutPanel İşlemleri
+
+            tlpSiniflar.Hide();
+            tlpSiniflar.ResumeLayout();
+
+            tlpSiniflar.Controls.Clear();
+            tlpSiniflar.ColumnStyles.Clear();
+            tlpSiniflar.ColumnCount = 1;
+            tlpSiniflar.RowStyles.Clear();
+            tlpSiniflar.RowCount = 1;
+
+            int sutun = gunSayisi * GunlukDersSayisi + 1;
+            int w = tlpSiniflar.Width / sutun;
+            for (int i = 0; i < sutun; i++)
+            {
+                tlpSiniflar.ColumnCount++;
+                tlpSiniflar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, w));
+            }
+
+            tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
+            tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
+            //tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
+            tlpSiniflar.RowCount++;
+
+            Label label;
+            for (int i = 0; i < gunSayisi; i++)
+            {
+                label = new Label()
+                {
+                    BackColor = Color.White,
+                    Text = secilenGunler[i],
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Size = new Size(w * gunlukDersSayisi, 30)
+                };
+                tlpSiniflar.Controls.Add(label, (i * gunlukDersSayisi) + 1, 0);
+                tlpSiniflar.SetColumnSpan(label, gunlukDersSayisi);
+                for (int j = 0; j < gunlukDersSayisi; j++)
+                {
+                    label = new Label()
+                    {
+                        BackColor = Color.White,
+                        Text = (j + 1).ToString(),
+                        TextAlign = ContentAlignment.MiddleCenter,
+                    };
+                    tlpSiniflar.Controls.Add(label, (i * gunlukDersSayisi) + 1 + j, 1);
+                }
+            }
+
+
+            //int sutun = gunSayisi * GunlukDersSayisi + 1;
+
+            for (int i = 0; i < siniflar.Count; i++)
+            {
+                tlpSiniflar.RowCount++;
+                tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
+                for (int j = 0; j < sutun-1; j++)
+                {
+                    if (dbSinif[i, j] != null)
+                    {
+                        if (j == 0)
+                        {
+                            tlpSiniflar.Controls.Add(new Label()
+                            {
+                                Text = siniflar[i].kod,
+                                TextAlign = ContentAlignment.MiddleLeft,
+                                Size = new Size(50,20)
+                            }, 0, i+2);
+                        }
+                        
+                        tlpSiniflar.Controls.Add(dbSinif[i, j].kart, j+1, i+2);
+                        tlpSiniflar.SetColumnSpan(dbSinif[i, j].kart, dbSinif[i, j].uzunluk);
+                        
+                    }
+                }
+            }
+
+            tlpSiniflar.SuspendLayout();
+            tlpSiniflar.Show();
+
+            #endregion
+
         }
+
+
 
         /// <summary>
         /// Algoritma, ders bloklarını verilen kriterlere göre yerleştirir
@@ -769,6 +862,7 @@ namespace Ders_Programı_Planlayıcı
                     dersBlogu.gun = gun;
                     dersBlogu.saat = saat;
 
+                    //boş saatleri doldurma
                     for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
                     {
                         foreach (var derslik in dersBlogu.atananDers.derslikler)
@@ -1001,11 +1095,11 @@ namespace Ders_Programı_Planlayıcı
 
         private void tsbPlanlama_Click(object sender, EventArgs e)
         {
-            Hide();
+            //Hide();
             AnaFonk();
             lblAnaTur.Text = anafonktur.ToString();
             anafonktur = 0;
-            Show();
+            //Show();
         }
 
         #endregion
@@ -1050,7 +1144,7 @@ namespace Ders_Programı_Planlayıcı
             foreach (var drslk in dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
                 lblDerslik.Text += drslk.kod + " ";
 
-            Label etiket = dbDerslik[e.RowIndex, e.ColumnIndex].kart;
+            var etiket = dbDerslik[e.RowIndex, e.ColumnIndex].kart;
             etiket.Dock = DockStyle.Fill;
             lblEtiket.Controls.Add(etiket);
         }
@@ -1093,7 +1187,7 @@ namespace Ders_Programı_Planlayıcı
             foreach (var drslk in dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
                 lblDerslik.Text += drslk.kod + " ";
 
-            Label etiket = dbOgretmen[e.RowIndex, e.ColumnIndex].kart;
+            var etiket = dbOgretmen[e.RowIndex, e.ColumnIndex].kart;
             etiket.Dock = DockStyle.Fill;
             lblEtiket.Controls.Add(etiket);
         }
@@ -1137,9 +1231,14 @@ namespace Ders_Programı_Planlayıcı
 
             foreach (var drslk in dbSinif[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
                 lblDerslik.Text += drslk.kod + " ";
-            Label etiket = dbSinif[e.RowIndex, e.ColumnIndex].kart;
+            var etiket = dbSinif[e.RowIndex, e.ColumnIndex].kart;
             etiket.Dock = DockStyle.Fill;
             lblEtiket.Controls.Add(etiket);
+        }
+
+        private void flpDersEtiketleri_ControlAdded(object sender, ControlEventArgs e)
+        {
+
         }
     }
 }

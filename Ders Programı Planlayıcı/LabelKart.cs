@@ -18,10 +18,11 @@ namespace Ders_Programı_Planlayıcı
             Text = dersBlogu.atananDers.ders.kod;
             TextAlign = ContentAlignment.MiddleCenter;
             BackColor = dersBlogu.atananDers.ogretmenler[0].renk;
+            Margin = new Padding(0);
 
             if (dersBlogu.atananDers.ogretmenler.Count > 1) 
             {
-                TextAlign = ContentAlignment.MiddleLeft;
+                //TextAlign = ContentAlignment.MiddleLeft;
                 Splitter splitter;
                 foreach (var ogretmen in dersBlogu.atananDers.ogretmenler.GetRange(1, dersBlogu.atananDers.ogretmenler.Count - 1))
                 {
