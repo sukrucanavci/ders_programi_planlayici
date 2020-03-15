@@ -236,6 +236,12 @@ namespace Ders_Programı_Planlayıcı
         #endregion
 
 
+        #region Panel Properties
+
+
+
+        #endregion
+
         public static DataTable dtDersSaatleri;
         frmParametre frmParametre = new frmParametre();
 
@@ -246,21 +252,6 @@ namespace Ders_Programı_Planlayıcı
 
         private void frmAna_Load(object sender, EventArgs e)
         {
-            #region Datagridview görsel ayarlar
-
-            dgwDerslikDP.EnableHeadersVisualStyles = false;
-            dgwOgretmenDP.EnableHeadersVisualStyles = false;
-            dgwSinifDP.EnableHeadersVisualStyles = false;
-            dgwGunler0.EnableHeadersVisualStyles = false;
-            dgwGunler1.EnableHeadersVisualStyles = false;
-            dgwGunler2.EnableHeadersVisualStyles = false;
-
-            dgwGunler0.Height = dgwGunler0.ColumnHeadersHeight;
-            dgwGunler1.Height = dgwGunler0.Height;
-            dgwGunler2.Height = dgwGunler0.Height;
-
-            #endregion
-            
             //Ders saatleri
             dtDersSaatleri = new DataTable("ders_saatleri");
             dtDersSaatleri.Columns.AddRange(new DataColumn[] 
@@ -274,41 +265,6 @@ namespace Ders_Programı_Planlayıcı
             frmParametre.ShowDialog();
 
             this.WindowState = FormWindowState.Maximized;
-
-            //Gün sayısı kadar sütun oluşturup datagridviewlere ekledim
-            DataGridViewColumn column;
-            for (int i = 0; i < secilenGunler.Count; i++)
-            {
-                column = new DataGridViewColumn();
-
-                if (i % 2 == 1) { column.HeaderCell.Style.BackColor = Color.White; }
-                else { column.HeaderCell.Style.BackColor = Color.LightGray; }
-
-                column.HeaderText = secilenGunler[i].ToString();
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                dgwGunler0.Columns.Add(column);
-                dgwGunler1.Columns.Add(dgwGunler0.Columns[i].Clone() as DataGridViewColumn);
-                dgwGunler2.Columns.Add(dgwGunler0.Columns[i].Clone() as DataGridViewColumn);
-            }
-
-            //Haftalık max ders saati kadar sütun oluşturup alt sütunları oluşturdum
-            for (int i = 0; i < gunSayisi; i++)
-            {
-                for (int j = 0; j < gunlukDersSayisi; j++)
-                {
-                    column = new DataGridViewColumn();
-
-                    if (i % 2 == 0) { column.HeaderCell.Style.BackColor = Color.LightGray; }
-                    else { column.HeaderCell.Style.BackColor = Color.White; }
-
-                    column.HeaderText = (j+1).ToString();
-                    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-                    dgwSinifDP.Columns.Add(column);
-                    dgwOgretmenDP.Columns.Add(dgwSinifDP.Columns[j].Clone() as DataGridViewColumn);
-                    dgwDerslikDP.Columns.Add(dgwSinifDP.Columns[j].Clone() as DataGridViewColumn);
-                }
-            }
         }
 
         int yerlestirilen = 0;
@@ -505,224 +461,207 @@ namespace Ders_Programı_Planlayıcı
 
             #endregion
 
-            #region FlowLayoutPanel İşlemleri
-
-            flpDersEtiketleri.Controls.Clear();
-            foreach (var db in dersBloklari)
-            {
-                if (db.eklendi == false)
-                {
-                    //MessageBox.Show(db.atananDers.siniflar[0].ad + " " + db.atananDers.ogretmenler[0].ad);
-                    flpDersEtiketleri.Controls.Add(db.kart);
-                    flpDersEtiketleri.Controls.Add(new Label() { Size = new Size(0, 26) });
-                }
-            }
-            flpDersEtiketleri.Controls.Add(new Label());
-            //flpDersEtiketleri.Controls.RemoveAt(flpDersEtiketleri.Controls.Count - 1);
-
-            #endregion
-
             #region DataGridView İşlemleri
 
-            dgwSinifDP.Rows.Clear();
-            dgwOgretmenDP.Rows.Clear();
-            dgwDerslikDP.Rows.Clear();
+            //dgwSinifDP.Rows.Clear();
+            //dgwOgretmenDP.Rows.Clear();
+            //dgwDerslikDP.Rows.Clear();
 
-            DataGridViewRow row;
-            DataGridViewCell cell;
+            //DataGridViewRow row;
+            //DataGridViewCell cell;
 
-            for (int i = 0; i < derslikler.Count; i++)
-            {
-                row = new DataGridViewRow();
-                row.HeaderCell.Value = derslikler[i].kod;
-                row.Height = 35;
+            //for (int i = 0; i < derslikler.Count; i++)
+            //{
+            //    row = new DataGridViewRow();
+            //    row.HeaderCell.Value = derslikler[i].kod;
+            //    row.Height = 35;
 
-                int sutunAdeti = gunSayisi * gunlukDersSayisi;
-                for (int j = 0; j < sutunAdeti;)
-                {
-                    if (dbDerslik[i, j] != null)
-                    {
-                        int sutunSabiti = j;
-                        for (int sayac = 0; sayac < dbDerslik[i, sutunSabiti].uzunluk; sayac++)
-                        {
-                            cell = new DataGridViewTextBoxCell();
-                            cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                            if (sayac == 0)
-                            {
-                                foreach (var snf in dbDerslik[i, sutunSabiti].atananDers.siniflar)
-                                {
-                                    cell.Value += snf.kod + " ";
-                                }
-                            }
-                            if (dbDerslik[i, sutunSabiti].atananDers.ogretmenler.Count == 1)
-                            {
-                                cell.Style.BackColor = dbDerslik[i, sutunSabiti].atananDers.ogretmenler[0].renk;
-                            }
-                            else
-                            {
-                                int r = 0; int g = 0; int b = 0;
-                                foreach (var ogretmen in dbDerslik[i, sutunSabiti].atananDers.ogretmenler)
-                                {
-                                    r += ogretmen.renk.R;
-                                    g += ogretmen.renk.G;
-                                    b += ogretmen.renk.B;
-                                }
-                                int ogretmenSayisi = dbDerslik[i, sutunSabiti].atananDers.ogretmenler.Count;
-                                r = r / ogretmenSayisi;
-                                g = g / ogretmenSayisi;
-                                b = b / ogretmenSayisi;
+            //    int sutunAdeti = gunSayisi * gunlukDersSayisi;
+            //    for (int j = 0; j < sutunAdeti;)
+            //    {
+            //        if (dbDerslik[i, j] != null)
+            //        {
+            //            int sutunSabiti = j;
+            //            for (int sayac = 0; sayac < dbDerslik[i, sutunSabiti].uzunluk; sayac++)
+            //            {
+            //                cell = new DataGridViewTextBoxCell();
+            //                cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //                if (sayac == 0)
+            //                {
+            //                    foreach (var snf in dbDerslik[i, sutunSabiti].atananDers.siniflar)
+            //                    {
+            //                        cell.Value += snf.kod + " ";
+            //                    }
+            //                }
+            //                if (dbDerslik[i, sutunSabiti].atananDers.ogretmenler.Count == 1)
+            //                {
+            //                    cell.Style.BackColor = dbDerslik[i, sutunSabiti].atananDers.ogretmenler[0].renk;
+            //                }
+            //                else
+            //                {
+            //                    int r = 0; int g = 0; int b = 0;
+            //                    foreach (var ogretmen in dbDerslik[i, sutunSabiti].atananDers.ogretmenler)
+            //                    {
+            //                        r += ogretmen.renk.R;
+            //                        g += ogretmen.renk.G;
+            //                        b += ogretmen.renk.B;
+            //                    }
+            //                    int ogretmenSayisi = dbDerslik[i, sutunSabiti].atananDers.ogretmenler.Count;
+            //                    r = r / ogretmenSayisi;
+            //                    g = g / ogretmenSayisi;
+            //                    b = b / ogretmenSayisi;
 
-                                cell.Style.BackColor = Color.FromArgb(r, g, b);
-                            }
-                            row.Cells.Add(cell);
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        cell = new DataGridViewTextBoxCell();
-                        cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                        int bölüm = j / gunlukDersSayisi;
-                        int kalan = j % gunlukDersSayisi;
-                        if (!derslikler[i].uygunZamanlar[bölüm, kalan])
-                        {
-                            cell.Value = "X";
-                            cell.Style.BackColor = Color.DarkGray;
-                        }
-                        row.Cells.Add(cell);
-                        j++;
-                    }
-                }
+            //                    cell.Style.BackColor = Color.FromArgb(r, g, b);
+            //                }
+            //                row.Cells.Add(cell);
+            //                j++;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            cell = new DataGridViewTextBoxCell();
+            //            cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //            int bölüm = j / gunlukDersSayisi;
+            //            int kalan = j % gunlukDersSayisi;
+            //            if (!derslikler[i].uygunZamanlar[bölüm, kalan])
+            //            {
+            //                cell.Value = "X";
+            //                cell.Style.BackColor = Color.DarkGray;
+            //            }
+            //            row.Cells.Add(cell);
+            //            j++;
+            //        }
+            //    }
 
-                dgwDerslikDP.Rows.Add(row);
-            }
+            //    dgwDerslikDP.Rows.Add(row);
+            //}
 
-            for (int i = 0; i < ogretmenler.Count; i++)
-            {
-                row = new DataGridViewRow();
-                row.HeaderCell.Value = ogretmenler[i].kod;
-                row.Height = 35;
+            //for (int i = 0; i < ogretmenler.Count; i++)
+            //{
+            //    row = new DataGridViewRow();
+            //    row.HeaderCell.Value = ogretmenler[i].kod;
+            //    row.Height = 35;
 
-                for (int j = 0; j < gunSayisi * gunlukDersSayisi;)
-                {
-                    if (dbOgretmen[i, j] != null)
-                    {
-                        int sutunSabiti = j;
-                        for (int sayac = 0; sayac < dbOgretmen[i, sutunSabiti].uzunluk; sayac++)
-                        {
-                            cell = new DataGridViewTextBoxCell();
-                            cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                            if (sayac == 0)
-                            {
-                                foreach (var snf in dbOgretmen[i, sutunSabiti].atananDers.siniflar)
-                                {
-                                    cell.Value += snf.kod + " ";
-                                }
-                            }
-                            if (dbOgretmen[i, sutunSabiti].atananDers.ogretmenler.Count == 1)
-                            {
-                                cell.Style.BackColor = dbOgretmen[i, sutunSabiti].atananDers.ogretmenler[0].renk;
-                            }
-                            else
-                            {
-                                int r = 0; int g = 0; int b = 0;
-                                foreach (var ogretmen in dbOgretmen[i, sutunSabiti].atananDers.ogretmenler)
-                                {
-                                    r += ogretmen.renk.R;
-                                    g += ogretmen.renk.G;
-                                    b += ogretmen.renk.B;
-                                }
-                                int ogretmenSayisi = dbOgretmen[i, sutunSabiti].atananDers.ogretmenler.Count;
-                                r = r / ogretmenSayisi;
-                                g = g / ogretmenSayisi;
-                                b = b / ogretmenSayisi;
+            //    for (int j = 0; j < gunSayisi * gunlukDersSayisi;)
+            //    {
+            //        if (dbOgretmen[i, j] != null)
+            //        {
+            //            int sutunSabiti = j;
+            //            for (int sayac = 0; sayac < dbOgretmen[i, sutunSabiti].uzunluk; sayac++)
+            //            {
+            //                cell = new DataGridViewTextBoxCell();
+            //                cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //                if (sayac == 0)
+            //                {
+            //                    foreach (var snf in dbOgretmen[i, sutunSabiti].atananDers.siniflar)
+            //                    {
+            //                        cell.Value += snf.kod + " ";
+            //                    }
+            //                }
+            //                if (dbOgretmen[i, sutunSabiti].atananDers.ogretmenler.Count == 1)
+            //                {
+            //                    cell.Style.BackColor = dbOgretmen[i, sutunSabiti].atananDers.ogretmenler[0].renk;
+            //                }
+            //                else
+            //                {
+            //                    int r = 0; int g = 0; int b = 0;
+            //                    foreach (var ogretmen in dbOgretmen[i, sutunSabiti].atananDers.ogretmenler)
+            //                    {
+            //                        r += ogretmen.renk.R;
+            //                        g += ogretmen.renk.G;
+            //                        b += ogretmen.renk.B;
+            //                    }
+            //                    int ogretmenSayisi = dbOgretmen[i, sutunSabiti].atananDers.ogretmenler.Count;
+            //                    r = r / ogretmenSayisi;
+            //                    g = g / ogretmenSayisi;
+            //                    b = b / ogretmenSayisi;
 
-                                cell.Style.BackColor = Color.FromArgb(r, g, b);
-                            }
-                            row.Cells.Add(cell);
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        cell = new DataGridViewTextBoxCell();
-                        cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                        int bölüm = j / gunlukDersSayisi;
-                        int kalan = j % gunlukDersSayisi;
-                        if (!ogretmenler[i].uygunZamanlar[bölüm, kalan])
-                        {
-                            cell.Value = "X";
-                            cell.Style.BackColor = Color.DarkGray;
-                        }
-                        row.Cells.Add(cell);
-                        j++;
-                    }
-                }
+            //                    cell.Style.BackColor = Color.FromArgb(r, g, b);
+            //                }
+            //                row.Cells.Add(cell);
+            //                j++;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            cell = new DataGridViewTextBoxCell();
+            //            cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //            int bölüm = j / gunlukDersSayisi;
+            //            int kalan = j % gunlukDersSayisi;
+            //            if (!ogretmenler[i].uygunZamanlar[bölüm, kalan])
+            //            {
+            //                cell.Value = "X";
+            //                cell.Style.BackColor = Color.DarkGray;
+            //            }
+            //            row.Cells.Add(cell);
+            //            j++;
+            //        }
+            //    }
 
-                dgwOgretmenDP.Rows.Add(row);
-            }
+            //    dgwOgretmenDP.Rows.Add(row);
+            //}
 
-            for (int i = 0; i < siniflar.Count; i++)
-            {
-                row = new DataGridViewRow();
-                row.HeaderCell.Value = siniflar[i].kod;
-                row.Height = 35;
+            //for (int i = 0; i < siniflar.Count; i++)
+            //{
+            //    row = new DataGridViewRow();
+            //    row.HeaderCell.Value = siniflar[i].kod;
+            //    row.Height = 35;
 
-                for (int j = 0; j < gunSayisi * gunlukDersSayisi;)
-                {
-                    if (dbSinif[i, j] != null)
-                    {
-                        int sutunSabiti = j;
-                        for (int sayac = 0; sayac < dbSinif[i, sutunSabiti].uzunluk; sayac++)
-                        {
-                            cell = new DataGridViewTextBoxCell();
-                            cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                            if (sayac == 0)
-                            {
-                                cell.Value = dbSinif[i, sutunSabiti].atananDers.ders.kod;
-                            }
-                            if (dbSinif[i, sutunSabiti].atananDers.ogretmenler.Count == 1)
-                            {
-                                cell.Style.BackColor = dbSinif[i, sutunSabiti].atananDers.ogretmenler[0].renk;
-                            }
-                            else
-                            {
-                                int r = 0; int g = 0; int b = 0;
-                                foreach (var ogretmen in dbSinif[i, sutunSabiti].atananDers.ogretmenler)
-                                {
-                                    r += ogretmen.renk.R;
-                                    g += ogretmen.renk.G;
-                                    b += ogretmen.renk.B;
-                                }
-                                int ogretmenSayisi = dbSinif[i, sutunSabiti].atananDers.ogretmenler.Count;
-                                r = r / ogretmenSayisi;
-                                g = g / ogretmenSayisi;
-                                b = b / ogretmenSayisi;
+            //    for (int j = 0; j < gunSayisi * gunlukDersSayisi;)
+            //    {
+            //        if (dbSinif[i, j] != null)
+            //        {
+            //            int sutunSabiti = j;
+            //            for (int sayac = 0; sayac < dbSinif[i, sutunSabiti].uzunluk; sayac++)
+            //            {
+            //                cell = new DataGridViewTextBoxCell();
+            //                cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //                if (sayac == 0)
+            //                {
+            //                    cell.Value = dbSinif[i, sutunSabiti].atananDers.ders.kod;
+            //                }
+            //                if (dbSinif[i, sutunSabiti].atananDers.ogretmenler.Count == 1)
+            //                {
+            //                    cell.Style.BackColor = dbSinif[i, sutunSabiti].atananDers.ogretmenler[0].renk;
+            //                }
+            //                else
+            //                {
+            //                    int r = 0; int g = 0; int b = 0;
+            //                    foreach (var ogretmen in dbSinif[i, sutunSabiti].atananDers.ogretmenler)
+            //                    {
+            //                        r += ogretmen.renk.R;
+            //                        g += ogretmen.renk.G;
+            //                        b += ogretmen.renk.B;
+            //                    }
+            //                    int ogretmenSayisi = dbSinif[i, sutunSabiti].atananDers.ogretmenler.Count;
+            //                    r = r / ogretmenSayisi;
+            //                    g = g / ogretmenSayisi;
+            //                    b = b / ogretmenSayisi;
 
-                                cell.Style.BackColor = Color.FromArgb(r, g, b);
-                            }
-                            row.Cells.Add(cell);
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        cell = new DataGridViewTextBoxCell();
-                        cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                        int bölüm = j / gunlukDersSayisi;
-                        int kalan = j % gunlukDersSayisi;
-                        if (!siniflar[i].uygunZamanlar[bölüm, kalan])
-                        {
-                            cell.Value = "X";
-                            cell.Style.BackColor = Color.DarkGray;
-                        }
-                        row.Cells.Add(cell);
-                        j++;
-                    }
-                }
+            //                    cell.Style.BackColor = Color.FromArgb(r, g, b);
+            //                }
+            //                row.Cells.Add(cell);
+            //                j++;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            cell = new DataGridViewTextBoxCell();
+            //            cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //            int bölüm = j / gunlukDersSayisi;
+            //            int kalan = j % gunlukDersSayisi;
+            //            if (!siniflar[i].uygunZamanlar[bölüm, kalan])
+            //            {
+            //                cell.Value = "X";
+            //                cell.Style.BackColor = Color.DarkGray;
+            //            }
+            //            row.Cells.Add(cell);
+            //            j++;
+            //        }
+            //    }
 
-                dgwSinifDP.Rows.Add(row);
-            }
+            //    dgwSinifDP.Rows.Add(row);
+            //}
 
             #endregion
 
@@ -745,12 +684,12 @@ namespace Ders_Programı_Planlayıcı
                 tlpSiniflar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, w));
             }
 
-            tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
-            tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
-            //tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
+            tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
+            tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.Absolute, 20));
             tlpSiniflar.RowCount++;
 
             Label label;
+
             for (int i = 0; i < gunSayisi; i++)
             {
                 label = new Label()
@@ -774,9 +713,6 @@ namespace Ders_Programı_Planlayıcı
                 }
             }
 
-
-            //int sutun = gunSayisi * GunlukDersSayisi + 1;
-
             for (int i = 0; i < siniflar.Count; i++)
             {
                 tlpSiniflar.RowCount++;
@@ -794,10 +730,11 @@ namespace Ders_Programı_Planlayıcı
                                 Size = new Size(50,30)
                             }, 0, i+2);
                         }
-                        Kart kart = dbSinif[i, j].kart;
-                        tlpSiniflar.Controls.Add(kart, j+1, i+2);
-                        tlpSiniflar.SetColumnSpan(dbSinif[i, j].kart, dbSinif[i, j].uzunluk);
-                        
+
+                        dbSinif[i, j].kart.frmAna = this;
+                        tlpSiniflar.Controls.Add(new LabelKart(dbSinif[i, j]), j+1, i+2);
+                        //flpDersEtiketleri.Controls.Add(dbSinif[i, j].kart);
+                        tlpSiniflar.SetColumnSpan(tlpSiniflar.GetControlFromPosition(j+1, i+2), dbSinif[i, j].uzunluk);
                     }
                 }
             }
@@ -807,6 +744,19 @@ namespace Ders_Programı_Planlayıcı
 
             #endregion
 
+            #region FlowLayoutPanel İşlemleri
+
+            flpDersEtiketleri.Controls.Clear();
+            foreach (var db in dersBloklari)
+            {
+                if (db.eklendi == false)
+                {
+                    db.kart.genislik = w * db.uzunluk;
+                    flpDersEtiketleri.Controls.Add(db.kart);
+                }
+            }
+
+            #endregion
         }
 
 
@@ -1090,141 +1040,5 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
-
-
-        /// <summary>
-        /// Derslik görünümünde bulunan datagridview nesnesindeki hücrelere tıklandığında formun sağ altında ders bloğu ile ilgili kısa bilgiler verir
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dgwDerslikDP_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            lblEtiket.Controls.Clear();
-            if (e.RowIndex == -1 || e.ColumnIndex == -1) { return; };
-            if (dbDerslik[e.RowIndex, e.ColumnIndex] == null)
-            {
-                lblDers.Text = "";
-                lblSinif.Text = "";
-                lblOgretmen.Text = "";
-                lblDerslik.Text = "";
-                return;
-            };
-            lblDerslik.Text = "";
-            lblSinif.Text = "";
-            lblOgretmen.Text = "";
-
-            lblDers.Text = dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ders.kod + " - " +
-                dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ders.ad;
-
-            foreach (var snf in dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.siniflar)
-                lblSinif.Text += snf.kod + " ";
-
-            if (dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler.Count > 1)
-                foreach (var ogr in dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler)
-                    lblOgretmen.Text += ogr.kod + " ";
-            else
-                lblOgretmen.Text += dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].kod + " - " +
-                    dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].ad + " " +
-                    dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].soyad;
-
-            foreach (var drslk in dbDerslik[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
-                lblDerslik.Text += drslk.kod + " ";
-
-            var etiket = dbDerslik[e.RowIndex, e.ColumnIndex].kart;
-            etiket.Dock = DockStyle.Fill;
-            lblEtiket.Controls.Add(etiket);
-        }
-
-        /// <summary>
-        /// Öğretmen görünümünde bulunan datagridview nesnesindeki hücrelere tıklandığında formun sağ altında ders bloğu ile ilgili kısa bilgiler verir
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dgwOgretmenDP_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            lblEtiket.Controls.Clear();
-            if (e.RowIndex == -1 || e.ColumnIndex == -1) { return; };
-            if (dbOgretmen[e.RowIndex, e.ColumnIndex] == null)
-            {
-                lblDers.Text = "";
-                lblSinif.Text = "";
-                lblOgretmen.Text = "";
-                lblDerslik.Text = "";
-                return;
-            };
-            lblSinif.Text = "";
-            lblOgretmen.Text = "";
-            lblDerslik.Text = "";
-
-            lblDers.Text = dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ders.kod + " - " +
-                dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ders.ad;
-
-            foreach (var snf in dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.siniflar)
-                lblSinif.Text += snf.kod + " ";
-
-            if (dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler.Count > 1)
-                foreach (var ogr in dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler)
-                    lblOgretmen.Text += ogr.kod + " ";
-            else
-                lblOgretmen.Text += dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].kod + " - " +
-                    dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].ad + " " +
-                    dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].soyad;
-
-            foreach (var drslk in dbOgretmen[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
-                lblDerslik.Text += drslk.kod + " ";
-
-            var etiket = dbOgretmen[e.RowIndex, e.ColumnIndex].kart;
-            etiket.Dock = DockStyle.Fill;
-            lblEtiket.Controls.Add(etiket);
-        }
-
-        /// <summary>
-        /// Sınıf görünümünde bulunan datagridview nesnesindeki hücrelere tıklandığında formun sağ altında ders bloğu ile ilgili kısa bilgiler verir
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dgwSinifDP_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            lblEtiket.Controls.Clear();
-
-            if (e.RowIndex == -1 || e.ColumnIndex == -1) { return; };
-
-            if (dbSinif[e.RowIndex, e.ColumnIndex] == null)
-            {
-                lblDers.Text = "";
-                lblSinif.Text = "";
-                lblOgretmen.Text = "";
-                lblDerslik.Text = "";
-                return;
-            };
-            lblDerslik.Text = "";
-            lblSinif.Text = "";
-            lblOgretmen.Text = "";
-
-            lblDers.Text = dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ders.kod + " - " +
-                dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ders.ad;
-
-            foreach (var snf in dbSinif[e.RowIndex, e.ColumnIndex].atananDers.siniflar)
-                lblSinif.Text += snf.kod + " ";
-
-            if (dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler.Count > 1)
-                foreach (var ogr in dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler)
-                    lblOgretmen.Text += ogr.kod + " ";
-            else
-                lblOgretmen.Text += dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].kod + " - " +
-                    dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].ad + " " +
-                    dbSinif[e.RowIndex, e.ColumnIndex].atananDers.ogretmenler[0].soyad;
-
-            foreach (var drslk in dbSinif[e.RowIndex, e.ColumnIndex].atananDers.derslikler)
-                lblDerslik.Text += drslk.kod + " ";
-            var etiket = dbSinif[e.RowIndex, e.ColumnIndex].kart;
-            etiket.Dock = DockStyle.Fill;
-            lblEtiket.Controls.Add(etiket);
-        }
-
-        private void flpDersEtiketleri_ControlAdded(object sender, ControlEventArgs e)
-        {
-
-        }
     }
 }

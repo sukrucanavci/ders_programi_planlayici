@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace Ders_Programı_Planlayıcı
+﻿namespace Ders_Programı_Planlayıcı
 {
     public class DersBlogu
     {
@@ -14,7 +10,7 @@ namespace Ders_Programı_Planlayıcı
         public int saat;
         public int uzunluk;
         public int doluluk;
-        public Kart kart;
+        public LabelKart kart;
 
         /// <summary>
         /// Tablolara yerleştirilecek ders kartları
@@ -24,7 +20,7 @@ namespace Ders_Programı_Planlayıcı
         {
             this.atananDers = atananDers;
             this.uzunluk = uzunluk;
-            kart = new Kart(this);
+            kart = new LabelKart(this);
             frmAna.dersBloklari.Add(this);
         }
     }
