@@ -26,7 +26,6 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
-
         #region Listeler
 
         public static List<Sinif> siniflar = new List<Sinif>();
@@ -66,10 +65,7 @@ namespace Ders_Programı_Planlayıcı
             Color.Lime,
             Color.LimeGreen,
             Color.Linen,
-            Color.Blue,
             Color.Magenta,
-            Color.BlueViolet,
-            Color.Brown,
             Color.MediumAquamarine,
             Color.BurlyWood,
             Color.CadetBlue,
@@ -87,8 +83,6 @@ namespace Ders_Programı_Planlayıcı
             Color.NavajoWhite,
             Color.DarkKhaki,
             Color.OldLace,
-            Color.Olive,
-            Color.OliveDrab,
             Color.DarkOrange,
             Color.Orange,
             Color.OrangeRed,
@@ -98,11 +92,9 @@ namespace Ders_Programı_Planlayıcı
             Color.DarkSeaGreen,
             Color.PaleGreen,
             Color.PaleTurquoise,
-            Color.DarkSlateGray,
             Color.PaleVioletRed,
             Color.DarkTurquoise,
             Color.PapayaWhip,
-            Color.DarkViolet,
             Color.PeachPuff,
             Color.DeepPink,
             Color.Peru,
@@ -177,7 +169,6 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
-
         #region Fields and Properties
 
         public static bool ogleArasiVar = false;
@@ -217,7 +208,6 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
-
         #region Ders Bloğu Matrisleri
 
         /// <summary>
@@ -232,13 +222,6 @@ namespace Ders_Programı_Planlayıcı
         /// Ders bloklarını dersliğe göre tutan matris
         /// </summary>
         DersBlogu[,] dbDerslik;
-
-        #endregion
-
-
-        #region Panel Properties
-
-
 
         #endregion
 
