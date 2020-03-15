@@ -14,7 +14,7 @@ namespace Ders_Programı_Planlayıcı
         public int saat;
         public int uzunluk;
         public int doluluk;
-        public LabelKart kart;
+        public Kart kart;
 
         /// <summary>
         /// Tablolara yerleştirilecek ders kartları
@@ -24,7 +24,7 @@ namespace Ders_Programı_Planlayıcı
         {
             this.atananDers = atananDers;
             this.uzunluk = uzunluk;
-            kart = new LabelKart(this);
+            kart = new Kart(this);
             frmAna.dersBloklari.Add(this);
         }
     }

@@ -309,16 +309,6 @@ namespace Ders_Programı_Planlayıcı
                     dgwDerslikDP.Columns.Add(dgwSinifDP.Columns[j].Clone() as DataGridViewColumn);
                 }
             }
-
-            #region TableLayoutPanel
-
-            tlpSiniflar.ResumeLayout();
-            tlpSiniflar.Hide();
-
-
-            tlpSiniflar.SuspendLayout();
-            tlpSiniflar.Show();
-            #endregion
         }
 
         int yerlestirilen = 0;
@@ -509,10 +499,6 @@ namespace Ders_Programı_Planlayıcı
                 }
 
             }
-
-            //dgwOgretmenDP.Visible = false;
-            //dgwSinifDP.Visible = false;
-            //dgwDerslikDP.Visible = false;
 
             lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
             lblTur.Text = counter.ToString();
@@ -794,7 +780,7 @@ namespace Ders_Programı_Planlayıcı
             for (int i = 0; i < siniflar.Count; i++)
             {
                 tlpSiniflar.RowCount++;
-                tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.AutoSize, 35));
+                tlpSiniflar.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
                 for (int j = 0; j < sutun-1; j++)
                 {
                     if (dbSinif[i, j] != null)
@@ -805,11 +791,11 @@ namespace Ders_Programı_Planlayıcı
                             {
                                 Text = siniflar[i].kod,
                                 TextAlign = ContentAlignment.MiddleLeft,
-                                Size = new Size(50,20)
+                                Size = new Size(50,30)
                             }, 0, i+2);
                         }
-                        
-                        tlpSiniflar.Controls.Add(dbSinif[i, j].kart, j+1, i+2);
+                        Kart kart = dbSinif[i, j].kart;
+                        tlpSiniflar.Controls.Add(kart, j+1, i+2);
                         tlpSiniflar.SetColumnSpan(dbSinif[i, j].kart, dbSinif[i, j].uzunluk);
                         
                     }

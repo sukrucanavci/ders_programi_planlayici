@@ -114,6 +114,12 @@
     <Compile Include="frmZamanTablosu.Designer.cs">
       <DependentUpon>frmZamanTablosu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Kart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Kart.Designer.cs">
+      <DependentUpon>Kart.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ogretmen.cs" />
     <Compile Include="frmDersAtama.cs">
       <SubType>Form</SubType>
@@ -140,9 +146,6 @@
       <DependentUpon>frmKisitlamaOgretmen.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="LabelKart.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sinif.cs" />
     <EmbeddedResource Include="frmAna.resx">
@@ -180,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmKisitlamaDers.resx">
       <DependentUpon>frmKisitlamaDers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kart.resx">
+      <DependentUpon>Kart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
