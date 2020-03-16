@@ -15,7 +15,10 @@ namespace Ders_Programı_Planlayıcı
         public string ad;
         public string kod;
         public string dagilimSekli;
-        public int tds = 0; //Toplam ders saati
+        /// <summary>
+        /// Toplam ders saati
+        /// </summary>
+        public int tds = 0;
         public bool sanalDers = false;
         public DagilimKisitlamasi kisitlama;
 

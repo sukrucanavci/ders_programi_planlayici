@@ -273,5 +273,8 @@
   <ItemGroup>
     <None Include="Resources\onizle32px.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sonraKontrol32px.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

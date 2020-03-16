@@ -243,6 +243,16 @@ namespace Ders_Programı_Planlayıcı.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap sonraKontrol32px {
+            get {
+                object obj = ResourceManager.GetObject("sonraKontrol32px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap veritabaniIndir32px {
             get {
                 object obj = ResourceManager.GetObject("veritabaniIndir32px", resourceCulture);

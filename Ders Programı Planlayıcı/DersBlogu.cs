@@ -13,6 +13,11 @@
         public LabelKart kart;
 
         /// <summary>
+        /// Dağılım kısıtlaması sayacı
+        /// </summary>
+        public int dksayac = 0;
+
+        /// <summary>
         /// Tablolara yerleştirilecek ders kartları
         /// </summary>
         /// <param name="uzunluk">Ders kartının saat uzunluğu</param>

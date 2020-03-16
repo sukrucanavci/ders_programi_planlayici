@@ -47,7 +47,6 @@ namespace Ders_Programı_Planlayıcı
             };
 
             b.Click += new EventHandler(Guncelle);
-
             void Guncelle(object sndr, EventArgs a)
             {
                 dgwDersSaatleri.SelectedCells[0].Value = t.Text;

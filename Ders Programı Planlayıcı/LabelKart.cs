@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Ders_Programı_Planlayıcı
@@ -45,10 +46,21 @@ namespace Ders_Programı_Planlayıcı
             int count = db.atananDers.ogretmenler.Count;
             int width = Width / count;
 
-            for (int i = 0; i < count; i++)
+            if (count == 1)
             {
-                var brush = new SolidBrush(db.atananDers.ogretmenler[i].renk);
-                e.Graphics.FillRectangle(brush, width * i, 0, width, Height);
+                LinearGradientBrush brush = new LinearGradientBrush(
+                    new Rectangle(0, 0, Width, Height), Color.White,
+                    db.atananDers.ogretmenler[0].renk, LinearGradientMode.Vertical);
+
+                e.Graphics.FillRectangle(brush, 0, 0, Width, Height);
+            }
+            else
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    var brush = new SolidBrush(db.atananDers.ogretmenler[i].renk);
+                    e.Graphics.FillRectangle(brush, width * i, 0, width, Height);
+                }
             }
         }
 

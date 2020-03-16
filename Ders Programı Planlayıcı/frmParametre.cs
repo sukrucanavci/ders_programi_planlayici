@@ -126,7 +126,14 @@ namespace Ders_Programı_Planlayıcı
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = baglanti;
             baglanti.Open();
-            
+
+            cmd.CommandText = "SELECT * FROM ders_saatleri";
+            SqlDataAdapter sda = new SqlDataAdapter();
+            sda.SelectCommand = cmd;
+            frmAna.dtDersSaatleri.Clear();
+            sda.Fill(frmAna.dtDersSaatleri);
+            frmAna.gunlukDersSayisi = frmAna.dtDersSaatleri.Rows.Count;
+
             cmd.CommandText = "SELECT * FROM dersler";
             SqlDataReader dr = cmd.ExecuteReader();
             Ders ders;

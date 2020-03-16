@@ -9,6 +9,7 @@ namespace Ders_Programı_Planlayıcı
         public Ders ders;
         public List<Sinif> siniflar = new List<Sinif>();
         public List<Derslik> derslikler = new List<Derslik>();
+        public List<DersBlogu> dersBloklari = new List<DersBlogu>();
 
         private string DagilimSekli;
         public string dagilimSekli
@@ -46,23 +47,23 @@ namespace Ders_Programı_Planlayıcı
                 {
                     ogretmen.tds += tds - otds;
                 }
-
                 foreach (var sinif in siniflar)
                 {
                     sinif.tds += tds - otds;
                 }
-
                 foreach (var derslik in derslikler)
                 {
                     derslik.tds += tds - otds;
                 }
 
+                dersBloklari.Clear();
                 //Varsa önceden oluşturulan eski ders bloklarını temizle
                 for (int i = 0; i < frmAna.dersBloklari.Count; i++)
                 {
                     if (frmAna.dersBloklari[i].atananDers == this)
                     {
                         frmAna.dersBloklari.Remove(frmAna.dersBloklari[i]);
+                        
                     }
                 }
 
@@ -71,13 +72,12 @@ namespace Ders_Programı_Planlayıcı
                 foreach (var saat in saatler)
                 {
                     dersBlogu = new DersBlogu(this, saat);
+                    dersBloklari.Add(dersBlogu);
                 }
             }
         }
 
         public int tds;
-
-        public AtananDers() { }
 
         /// <summary>
         /// Atanacak ders
