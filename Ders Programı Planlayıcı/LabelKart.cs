@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Ders_Programı_Planlayıcı
@@ -9,12 +11,13 @@ namespace Ders_Programı_Planlayıcı
     {
         DersBlogu db;
         public frmAna frmAna;
+        public bool eklendi = false;
 
         public int genislik
         {
             set
             {
-                this.Width = value;
+                Size = new Size(value * db.uzunluk, 30);
             }
         }
 
@@ -22,11 +25,14 @@ namespace Ders_Programı_Planlayıcı
         {
             frmAna = (frmAna)Application.OpenForms["frmAna"];
             db = dersBlogu;
-            Size = new Size(200 * dersBlogu.uzunluk, 30);
-            Margin = new Padding(0);
-            BorderStyle = BorderStyle.FixedSingle;
 
-            Label tb = new Label()
+            Size = new Size(Width * dersBlogu.uzunluk, 30);
+            Margin = new Padding(0);
+            Dock = DockStyle.Fill;
+            //BorderStyle = BorderStyle.FixedSingle;
+            Text = db.atananDers.ders.kod;
+
+            Label lab = new Label()
             {
                 AutoSize = false,
                 BackColor = Color.Transparent,
@@ -34,11 +40,130 @@ namespace Ders_Programı_Planlayıcı
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Fill
             };
-            Controls.Add(tb);
+            Controls.Add(lab);
 
-            tb.MouseHover += new EventHandler(Kart_MouseHover);
-            tb.MouseLeave += new EventHandler(Kart_MouseLeave);
+            lab.MouseClick += new MouseEventHandler(Kart_MouseClick);
+            lab.MouseHover += new EventHandler(Kart_MouseHover);
+            lab.MouseLeave += new EventHandler(Kart_MouseLeave);
             Paint += new PaintEventHandler(Kart_Paint);
+        }
+
+        public struct IconInfo
+        {
+            public bool fIcon;
+            public int xHotspot;
+            public int yHotspot;
+            public IntPtr hbmMask;
+            public IntPtr hbmColor;
+        }
+
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr CreateIconIndirect(ref IconInfo icon);
+
+        public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
+        {
+            IntPtr ptr = bmp.GetHicon();
+            IconInfo tmp = new IconInfo();
+            GetIconInfo(ptr, ref tmp);
+            tmp.xHotspot = xHotSpot;
+            tmp.yHotspot = yHotSpot;
+            tmp.fIcon = false;
+            ptr = CreateIconIndirect(ref tmp);
+            return new Cursor(ptr);
+        }
+
+        void Kart_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                frmAna.LabelleriBeyazlat();
+                return;
+            }
+
+            if (this.Parent == frmAna.tlpSiniflar)
+            {
+                frmAna.LabelleriBeyazlat();
+                frmAna.seciliDB = db;
+
+                foreach (var kart in db.kartlar)
+                {
+                    frmAna.flpDersEtiketleri.Controls.Add(kart);
+                    kart.Hide();
+                }
+                
+                Dock = DockStyle.None;
+                this.Show();
+                //frmAna.flpDersEtiketleri.Controls.Add(this);
+
+                this.Margin = new Padding(1);
+
+                Bitmap bmp = new Bitmap(30, 30);
+                using (Graphics gfx = Graphics.FromImage(bmp))
+                using (SolidBrush brush = new SolidBrush(db.atananDers.ogretmenler[0].renk))
+                {
+                    gfx.FillRectangle(brush, 0, 0, 30, 30);
+                    if (Text.Length > 3)
+                    {
+                        RectangleF rectf = new RectangleF(0, 0, 30, 30);
+                        gfx.DrawString(Text, Font, Brushes.Black, rectf);
+                    }
+                    else
+                    {
+                        StringFormat sf = new StringFormat();
+                        sf.LineAlignment = StringAlignment.Center;
+                        sf.Alignment = StringAlignment.Center;
+                        PointF pf = new PointF(15, 15);
+                        gfx.DrawString(Text, Font, Brushes.Black, pf, sf);
+                    }
+                }
+                frmAna.tlpSiniflar.Cursor = CreateCursor(bmp, 5, 5);
+
+                
+                for (int i = db.saat; i < db.saat + db.uzunluk; i++)
+                {
+                    foreach (var derslik in db.atananDers.derslikler)
+                    { derslik.bosSaatler[db.gun, i] = true; }
+
+                    foreach (var ogretmen in db.atananDers.ogretmenler)
+                    { ogretmen.bosSaatler[db.gun, i] = true; }
+
+                    foreach (var sinif in db.atananDers.siniflar)
+                    { sinif.bosSaatler[db.gun, i] = true; }
+                }
+
+                int s = ((db.gun * frmAna.gunlukDersSayisi) + db.saat);
+                foreach (var sinif in db.atananDers.siniflar)
+                {
+                    for (int i = s; i < s + db.uzunluk; i++)
+                        frmAna.dbSinif[frmAna.siniflar.IndexOf(sinif), i] = null;
+                }
+
+                for (int i = 0; i < frmAna.gunSayisi; i++)
+                {
+                    for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+                    {
+                        if (j + db.uzunluk > frmAna.gunlukDersSayisi) { continue; }
+
+                        if (frmAna.BosZamanlariKontrolEt(db, i, j))
+                        {
+                            foreach (var sinif in db.atananDers.siniflar)
+                            {
+                                frmAna.tlpSiniflar.GetControlFromPosition(0, frmAna.siniflar.IndexOf(sinif) + 2).BackColor = Color.Lime;
+                                frmAna.tlpSiniflar.GetControlFromPosition(i*frmAna.gunlukDersSayisi+j+1, 1).BackColor = Color.Lime;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //frmAna.flpDersEtiketleri.Controls.Remove(this);
+            }
         }
 
         void Kart_Paint(object sender, PaintEventArgs e)
@@ -67,18 +192,43 @@ namespace Ders_Programı_Planlayıcı
         void Kart_MouseHover(object sender, EventArgs e)
         {
             frmAna.lblDers.Text = db.atananDers.ders.ad;
-            foreach (var derslik in db.atananDers.derslikler)
+
+            if (db.atananDers.derslikler.Count == 1)
             {
-                frmAna.lblDerslik.Text += derslik.kod + " ";
+                frmAna.lblDerslik.Text = db.atananDers.derslikler[0].ad;
             }
-            foreach (var ogretmen in db.atananDers.ogretmenler)
+            else
             {
-                frmAna.lblOgretmen.Text += ogretmen.kod + " ";
+                foreach (var derslik in db.atananDers.derslikler)
+                {
+                    frmAna.lblDerslik.Text += derslik.kod + " ";
+                }
             }
-            foreach (var sinif in db.atananDers.siniflar)
+
+            if (db.atananDers.ogretmenler.Count == 1)
             {
-                frmAna.lblSinif.Text += sinif.kod + " ";
+                frmAna.lblOgretmen.Text = db.atananDers.ogretmenler[0].ad + " " + db.atananDers.ogretmenler[0].soyad;
             }
+            else
+            {
+                foreach (var ogretmen in db.atananDers.ogretmenler)
+                {
+                    frmAna.lblOgretmen.Text += ogretmen.kod + " ";
+                }
+            }
+
+            if (db.atananDers.siniflar.Count == 1)
+            {
+                frmAna.lblSinif.Text = db.atananDers.siniflar[0].ad;
+            }
+            else
+            {
+                foreach (var sinif in db.atananDers.siniflar)
+                {
+                    frmAna.lblSinif.Text += sinif.kod + " ";
+                }
+            }
+
 
             frmAna.lblEtiket.Controls.Add(new LabelKart(db));
             frmAna.lblEtiket.Controls[0].Dock = DockStyle.Fill;

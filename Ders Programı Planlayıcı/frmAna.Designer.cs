@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAna));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pnlAlt = new System.Windows.Forms.Panel();
@@ -65,7 +66,7 @@
             this.tpDerslikler = new System.Windows.Forms.TabPage();
             this.tpOgretmenler = new System.Windows.Forms.TabPage();
             this.tpSiniflar = new System.Windows.Forms.TabPage();
-            this.tlpSiniflar = new System.Windows.Forms.TableLayoutPanel();
+            this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
             this.dgwGunler3 = new System.Windows.Forms.TabControl();
             this.pnlAlt.SuspendLayout();
             this.pnlDersBilgi.SuspendLayout();
@@ -470,17 +471,21 @@
             // 
             // tlpSiniflar
             // 
+            this.tlpSiniflar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tlpSiniflar.AutoScroll = true;
             this.tlpSiniflar.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tlpSiniflar.ColumnCount = 1;
             this.tlpSiniflar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpSiniflar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpSiniflar.Location = new System.Drawing.Point(0, 0);
             this.tlpSiniflar.Name = "tlpSiniflar";
             this.tlpSiniflar.RowCount = 1;
             this.tlpSiniflar.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpSiniflar.Size = new System.Drawing.Size(1353, 365);
             this.tlpSiniflar.TabIndex = 15;
+            this.tlpSiniflar.Text = "DBLayoutPanel";
+            this.tlpSiniflar.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tlpSiniflar_MouseClick);
             // 
             // dgwGunler3
             // 
@@ -551,14 +556,12 @@
         private System.Windows.Forms.ToolStripButton tsbVeritabani;
         private System.Windows.Forms.Label lblTur;
         private System.Windows.Forms.Label lblBasari;
-        private System.Windows.Forms.FlowLayoutPanel flpDersEtiketleri;
         private System.Windows.Forms.Label lblAnaTur;
         private System.Windows.Forms.Label lblMax;
         private System.Windows.Forms.TabPage tpDersCizelgesi;
         private System.Windows.Forms.TabPage tpDerslikler;
         private System.Windows.Forms.TabPage tpOgretmenler;
         private System.Windows.Forms.TabPage tpSiniflar;
-        private System.Windows.Forms.TableLayoutPanel tlpSiniflar;
         private System.Windows.Forms.TabControl dgwGunler3;
         public System.Windows.Forms.Label lblEtiket;
         public System.Windows.Forms.Label lblDers;
@@ -569,6 +572,8 @@
         private System.Windows.Forms.ListView lvwBasarisizlar;
         private System.Windows.Forms.ColumnHeader clmnKayit;
         private System.Windows.Forms.ColumnHeader clmnTanimlama;
+        public System.Windows.Forms.FlowLayoutPanel flpDersEtiketleri;
+        public DBLayoutPanel tlpSiniflar;
     }
 }
 

@@ -49,6 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AtananDers.cs" />
+    <Compile Include="DBLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DBLayoutPanel.Designer.cs">
+      <DependentUpon>DBLayoutPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ders.cs" />
     <Compile Include="DersBlogu.cs" />
     <Compile Include="Derslik.cs" />

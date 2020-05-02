@@ -10,6 +10,7 @@ namespace Ders_Programı_Planlayıcı
         public List<Sinif> siniflar = new List<Sinif>();
         public List<Derslik> derslikler = new List<Derslik>();
         public List<DersBlogu> dersBloklari = new List<DersBlogu>();
+        
 
         private string DagilimSekli;
         public string dagilimSekli

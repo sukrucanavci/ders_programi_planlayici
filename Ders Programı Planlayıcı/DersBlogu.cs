@@ -1,4 +1,6 @@
-﻿namespace Ders_Programı_Planlayıcı
+﻿using System.Collections.Generic;
+
+namespace Ders_Programı_Planlayıcı
 {
     public class DersBlogu
     {
@@ -6,11 +8,12 @@
 
         public bool eklendi;
 
-        public int gun;
-        public int saat;
+        public int gun = -1;
+        public int saat = -1;
         public int uzunluk;
         public int doluluk;
         public LabelKart kart;
+        public List<LabelKart> kartlar = new List<LabelKart>();
 
         /// <summary>
         /// Dağılım kısıtlaması sayacı
@@ -25,7 +28,11 @@
         {
             this.atananDers = atananDers;
             this.uzunluk = uzunluk;
-            kart = new LabelKart(this);
+            for (int i = 0; i < atananDers.siniflar.Count; i++)
+            {
+                kart = new LabelKart(this);
+                kartlar.Add(kart);
+            }
             frmAna.dersBloklari.Add(this);
         }
     }
