@@ -57,7 +57,6 @@ namespace Ders_Programı_Planlayıcı
             public IntPtr hbmColor;
         }
 
-
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
@@ -98,7 +97,7 @@ namespace Ders_Programı_Planlayıcı
                 
                 Dock = DockStyle.None;
                 this.Show();
-                //frmAna.flpDersEtiketleri.Controls.Add(this);
+
 
                 this.Margin = new Padding(1);
 
@@ -160,9 +159,48 @@ namespace Ders_Programı_Planlayıcı
                     }
                 }
             }
-            else
+            else if(this.Parent == frmAna.flpDersEtiketleri)
             {
-                //frmAna.flpDersEtiketleri.Controls.Remove(this);
+                frmAna.seciliDB = db;
+
+                Bitmap bmp = new Bitmap(30, 30);
+                using (Graphics gfx = Graphics.FromImage(bmp))
+                using (SolidBrush brush = new SolidBrush(db.atananDers.ogretmenler[0].renk))
+                {
+                    gfx.FillRectangle(brush, 0, 0, 30, 30);
+                    if (Text.Length > 3)
+                    {
+                        RectangleF rectf = new RectangleF(0, 0, 30, 30);
+                        gfx.DrawString(Text, Font, Brushes.Black, rectf);
+                    }
+                    else
+                    {
+                        StringFormat sf = new StringFormat();
+                        sf.LineAlignment = StringAlignment.Center;
+                        sf.Alignment = StringAlignment.Center;
+                        PointF pf = new PointF(15, 15);
+                        gfx.DrawString(Text, Font, Brushes.Black, pf, sf);
+                    }
+                }
+                frmAna.tlpSiniflar.Cursor = CreateCursor(bmp, 5, 5);
+
+                //yeşil yapma olayı
+                for (int i = 0; i < frmAna.gunSayisi; i++)
+                {
+                    for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+                    {
+                        if (j + db.uzunluk > frmAna.gunlukDersSayisi) { continue; }
+
+                        if (frmAna.BosZamanlariKontrolEt(db, i, j))
+                        {
+                            foreach (var sinif in db.atananDers.siniflar)
+                            {
+                                frmAna.tlpSiniflar.GetControlFromPosition(0, frmAna.siniflar.IndexOf(sinif) + 2).BackColor = Color.Lime;
+                                frmAna.tlpSiniflar.GetControlFromPosition(i * frmAna.gunlukDersSayisi + j + 1, 1).BackColor = Color.Lime;
+                            }
+                        }
+                    }
+                }
             }
         }
 

@@ -144,13 +144,13 @@ namespace Ders_Programı_Planlayıcı
                 string dagilim = dr["dagilim_sekli"].ToString().Trim();
                 string zaman = dr["zaman"].ToString().Trim();
                 ders = new Ders(ad, kod, dagilim);
-                if (zaman != "")
-                {
-                    for (int i = 0; i < frmAna.gunSayisi; i++)
-                        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
-                            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
-                                ders.uygunZamanlar[i, j] = false;
-                }
+                //if (zaman != "")
+                //{
+                //    for (int i = 0; i < frmAna.gunSayisi; i++)
+                //        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+                //            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
+                //                ders.uygunZamanlar[i, j] = false;
+                //}
                 frmAna.dersler.Add(ders);
             }
             dr.Close();
@@ -164,13 +164,13 @@ namespace Ders_Programı_Planlayıcı
                 string kod = dr["sinif_kodu"].ToString().Trim();
                 string zaman = dr["zaman"].ToString().Trim();
                 sinif = new Sinif(ad, kod);
-                if (zaman != "")
-                {
-                    for (int i = 0; i < frmAna.gunSayisi; i++)
-                        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
-                            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
-                                sinif.uygunZamanlar[i, j] = false;
-                }
+                //if (zaman != "")
+                //{
+                //    for (int i = 0; i < frmAna.gunSayisi; i++)
+                //        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+                //            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
+                //                sinif.uygunZamanlar[i, j] = false;
+                //}
                 frmAna.siniflar.Add(sinif);
             }
             dr.Close();
@@ -184,13 +184,13 @@ namespace Ders_Programı_Planlayıcı
                 string kod = dr["derslik_kodu"].ToString().Trim();
                 string zaman = dr["zaman"].ToString().Trim();
                 derslik = new Derslik(ad, kod);
-                if (zaman != "")
-                {
-                    for (int i = 0; i < frmAna.gunSayisi; i++)
-                        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
-                            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
-                                derslik.uygunZamanlar[i, j] = false;
-                }
+                //if (zaman != "")
+                //{
+                //    for (int i = 0; i < frmAna.gunSayisi; i++)
+                //        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+                //            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
+                //                derslik.uygunZamanlar[i, j] = false;
+                //}
                 frmAna.derslikler.Add(derslik);
             }
             dr.Close();
@@ -208,14 +208,14 @@ namespace Ders_Programı_Planlayıcı
                 Color renk = frmAna.renkler[r++];
                 
                 ogretmen = new Ogretmen(ad, soyad, kod, renk);
-                if (zaman != "")
-                {
-                    for (int i = 0; i < frmAna.gunSayisi; i++)
-                        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
-                            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
-                                ogretmen.uygunZamanlar[i, j] = false;
+                //if (zaman != "")
+                //{
+                //    for (int i = 0; i < frmAna.gunSayisi; i++)
+                //        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+                //            if (zaman[i * frmAna.gunlukDersSayisi + j] == '0')
+                //                ogretmen.uygunZamanlar[i, j] = false;
 
-                }
+                //}
                 frmAna.ogretmenler.Add(ogretmen);
             }
             dr.Close();

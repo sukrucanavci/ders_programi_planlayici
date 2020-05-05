@@ -454,16 +454,17 @@ namespace Ders_Programı_Planlayıcı
                         }
                     digerEklenemeyenBlogaGec:;
                     }
-                    if (counter > 100)
+                    if (counter > 500)
                     {
                         break;
                     }
                 }
-                if (counter>100)
+                if (counter > 100)
                 {
                     anafonktur++;
                     AnaFonk();
                     return;
+                    //break;
                 }
 
             }
@@ -953,8 +954,6 @@ namespace Ders_Programı_Planlayıcı
             }
             else if (e.Button == MouseButtons.Left && tlpSiniflar.Cursor != Cursors.Arrow)
             {
-                //MessageBox.Show(tlpSiniflar.Width + " ");
-
                 var ctl = tlpSiniflar.GetChildAtPoint(e.Location);
 
                 if (ctl is null)
@@ -971,7 +970,7 @@ namespace Ders_Programı_Planlayıcı
                         }
                         catch (Exception)
                         {
-
+                            
                         }
                         if (tlpCol != null)
                         {
@@ -986,19 +985,31 @@ namespace Ders_Programı_Planlayıcı
                         }
                         catch (Exception)
                         {
-
+                            
                         }
                         if (tlpRow != null)
                         {
                             break;
                         }
                     }
-                    if (true)
+
+                    try
+                    {
+                        if (tlpSiniflar.GetControlFromPosition(tlpCol.Column, 1) != null && tlpSiniflar.GetControlFromPosition(0, tlpRow.Row) != null)
+                        {
+                            if (tlpSiniflar.GetControlFromPosition(tlpCol.Column, 1).BackColor == Color.Lime &&
+                                tlpSiniflar.GetControlFromPosition(0, tlpRow.Row).BackColor == Color.Lime)
+                            {
+                                tlpSiniflar.Controls.Add(seciliDB.kartlar[0], tlpCol.Column, tlpRow.Row);
+                                LabelleriBeyazlat();
+                            }
+                        }
+                    }
+                    catch (Exception)
                     {
 
                     }
-                    tlpSiniflar.Controls.Add(seciliDB.kartlar[0], tlpCol.Column, tlpRow.Row);
-                    LabelleriBeyazlat();
+
                     //seciliDB.kartlar[0].Margin = new Padding(0);
                     tlpSiniflar.SuspendLayout();
                 }
