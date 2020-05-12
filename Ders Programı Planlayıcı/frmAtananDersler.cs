@@ -46,7 +46,7 @@ namespace Ders_Programı_Planlayıcı
                         dvDerslikler += drslk.ad + " ";
 
                     dgwAtananDersler.Rows.Add(ders.kod, ders.ad, dvOgretmenler, dvSiniflar, atananDers.dagilimSekli, dvDerslikler);
-                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().kart.BackColor;
+                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().atananDers.ogretmenler[0].renk;
                     sayac++;
 
                     hashTable.Add(dgwAtananDersler.Rows[dgwAtananDersler.Rows.Count-1], atananDers);
@@ -102,7 +102,7 @@ namespace Ders_Programı_Planlayıcı
                         dvDerslikler += drslk.ad + " ";
 
                     dgwAtananDersler.Rows.Add(atananDers.ders.kod, atananDers.ders.ad, dvOgretmenler, dvSiniflar, atananDers.dagilimSekli, dvDerslikler);
-                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().kart.BackColor; sayac++;
+                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().atananDers.ogretmenler[0].renk; sayac++;
 
                     hashTable.Add(dgwAtananDersler.Rows[dgwAtananDersler.Rows.Count - 1], atananDers);
                 }
@@ -157,7 +157,7 @@ namespace Ders_Programı_Planlayıcı
                         dvDerslikler += drslik.ad + " ";
 
                     dgwAtananDersler.Rows.Add(atananDers.ders.kod, atananDers.ders.ad, dvOgretmenler, dvSiniflar, atananDers.dagilimSekli, dvDerslikler);
-                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().kart.BackColor; sayac++;
+                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().atananDers.ogretmenler[0].renk; sayac++;
                    
                     hashTable.Add(dgwAtananDersler.Rows[dgwAtananDersler.Rows.Count - 1], atananDers);
                 }
@@ -212,7 +212,8 @@ namespace Ders_Programı_Planlayıcı
                         dvDerslikler += drslk.ad + " ";
 
                     dgwAtananDersler.Rows.Add(atananDers.ders.kod, atananDers.ders.ad, dvOgretmenler, dvSiniflar, atananDers.dagilimSekli, dvDerslikler);
-                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().kart.BackColor; sayac++;
+                    dgwAtananDersler.Rows[sayac].Cells[0].Style.BackColor = frmAna.dersBloklari.Where(db => db.atananDers == atananDers).First().atananDers.ogretmenler[0].renk;
+                    sayac++;
 
                     hashTable.Add(dgwAtananDersler.Rows[dgwAtananDersler.Rows.Count - 1], atananDers);
                 }

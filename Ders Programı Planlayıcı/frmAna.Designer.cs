@@ -44,19 +44,8 @@
             this.lblEtiket = new System.Windows.Forms.Label();
             this.tpAnaMenu = new System.Windows.Forms.TabPage();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tsbYeni = new System.Windows.Forms.ToolStripButton();
-            this.tsbKaydet = new System.Windows.Forms.ToolStripButton();
-            this.tsbOnizle = new System.Windows.Forms.ToolStripButton();
-            this.tsbVeritabani = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbDersler = new System.Windows.Forms.ToolStripButton();
-            this.tsbSiniflar = new System.Windows.Forms.ToolStripButton();
-            this.tsbDerslikler = new System.Windows.Forms.ToolStripButton();
-            this.tsbOgretmenler = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbOnceKontrol = new System.Windows.Forms.ToolStripButton();
-            this.tsbPlanlama = new System.Windows.Forms.ToolStripButton();
-            this.tsbSonraKontrol = new System.Windows.Forms.ToolStripButton();
             this.tabMenu = new System.Windows.Forms.TabControl();
             this.lblTur = new System.Windows.Forms.Label();
             this.lblBasari = new System.Windows.Forms.Label();
@@ -66,8 +55,19 @@
             this.tpDerslikler = new System.Windows.Forms.TabPage();
             this.tpOgretmenler = new System.Windows.Forms.TabPage();
             this.tpSiniflar = new System.Windows.Forms.TabPage();
-            this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
             this.dgwGunler3 = new System.Windows.Forms.TabControl();
+            this.tsbYeni = new System.Windows.Forms.ToolStripButton();
+            this.tsbKaydet = new System.Windows.Forms.ToolStripButton();
+            this.tsbOnizle = new System.Windows.Forms.ToolStripButton();
+            this.tsbVeritabani = new System.Windows.Forms.ToolStripButton();
+            this.tsbDersler = new System.Windows.Forms.ToolStripButton();
+            this.tsbSiniflar = new System.Windows.Forms.ToolStripButton();
+            this.tsbDerslikler = new System.Windows.Forms.ToolStripButton();
+            this.tsbOgretmenler = new System.Windows.Forms.ToolStripButton();
+            this.tsbOnceKontrol = new System.Windows.Forms.ToolStripButton();
+            this.tsbPlanlama = new System.Windows.Forms.ToolStripButton();
+            this.tsbSonraKontrol = new System.Windows.Forms.ToolStripButton();
+            this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
             this.pnlAlt.SuspendLayout();
             this.pnlDersBilgi.SuspendLayout();
             this.tpAnaMenu.SuspendLayout();
@@ -236,149 +236,15 @@
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // tsbYeni
-            // 
-            this.tsbYeni.Image = ((System.Drawing.Image)(resources.GetObject("tsbYeni.Image")));
-            this.tsbYeni.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbYeni.Name = "tsbYeni";
-            this.tsbYeni.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbYeni.Size = new System.Drawing.Size(60, 93);
-            this.tsbYeni.Text = "Yeni";
-            this.tsbYeni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            // 
-            // tsbKaydet
-            // 
-            this.tsbKaydet.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.kaydet32px;
-            this.tsbKaydet.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbKaydet.Name = "tsbKaydet";
-            this.tsbKaydet.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbKaydet.Size = new System.Drawing.Size(79, 93);
-            this.tsbKaydet.Text = "Kaydet";
-            this.tsbKaydet.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbKaydet.ToolTipText = "Verileri veritabanına günceller";
-            // 
-            // tsbOnizle
-            // 
-            this.tsbOnizle.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.onizle32px;
-            this.tsbOnizle.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOnizle.Name = "tsbOnizle";
-            this.tsbOnizle.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbOnizle.Size = new System.Drawing.Size(75, 93);
-            this.tsbOnizle.Text = "Önizle";
-            this.tsbOnizle.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
-            this.tsbOnizle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbOnizle.ToolTipText = "Oluşturulan ders programlarını A4 çıktısı olarak gösterir";
-            // 
-            // tsbVeritabani
-            // 
-            this.tsbVeritabani.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.veritabaniIndir32px;
-            this.tsbVeritabani.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbVeritabani.Name = "tsbVeritabani";
-            this.tsbVeritabani.Size = new System.Drawing.Size(84, 93);
-            this.tsbVeritabani.Text = "Veritabanı ";
-            this.tsbVeritabani.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbVeritabani.ToolTipText = "Veritabanında veri çekmek için pencere açar";
-            this.tsbVeritabani.Click += new System.EventHandler(this.tsbVeritabani_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 96);
             // 
-            // tsbDersler
-            // 
-            this.tsbDersler.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.tsbDersler.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ders32px;
-            this.tsbDersler.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbDersler.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDersler.Name = "tsbDersler";
-            this.tsbDersler.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbDersler.Size = new System.Drawing.Size(80, 93);
-            this.tsbDersler.Text = "Dersler";
-            this.tsbDersler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbDersler.Click += new System.EventHandler(this.tsbDersler_Click);
-            // 
-            // tsbSiniflar
-            // 
-            this.tsbSiniflar.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.sinif32px;
-            this.tsbSiniflar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbSiniflar.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSiniflar.Name = "tsbSiniflar";
-            this.tsbSiniflar.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbSiniflar.Size = new System.Drawing.Size(79, 93);
-            this.tsbSiniflar.Text = "Sınıflar";
-            this.tsbSiniflar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbSiniflar.Click += new System.EventHandler(this.tsbSiniflar_Click);
-            // 
-            // tsbDerslikler
-            // 
-            this.tsbDerslikler.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.derslik32px;
-            this.tsbDerslikler.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbDerslikler.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDerslikler.Name = "tsbDerslikler";
-            this.tsbDerslikler.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbDerslikler.Size = new System.Drawing.Size(95, 93);
-            this.tsbDerslikler.Text = "Derslikler";
-            this.tsbDerslikler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbDerslikler.Click += new System.EventHandler(this.tsbDerslikler_Click);
-            // 
-            // tsbOgretmenler
-            // 
-            this.tsbOgretmenler.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ogretmen32px;
-            this.tsbOgretmenler.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbOgretmenler.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOgretmenler.Name = "tsbOgretmenler";
-            this.tsbOgretmenler.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbOgretmenler.Size = new System.Drawing.Size(117, 93);
-            this.tsbOgretmenler.Text = "Öğretmenler";
-            this.tsbOgretmenler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbOgretmenler.Click += new System.EventHandler(this.tsbOgretmenler_Click);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 96);
-            // 
-            // tsbOnceKontrol
-            // 
-            this.tsbOnceKontrol.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.onkontrol32px;
-            this.tsbOnceKontrol.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbOnceKontrol.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbOnceKontrol.Name = "tsbOnceKontrol";
-            this.tsbOnceKontrol.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbOnceKontrol.Size = new System.Drawing.Size(195, 93);
-            this.tsbOnceKontrol.Text = "Planlama Öncesi Kontrol";
-            this.tsbOnceKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbOnceKontrol.ToolTipText = "Otomatik planlama öncesinde verilerin doğruluğu hakkınnda ön kontrol gerçekleştir" +
-    "ir";
-            this.tsbOnceKontrol.Click += new System.EventHandler(this.tsbKontrol_Click);
-            // 
-            // tsbPlanlama
-            // 
-            this.tsbPlanlama.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.algoritma32px;
-            this.tsbPlanlama.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbPlanlama.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPlanlama.Name = "tsbPlanlama";
-            this.tsbPlanlama.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbPlanlama.Size = new System.Drawing.Size(215, 93);
-            this.tsbPlanlama.Text = "Otomatik Planlamayı Başlat";
-            this.tsbPlanlama.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbPlanlama.ToolTipText = "Otomatik ders planlamayı başlatır";
-            this.tsbPlanlama.Click += new System.EventHandler(this.tsbPlanlama_Click);
-            // 
-            // tsbSonraKontrol
-            // 
-            this.tsbSonraKontrol.CheckOnClick = true;
-            this.tsbSonraKontrol.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.sonraKontrol32px;
-            this.tsbSonraKontrol.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbSonraKontrol.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSonraKontrol.Name = "tsbSonraKontrol";
-            this.tsbSonraKontrol.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbSonraKontrol.Size = new System.Drawing.Size(199, 93);
-            this.tsbSonraKontrol.Text = "Planlama Sonrası Kontrol";
-            this.tsbSonraKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbSonraKontrol.ToolTipText = "Otomatik ders planlamayı başlatır";
-            this.tsbSonraKontrol.Click += new System.EventHandler(this.tsbSonraKontrol_Click);
             // 
             // tabMenu
             // 
@@ -469,24 +335,6 @@
             this.tpSiniflar.Text = "Sınıflar";
             this.tpSiniflar.UseVisualStyleBackColor = true;
             // 
-            // tlpSiniflar
-            // 
-            this.tlpSiniflar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpSiniflar.AutoScroll = true;
-            this.tlpSiniflar.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tlpSiniflar.ColumnCount = 1;
-            this.tlpSiniflar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpSiniflar.Location = new System.Drawing.Point(0, 0);
-            this.tlpSiniflar.Name = "tlpSiniflar";
-            this.tlpSiniflar.RowCount = 1;
-            this.tlpSiniflar.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpSiniflar.Size = new System.Drawing.Size(1353, 365);
-            this.tlpSiniflar.TabIndex = 15;
-            this.tlpSiniflar.Text = "DBLayoutPanel";
-            this.tlpSiniflar.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tlpSiniflar_MouseClick);
-            // 
             // dgwGunler3
             // 
             this.dgwGunler3.Alignment = System.Windows.Forms.TabAlignment.Left;
@@ -501,6 +349,159 @@
             this.dgwGunler3.SelectedIndex = 0;
             this.dgwGunler3.Size = new System.Drawing.Size(1382, 373);
             this.dgwGunler3.TabIndex = 3;
+            // 
+            // tsbYeni
+            // 
+            this.tsbYeni.Image = ((System.Drawing.Image)(resources.GetObject("tsbYeni.Image")));
+            this.tsbYeni.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbYeni.Name = "tsbYeni";
+            this.tsbYeni.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbYeni.Size = new System.Drawing.Size(60, 93);
+            this.tsbYeni.Text = "Yeni";
+            this.tsbYeni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            // 
+            // tsbKaydet
+            // 
+            this.tsbKaydet.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.kaydet32px;
+            this.tsbKaydet.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbKaydet.Name = "tsbKaydet";
+            this.tsbKaydet.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbKaydet.Size = new System.Drawing.Size(79, 93);
+            this.tsbKaydet.Text = "Kaydet";
+            this.tsbKaydet.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbKaydet.ToolTipText = "Verileri veritabanına günceller";
+            // 
+            // tsbOnizle
+            // 
+            this.tsbOnizle.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.onizle32px;
+            this.tsbOnizle.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOnizle.Name = "tsbOnizle";
+            this.tsbOnizle.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbOnizle.Size = new System.Drawing.Size(75, 93);
+            this.tsbOnizle.Text = "Önizle";
+            this.tsbOnizle.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
+            this.tsbOnizle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbOnizle.ToolTipText = "Oluşturulan ders programlarını A4 çıktısı olarak gösterir";
+            this.tsbOnizle.Click += new System.EventHandler(this.tsbOnizle_Click);
+            // 
+            // tsbVeritabani
+            // 
+            this.tsbVeritabani.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.veritabaniIndir32px;
+            this.tsbVeritabani.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbVeritabani.Name = "tsbVeritabani";
+            this.tsbVeritabani.Size = new System.Drawing.Size(84, 93);
+            this.tsbVeritabani.Text = "Veritabanı ";
+            this.tsbVeritabani.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbVeritabani.ToolTipText = "Veritabanında veri çekmek için pencere açar";
+            this.tsbVeritabani.Click += new System.EventHandler(this.tsbVeritabani_Click);
+            // 
+            // tsbDersler
+            // 
+            this.tsbDersler.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.tsbDersler.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ders32px;
+            this.tsbDersler.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbDersler.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDersler.Name = "tsbDersler";
+            this.tsbDersler.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbDersler.Size = new System.Drawing.Size(80, 93);
+            this.tsbDersler.Text = "Dersler";
+            this.tsbDersler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbDersler.Click += new System.EventHandler(this.tsbDersler_Click);
+            // 
+            // tsbSiniflar
+            // 
+            this.tsbSiniflar.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.sinif32px;
+            this.tsbSiniflar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbSiniflar.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSiniflar.Name = "tsbSiniflar";
+            this.tsbSiniflar.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbSiniflar.Size = new System.Drawing.Size(79, 93);
+            this.tsbSiniflar.Text = "Sınıflar";
+            this.tsbSiniflar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbSiniflar.Click += new System.EventHandler(this.tsbSiniflar_Click);
+            // 
+            // tsbDerslikler
+            // 
+            this.tsbDerslikler.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.derslik32px;
+            this.tsbDerslikler.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbDerslikler.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDerslikler.Name = "tsbDerslikler";
+            this.tsbDerslikler.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbDerslikler.Size = new System.Drawing.Size(95, 93);
+            this.tsbDerslikler.Text = "Derslikler";
+            this.tsbDerslikler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbDerslikler.Click += new System.EventHandler(this.tsbDerslikler_Click);
+            // 
+            // tsbOgretmenler
+            // 
+            this.tsbOgretmenler.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ogretmen32px;
+            this.tsbOgretmenler.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbOgretmenler.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOgretmenler.Name = "tsbOgretmenler";
+            this.tsbOgretmenler.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbOgretmenler.Size = new System.Drawing.Size(117, 93);
+            this.tsbOgretmenler.Text = "Öğretmenler";
+            this.tsbOgretmenler.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbOgretmenler.Click += new System.EventHandler(this.tsbOgretmenler_Click);
+            // 
+            // tsbOnceKontrol
+            // 
+            this.tsbOnceKontrol.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.onkontrol32px;
+            this.tsbOnceKontrol.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbOnceKontrol.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbOnceKontrol.Name = "tsbOnceKontrol";
+            this.tsbOnceKontrol.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbOnceKontrol.Size = new System.Drawing.Size(195, 93);
+            this.tsbOnceKontrol.Text = "Planlama Öncesi Kontrol";
+            this.tsbOnceKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbOnceKontrol.ToolTipText = "Otomatik planlama öncesinde verilerin doğruluğu hakkınnda ön kontrol gerçekleştir" +
+    "ir";
+            this.tsbOnceKontrol.Click += new System.EventHandler(this.tsbKontrol_Click);
+            // 
+            // tsbPlanlama
+            // 
+            this.tsbPlanlama.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.algoritma32px;
+            this.tsbPlanlama.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbPlanlama.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbPlanlama.Name = "tsbPlanlama";
+            this.tsbPlanlama.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbPlanlama.Size = new System.Drawing.Size(215, 93);
+            this.tsbPlanlama.Text = "Otomatik Planlamayı Başlat";
+            this.tsbPlanlama.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbPlanlama.ToolTipText = "Otomatik ders planlamayı başlatır";
+            this.tsbPlanlama.Click += new System.EventHandler(this.tsbPlanlama_Click);
+            // 
+            // tsbSonraKontrol
+            // 
+            this.tsbSonraKontrol.CheckOnClick = true;
+            this.tsbSonraKontrol.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.sonraKontrol32px;
+            this.tsbSonraKontrol.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbSonraKontrol.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSonraKontrol.Name = "tsbSonraKontrol";
+            this.tsbSonraKontrol.Padding = new System.Windows.Forms.Padding(10);
+            this.tsbSonraKontrol.Size = new System.Drawing.Size(199, 93);
+            this.tsbSonraKontrol.Text = "Planlama Sonrası Kontrol";
+            this.tsbSonraKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbSonraKontrol.ToolTipText = "Otomatik ders planlamayı başlatır";
+            this.tsbSonraKontrol.Click += new System.EventHandler(this.tsbSonraKontrol_Click);
+            // 
+            // tlpSiniflar
+            // 
+            this.tlpSiniflar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpSiniflar.AutoScroll = true;
+            this.tlpSiniflar.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tlpSiniflar.ColumnCount = 1;
+            this.tlpSiniflar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpSiniflar.Location = new System.Drawing.Point(0, 3);
+            this.tlpSiniflar.Name = "tlpSiniflar";
+            this.tlpSiniflar.RowCount = 1;
+            this.tlpSiniflar.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpSiniflar.Size = new System.Drawing.Size(1353, 362);
+            this.tlpSiniflar.TabIndex = 15;
+            this.tlpSiniflar.Text = "DBLayoutPanel";
+            this.tlpSiniflar.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tlpSiniflar_MouseClick);
             // 
             // frmAna
             // 

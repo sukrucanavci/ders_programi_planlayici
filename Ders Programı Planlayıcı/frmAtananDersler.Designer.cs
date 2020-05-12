@@ -141,6 +141,8 @@
             // 
             this.dgwAtananDersler.AllowUserToAddRows = false;
             this.dgwAtananDersler.AllowUserToDeleteRows = false;
+            this.dgwAtananDersler.AllowUserToResizeColumns = false;
+            this.dgwAtananDersler.AllowUserToResizeRows = false;
             this.dgwAtananDersler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));

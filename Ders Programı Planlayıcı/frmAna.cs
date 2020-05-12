@@ -530,7 +530,6 @@ namespace Ders_Programı_Planlayıcı
 
         void TLPWorker()
         {
-
             tlpSiniflar.Invoke((MethodInvoker)delegate {
 
                 tlpSiniflar.Hide();
@@ -1032,6 +1031,12 @@ namespace Ders_Programı_Planlayıcı
             {
                 tlpSiniflar.GetControlFromPosition(j + 1, 1).BackColor = Color.White;
             }
+        }
+
+        private void tsbOnizle_Click(object sender, EventArgs e)
+        {
+            frmDersProgramiCiktisi fdpc = new frmDersProgramiCiktisi();
+            fdpc.ShowDialog();
         }
     }
 }
