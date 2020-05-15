@@ -30,6 +30,8 @@ namespace Ders_Programı_Planlayıcı
             //wordApp.Selection.Font.Size = 12;
             //wordApp.Selection.Font.Name = "Arial";
 
+            #region Üst kısım
+
             objDoc = wordApp.Documents.Add(ref objMissing);
             Word.Paragraph p1 = objDoc.Content.Paragraphs.Add(ref objMissing);
             p1.Range.Text = "HAFTALIK DERS PROGRAMI";
@@ -78,29 +80,35 @@ namespace Ders_Programı_Planlayıcı
             p6.Format.SpaceAfter = 12;
             p6.Range.InsertParagraphAfter();
 
+            #endregion
+
+            #region Ders programı
+
 
             Word.Range wordRange = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Table tablo = objDoc.Tables.Add(wordRange, frmAna.gunSayisi+1, frmAna.gunlukDersSayisi+1, ref objMissing, ref objMissing);
+            Word.Table tablo = objDoc.Tables.Add(wordRange, frmAna.gunSayisi + 1, frmAna.gunlukDersSayisi + 1, ref objMissing, ref objMissing);
             tablo.Range.ParagraphFormat.SpaceAfter = 12;
+            tablo.Range.Font.Size = 10;
+            tablo.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+            tablo.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
 
             for (int i = 0; i < frmAna.gunlukDersSayisi; i++)
             {
-                tablo.Cell(1, i + 2).Range.Text = (i+1).ToString();
+                tablo.Cell(1, i + 2).Range.Text = (i + 1).ToString();
 
                 for (int j = 0; j < frmAna.gunSayisi; j++)
                 {
-                    if (i == 0)
-                    {
-                        tablo.Cell(j + 2, i).Range.Text = frmAna.secilenGunler[j];
-                    }
-                    else
-                    {
-                        tablo.Cell(j + 2, i + 1).Range.Text = "A";
-                    }
+                    tablo.Cell(j + 2, i + 2).Range.Text = "A";
                 }
             }
 
-            tablo.Range.Font.Size = 10;
+            for (int j = 0; j < frmAna.gunSayisi; j++)
+            {
+                tablo.Cell(j + 2, 1).Range.Text = frmAna.secilenGunler[j];
+            }
+
+
+            #endregion
 
         }
     }

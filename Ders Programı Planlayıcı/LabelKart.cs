@@ -89,12 +89,12 @@ namespace Ders_Programı_Planlayıcı
                 frmAna.LabelleriBeyazlat();
                 frmAna.seciliDB = db;
 
-                foreach (var kart in db.kartlar)
+                foreach (var kart in db.sinifKartlar)
                 {
-                    frmAna.flpDersEtiketleri.Controls.Add(kart);
+                    frmAna.flpSiniflar.Controls.Add(kart);
                     kart.Hide();
                 }
-                
+
                 Dock = DockStyle.None;
                 this.Show();
 
@@ -159,7 +159,7 @@ namespace Ders_Programı_Planlayıcı
                     }
                 }
             }
-            else if(this.Parent == frmAna.flpDersEtiketleri)
+            else if (this.Parent == frmAna.flpSiniflar)
             {
                 frmAna.seciliDB = db;
 
@@ -202,6 +202,124 @@ namespace Ders_Programı_Planlayıcı
                     }
                 }
             }
+            //else if (this.Parent == frmAna.tlpOgretmenler)
+            //{
+            //    frmAna.LabelleriBeyazlat();
+            //    frmAna.seciliDB = db; //BUG
+
+            //    foreach (var kart in db.ogretmenKartlar)
+            //    {
+            //        frmAna.flpOgretmenler.Controls.Add(kart);
+            //        kart.Hide();
+            //    }
+
+            //    Dock = DockStyle.None;
+            //    this.Show();
+
+
+            //    this.Margin = new Padding(1);
+
+            //    Bitmap bmp = new Bitmap(30, 30);
+            //    using (Graphics gfx = Graphics.FromImage(bmp))
+            //    //kod tekrarı
+            //    using (SolidBrush brush = new SolidBrush(db.atananDers.ogretmenler[0].renk))
+            //    {
+            //        gfx.FillRectangle(brush, 0, 0, 30, 30);
+            //        if (Text.Length > 3)
+            //        {
+            //            RectangleF rectf = new RectangleF(0, 0, 30, 30);
+            //            gfx.DrawString(Text, Font, Brushes.Black, rectf);
+            //        }
+            //        else
+            //        {
+            //            StringFormat sf = new StringFormat();
+            //            sf.LineAlignment = StringAlignment.Center;
+            //            sf.Alignment = StringAlignment.Center;
+            //            PointF pf = new PointF(15, 15);
+            //            gfx.DrawString(Text, Font, Brushes.Black, pf, sf);
+            //        }
+            //    }
+            //    frmAna.tlpOgretmenler.Cursor = CreateCursor(bmp, 5, 5);
+
+            //    for (int i = db.saat; i < db.saat + db.uzunluk; i++)
+            //    {
+            //        foreach (var derslik in db.atananDers.derslikler)
+            //        { derslik.bosSaatler[db.gun, i] = true; }
+
+            //        foreach (var ogretmen in db.atananDers.ogretmenler)
+            //        { ogretmen.bosSaatler[db.gun, i] = true; }
+
+            //        foreach (var sinif in db.atananDers.siniflar)
+            //        { sinif.bosSaatler[db.gun, i] = true; }
+            //    }
+
+            //    int s = ((db.gun * frmAna.gunlukDersSayisi) + db.saat);
+            //    foreach (var ogretmen in db.atananDers.ogretmenler)
+            //    {
+            //        for (int i = s; i < s + db.uzunluk; i++)
+            //            frmAna.dbSinif[frmAna.ogretmenler.IndexOf(ogretmen), i] = null;
+            //    }
+
+            //    for (int i = 0; i < frmAna.gunSayisi; i++)
+            //    {
+            //        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+            //        {
+            //            if (j + db.uzunluk > frmAna.gunlukDersSayisi) { continue; }
+
+            //            if (frmAna.BosZamanlariKontrolEt(db, i, j))
+            //            {
+            //                foreach (var ogretmen in db.atananDers.ogretmenler)
+            //                {
+            //                    frmAna.tlpOgretmenler.GetControlFromPosition(0, frmAna.ogretmenler.IndexOf(ogretmen) + 2).BackColor = Color.Lime;
+            //                    frmAna.tlpOgretmenler.GetControlFromPosition(i * frmAna.gunlukDersSayisi + j + 1, 1).BackColor = Color.Lime;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //else if (this.Parent == frmAna.flpOgretmenler)
+            //{
+            //    frmAna.seciliDB = db; //BUG
+
+            //    Bitmap bmp = new Bitmap(30, 30);
+            //    using (Graphics gfx = Graphics.FromImage(bmp))
+            //    using (SolidBrush brush = new SolidBrush(db.atananDers.ogretmenler[0].renk))
+            //    {
+            //        gfx.FillRectangle(brush, 0, 0, 30, 30);
+            //        if (Text.Length > 3)
+            //        {
+            //            RectangleF rectf = new RectangleF(0, 0, 30, 30);
+            //            gfx.DrawString(Text, Font, Brushes.Black, rectf);
+            //        }
+            //        else
+            //        {
+            //            StringFormat sf = new StringFormat();
+            //            sf.LineAlignment = StringAlignment.Center;
+            //            sf.Alignment = StringAlignment.Center;
+            //            PointF pf = new PointF(15, 15);
+            //            gfx.DrawString(Text, Font, Brushes.Black, pf, sf);
+            //        }
+            //    }
+            //    frmAna.tlpOgretmenler.Cursor = CreateCursor(bmp, 5, 5);
+
+            //    //yeşil yapma olayı
+            //    for (int i = 0; i < frmAna.gunSayisi; i++)
+            //    {
+            //        for (int j = 0; j < frmAna.gunlukDersSayisi; j++)
+            //        {
+            //            if (j + db.uzunluk > frmAna.gunlukDersSayisi) { continue; }
+
+            //            if (frmAna.BosZamanlariKontrolEt(db, i, j))
+            //            {
+            //                foreach (var ogretmen in db.atananDers.ogretmenler)
+            //                {
+            //                    frmAna.tlpOgretmenler.GetControlFromPosition(0, frmAna.ogretmenler.IndexOf(ogretmen) + 2).BackColor = Color.Lime;
+            //                    frmAna.tlpOgretmenler.GetControlFromPosition(i * frmAna.gunlukDersSayisi + j + 1, 1).BackColor = Color.Lime;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         void Kart_Paint(object sender, PaintEventArgs e)
