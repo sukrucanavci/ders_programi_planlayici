@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAna));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pnlAlt = new System.Windows.Forms.Panel();
+            this.flpDerslikler = new System.Windows.Forms.FlowLayoutPanel();
             this.lvwBasarisizlar = new System.Windows.Forms.ListView();
             this.clmnKayit = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmnTanimlama = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -65,13 +65,12 @@
             this.lblMax = new System.Windows.Forms.Label();
             this.tpDersCizelgesi = new System.Windows.Forms.TabPage();
             this.tpDerslikler = new System.Windows.Forms.TabPage();
-            this.tpOgretmenler = new System.Windows.Forms.TabPage();
-            this.tpSiniflar = new System.Windows.Forms.TabPage();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.flpDerslikler = new System.Windows.Forms.FlowLayoutPanel();
-            this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
-            this.tlpOgretmenler = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
             this.tlpDerslikler = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
+            this.tpOgretmenler = new System.Windows.Forms.TabPage();
+            this.tlpOgretmenler = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
+            this.tpSiniflar = new System.Windows.Forms.TabPage();
+            this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.pnlAlt.SuspendLayout();
             this.pnlDersBilgi.SuspendLayout();
             this.tpAnaMenu.SuspendLayout();
@@ -105,6 +104,15 @@
             this.pnlAlt.Name = "pnlAlt";
             this.pnlAlt.Size = new System.Drawing.Size(1382, 139);
             this.pnlAlt.TabIndex = 2;
+            // 
+            // flpDerslikler
+            // 
+            this.flpDerslikler.AutoScroll = true;
+            this.flpDerslikler.BackColor = System.Drawing.Color.White;
+            this.flpDerslikler.Location = new System.Drawing.Point(959, 6);
+            this.flpDerslikler.Name = "flpDerslikler";
+            this.flpDerslikler.Size = new System.Drawing.Size(214, 130);
+            this.flpDerslikler.TabIndex = 16;
             // 
             // lvwBasarisizlar
             // 
@@ -254,13 +262,15 @@
             // 
             // tsbYeni
             // 
-            this.tsbYeni.Image = ((System.Drawing.Image)(resources.GetObject("tsbYeni.Image")));
+            this.tsbYeni.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.yeni32px;
             this.tsbYeni.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbYeni.Name = "tsbYeni";
             this.tsbYeni.Padding = new System.Windows.Forms.Padding(10);
             this.tsbYeni.Size = new System.Drawing.Size(60, 93);
             this.tsbYeni.Text = "Yeni";
             this.tsbYeni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.tsbYeni.ToolTipText = "Yeni veritabanı oluşturur";
+            this.tsbYeni.Click += new System.EventHandler(this.tsbYeni_Click);
             // 
             // tsbKaydet
             // 
@@ -271,7 +281,8 @@
             this.tsbKaydet.Size = new System.Drawing.Size(79, 93);
             this.tsbKaydet.Text = "Kaydet";
             this.tsbKaydet.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbKaydet.ToolTipText = "Verileri veritabanına günceller";
+            this.tsbKaydet.ToolTipText = "Verileri veritabanında günceller";
+            this.tsbKaydet.Click += new System.EventHandler(this.tsbKaydet_Click);
             // 
             // tsbOnizle
             // 
@@ -283,7 +294,7 @@
             this.tsbOnizle.Text = "Önizle";
             this.tsbOnizle.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.tsbOnizle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbOnizle.ToolTipText = "Oluşturulan ders programlarını A4 çıktısı olarak gösterir";
+            this.tsbOnizle.ToolTipText = "Oluşturulan ders programlarınızın çıktısını alır";
             this.tsbOnizle.Click += new System.EventHandler(this.tsbOnizle_Click);
             // 
             // tsbVeritabani
@@ -468,6 +479,23 @@
             this.tpDerslikler.Text = "Derslikler";
             this.tpDerslikler.UseVisualStyleBackColor = true;
             // 
+            // tlpDerslikler
+            // 
+            this.tlpDerslikler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpDerslikler.AutoScroll = true;
+            this.tlpDerslikler.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tlpDerslikler.ColumnCount = 1;
+            this.tlpDerslikler.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpDerslikler.Location = new System.Drawing.Point(0, 1);
+            this.tlpDerslikler.Name = "tlpDerslikler";
+            this.tlpDerslikler.RowCount = 1;
+            this.tlpDerslikler.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpDerslikler.Size = new System.Drawing.Size(1353, 362);
+            this.tlpDerslikler.TabIndex = 17;
+            this.tlpDerslikler.Text = "DBLayoutPanel";
+            // 
             // tpOgretmenler
             // 
             this.tpOgretmenler.Controls.Add(this.tlpOgretmenler);
@@ -478,6 +506,23 @@
             this.tpOgretmenler.Text = "Öğretmenler";
             this.tpOgretmenler.UseVisualStyleBackColor = true;
             // 
+            // tlpOgretmenler
+            // 
+            this.tlpOgretmenler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpOgretmenler.AutoScroll = true;
+            this.tlpOgretmenler.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tlpOgretmenler.ColumnCount = 1;
+            this.tlpOgretmenler.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpOgretmenler.Location = new System.Drawing.Point(0, 1);
+            this.tlpOgretmenler.Name = "tlpOgretmenler";
+            this.tlpOgretmenler.RowCount = 1;
+            this.tlpOgretmenler.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpOgretmenler.Size = new System.Drawing.Size(1353, 362);
+            this.tlpOgretmenler.TabIndex = 16;
+            this.tlpOgretmenler.Text = "DBLayoutPanel";
+            // 
             // tpSiniflar
             // 
             this.tpSiniflar.Controls.Add(this.tlpSiniflar);
@@ -487,32 +532,6 @@
             this.tpSiniflar.TabIndex = 0;
             this.tpSiniflar.Text = "Sınıflar";
             this.tpSiniflar.UseVisualStyleBackColor = true;
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Alignment = System.Windows.Forms.TabAlignment.Left;
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tpSiniflar);
-            this.tabControl1.Controls.Add(this.tpOgretmenler);
-            this.tabControl1.Controls.Add(this.tpDerslikler);
-            this.tabControl1.Controls.Add(this.tpDersCizelgesi);
-            this.tabControl1.Location = new System.Drawing.Point(10, 141);
-            this.tabControl1.Multiline = true;
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1382, 373);
-            this.tabControl1.TabIndex = 3;
-            // 
-            // flpDerslikler
-            // 
-            this.flpDerslikler.AutoScroll = true;
-            this.flpDerslikler.BackColor = System.Drawing.Color.White;
-            this.flpDerslikler.Location = new System.Drawing.Point(959, 6);
-            this.flpDerslikler.Name = "flpDerslikler";
-            this.flpDerslikler.Size = new System.Drawing.Size(214, 130);
-            this.flpDerslikler.TabIndex = 16;
             // 
             // tlpSiniflar
             // 
@@ -532,39 +551,22 @@
             this.tlpSiniflar.Text = "DBLayoutPanel";
             this.tlpSiniflar.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tlpSiniflar_MouseClick);
             // 
-            // tlpOgretmenler
+            // tabControl1
             // 
-            this.tlpOgretmenler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabControl1.Alignment = System.Windows.Forms.TabAlignment.Left;
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpOgretmenler.AutoScroll = true;
-            this.tlpOgretmenler.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tlpOgretmenler.ColumnCount = 1;
-            this.tlpOgretmenler.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOgretmenler.Location = new System.Drawing.Point(0, 1);
-            this.tlpOgretmenler.Name = "tlpOgretmenler";
-            this.tlpOgretmenler.RowCount = 1;
-            this.tlpOgretmenler.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOgretmenler.Size = new System.Drawing.Size(1353, 362);
-            this.tlpOgretmenler.TabIndex = 16;
-            this.tlpOgretmenler.Text = "DBLayoutPanel";
-            // 
-            // tlpDerslikler
-            // 
-            this.tlpDerslikler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpDerslikler.AutoScroll = true;
-            this.tlpDerslikler.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tlpDerslikler.ColumnCount = 1;
-            this.tlpDerslikler.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpDerslikler.Location = new System.Drawing.Point(0, 1);
-            this.tlpDerslikler.Name = "tlpDerslikler";
-            this.tlpDerslikler.RowCount = 1;
-            this.tlpDerslikler.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDerslikler.Size = new System.Drawing.Size(1353, 362);
-            this.tlpDerslikler.TabIndex = 17;
-            this.tlpDerslikler.Text = "DBLayoutPanel";
+            this.tabControl1.Controls.Add(this.tpSiniflar);
+            this.tabControl1.Controls.Add(this.tpOgretmenler);
+            this.tabControl1.Controls.Add(this.tpDerslikler);
+            this.tabControl1.Controls.Add(this.tpDersCizelgesi);
+            this.tabControl1.Location = new System.Drawing.Point(10, 141);
+            this.tabControl1.Multiline = true;
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(1382, 373);
+            this.tabControl1.TabIndex = 3;
             // 
             // frmAna
             // 

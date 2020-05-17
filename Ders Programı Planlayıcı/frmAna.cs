@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace Ders_Programı_Planlayıcı
 {
@@ -180,6 +182,12 @@ namespace Ders_Programı_Planlayıcı
 
         #region Fields and Properties
 
+        public static string server;
+        public static string veritabani;
+        public static string kullaniciAdi;
+        public static string sifre;
+        public static bool winAuto;
+
         public static bool ogleArasiVar = false;
         public static bool ogleArasiBlokDersleriBolebilir = true;
         public static int ogleArasiKacinciDerstenSonra = 4;
@@ -235,7 +243,7 @@ namespace Ders_Programı_Planlayıcı
         #endregion
 
         public static DataTable dtDersSaatleri;
-        frmParametre frmParametre = new frmParametre();
+        public static frmParametre frmParametre = new frmParametre();
         public static DersBlogu seciliDB = null;
 
         public frmAna()
@@ -1266,6 +1274,301 @@ namespace Ders_Programı_Planlayıcı
         {
             frmDersProgramiCiktisi fdpc = new frmDersProgramiCiktisi();
             fdpc.ShowDialog();
+        }
+
+        private void tsbKaydet_Click(object sender, EventArgs e)
+        {
+            string girilenVeritabaniAdi = Interaction.InputBox("Veritabanı Adı", "Veritabanına Kaydet", veritabani, Screen.PrimaryScreen.Bounds.Width/2-250, Screen.PrimaryScreen.Bounds.Height/2-100);
+
+            try
+            {
+                SqlConnection baglanti = new SqlConnection();
+
+                if (winAuto)
+                {
+                    baglanti.ConnectionString = @"Server=" + server + ";Database=" +
+                        veritabani + ";User Id=" + kullaniciAdi + ";Password=" + sifre;
+                }
+                else
+                {
+                    baglanti.ConnectionString = @"Server=" + server + ";Database=" +
+                        veritabani + ";Integrated Security=true";
+                }
+
+                baglanti.Open();
+                if (baglanti.State != ConnectionState.Open)
+                {
+                    return;
+                }
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = baglanti;
+
+                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(baglanti))
+                {
+                    bulkCopy.DestinationTableName = "dbo.ders_saatleri";
+                    try
+                    {
+
+                        cmd.CommandText = "delete from ders_saatleri";
+                        cmd.ExecuteNonQuery();
+                        bulkCopy.WriteToServer(dtDersSaatleri);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+
+                cmd.CommandText = "delete from siniflar";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from ogretmenler";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from derslikler";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from dersler";
+                cmd.ExecuteNonQuery();
+
+                foreach (Sinif sinif in siniflar)
+                {
+                    cmd.CommandText = "insert into siniflar values(@sinif_kodu,@ad,@zaman)";
+                    cmd.Parameters.AddWithValue("@sinif_kodu", sinif.kod);
+                    cmd.Parameters.AddWithValue("@ad", sinif.ad);
+                    string zaman = "";
+                    for (int i = 0; i < gunSayisi; i++)
+                    {
+                        for (int j = 0; j < gunlukDersSayisi; j++)
+                        {
+                            if (sinif.uygunZamanlar[i, j] == false)
+                            {
+                                zaman += "0";
+                            }
+                            else
+                            {
+                                zaman += "1";
+                            }
+                        }
+                    }
+                    cmd.Parameters.AddWithValue("@zaman", zaman);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+
+                foreach (Ogretmen ogretmen in ogretmenler)
+                {
+                    cmd.CommandText = "insert into ogretmenler values(@ogretmen_kodu,@ad,@soyad,@zaman)";
+                    cmd.Parameters.AddWithValue("@ogretmen_kodu", ogretmen.kod);
+                    cmd.Parameters.AddWithValue("@ad", ogretmen.ad);
+                    cmd.Parameters.AddWithValue("@soyad", ogretmen.soyad);
+                    string zaman = "";
+                    for (int i = 0; i < gunSayisi; i++)
+                    {
+                        for (int j = 0; j < gunlukDersSayisi; j++)
+                        {
+                            if (ogretmen.uygunZamanlar[i, j] == false)
+                            {
+                                zaman += "0";
+                            }
+                            else
+                            {
+                                zaman += "1";
+                            }
+                        }
+                    }
+                    cmd.Parameters.AddWithValue("@zaman", zaman);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+
+                foreach (Derslik derslik in derslikler)
+                {
+                    cmd.CommandText = "insert into derslikler values(@derslik_kodu,@ad,@zaman)";
+                    cmd.Parameters.AddWithValue("@derslik_kodu", derslik.kod);
+                    cmd.Parameters.AddWithValue("@ad", derslik.ad);
+                    string zaman = "";
+                    for (int i = 0; i < gunSayisi; i++)
+                    {
+                        for (int j = 0; j < gunlukDersSayisi; j++)
+                        {
+                            if (derslik.uygunZamanlar[i, j] == false)
+                            {
+                                zaman += "0";
+                            }
+                            else
+                            {
+                                zaman += "1";
+                            }
+                        }
+                    }
+                    cmd.Parameters.AddWithValue("@zaman", zaman);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+
+                foreach (Ders ders in dersler)
+                {
+                    cmd.CommandText = "insert into dersler values(@ders_kodu,@ad,@dagilim_sekli,@zaman)";
+                    cmd.Parameters.AddWithValue("@ders_kodu", ders.kod);
+                    cmd.Parameters.AddWithValue("@ad", ders.ad);
+                    cmd.Parameters.AddWithValue("@dagilim_sekli", ders.dagilimSekli);
+                    string zaman = "";
+                    for (int i = 0; i < gunSayisi; i++)
+                    {
+                        for (int j = 0; j < gunlukDersSayisi; j++)
+                        {
+                            if (ders.uygunZamanlar[i, j] == false)
+                            {
+                                zaman += "0";
+                            }
+                            else
+                            {
+                                zaman += "1";
+                            }
+                        }
+                    }
+                    cmd.Parameters.AddWithValue("@zaman", zaman);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+
+                cmd.CommandText = "delete from atanan_dersler";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from ad_siniflar";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from ad_ogretmenler";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from ad_derslikler";
+                cmd.ExecuteNonQuery();
+
+                foreach (AtananDers ad in atananDersler)
+                {
+                    cmd.CommandText = "insert into atanan_dersler(ders_kodu, dagilim_sekli) values(@ders_kodu,@dagilim_sekli)";
+                    cmd.Parameters.AddWithValue("@ders_kodu", ad.ders.kod);
+                    cmd.Parameters.AddWithValue("@dagilim_sekli", ad.dagilimSekli);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+
+                    cmd.CommandText = "select max(ad_ID) from atanan_dersler";
+                    int ad_ID = Convert.ToInt16(cmd.ExecuteScalar());
+
+                    foreach (Sinif sinif in ad.siniflar)
+                    {
+                        cmd.CommandText = "insert into ad_siniflar values(@ad_ID, @sinif_kodu)";
+                        cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
+                        cmd.Parameters.AddWithValue("@sinif_kodu", sinif.kod);
+                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
+                    }
+
+                    foreach (Ogretmen ogretmen in ad.ogretmenler)
+                    {
+                        cmd.CommandText = "insert into ad_ogretmenler values(@ad_ID, @ogretmen_kodu)";
+                        cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
+                        cmd.Parameters.AddWithValue("@ogretmen_kodu", ogretmen.kod);
+                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
+                    }
+
+                    foreach (Derslik derslik in ad.derslikler)
+                    {
+                        cmd.CommandText = "insert into ad_siniflar values(@ad_ID, @sinif_kodu)";
+                        cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
+                        cmd.Parameters.AddWithValue("@sinif_kodu", derslik.kod);
+                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
+                    }
+                }
+
+                MessageBox.Show("Veritabanındaki değişiklikler tamamlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void tsbYeni_Click(object sender, EventArgs e)
+        {
+            string girilenVeritabaniAdi = "";
+            bool kontrol = true;
+
+            while (kontrol)
+            {
+                if (girilenVeritabaniAdi.Length < 3)
+                {
+                    girilenVeritabaniAdi = Interaction.InputBox("Veritabanı Adı", "Yeni Oluştur", "",
+                        Screen.PrimaryScreen.Bounds.Width / 2 - 250, Screen.PrimaryScreen.Bounds.Height / 2 - 100);
+
+                    DialogResult result = MessageBox.Show("Veritabanı adının uzunluğu 3'ten küçük olamaz!", "Uyarı", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                    if (result == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    kontrol = false;
+                }
+            }
+
+            SqlConnection baglanti = new SqlConnection("Server = localhost; database = master; integrated security = true");
+            baglanti.Open();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = baglanti;
+
+            cmd.CommandText = "CREATE DATABASE " + girilenVeritabaniAdi;
+            cmd.ExecuteNonQuery();
+            baglanti.Close();
+
+            baglanti.ConnectionString = "Server = localhost; database = " + girilenVeritabaniAdi + "; integrated security = true";
+            baglanti.Open();
+
+            cmd.CommandText = "CREATE TABLE ad_derslikler (ad_ID int NOT NULL,derslik_kodu nvarchar(10) NOT NULL )";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE ad_ogretmenler (ad_ID int NOT NULL,ogretmen_kodu nvarchar(10) NOT NULL )";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE ad_siniflar (ad_ID int NOT NULL,sinif_kodu nvarchar(10) NOT NULL )";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE atanan_dersler ( ad_ID  int  IDENTITY(1, 1) NOT NULL, ders_kodu  nvarchar(10) NOT NULL, " +
+                "dagilim_sekli nvarchar(50) NOT NULL, CONSTRAINT[PK_atanan_dersler] PRIMARY KEY CLUSTERED ([ad_ID] ASC))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE ders_saatleri(ders_saati int NOT NULL, baslangic time(7) NULL,bitis time(7) NULL)";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE dersler (ders_kodu nvarchar(10) NOT NULL, ad nvarchar(50) NOT NULL," +
+                "dagilim_sekli nvarchar(50) NULL,zaman nvarchar(40) NULL,CONSTRAINT[PK_dersler] PRIMARY KEY CLUSTERED(ders_kodu ASC))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE derslikler(derslik_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL," +
+                "zaman nvarchar(40) NULL,CONSTRAINT[PK_derslikler] PRIMARY KEY CLUSTERED(derslik_kodu ASC))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE ogretmenler(ogretmen_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL," +
+                "soyad nvarchar(50) NOT NULL,zaman nvarchar(40) NULL,CONSTRAINT[PK_ogretmenler] PRIMARY KEY CLUSTERED(ogretmen_kodu ASC))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "CREATE TABLE siniflar(sinif_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL,zaman nvarchar(40) NULL," +
+                "CONSTRAINT[PK_siniflar] PRIMARY KEY CLUSTERED(sinif_kodu ASC))";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "ALTER TABLE [dbo].[ad_derslikler]  WITH CHECK ADD  CONSTRAINT [FK_ad_derslikler_atanan_dersler] FOREIGN KEY([ad_ID])REFERENCES[dbo].[atanan_dersler]([ad_ID]);" +
+                "ALTER TABLE[dbo].[ad_derslikler] CHECK CONSTRAINT[FK_ad_derslikler_atanan_dersler];" +
+                "ALTER TABLE[dbo].[ad_derslikler]  WITH CHECK ADD CONSTRAINT[FK_ad_derslikler_derslikler] FOREIGN KEY([derslik_kodu])REFERENCES[dbo].[derslikler]([derslik_kodu]);" +
+                "ALTER TABLE[dbo].[ad_derslikler] CHECK CONSTRAINT[FK_ad_derslikler_derslikler];" +
+                "ALTER TABLE[dbo].[ad_ogretmenler]  WITH CHECK ADD CONSTRAINT[FK_ad_ogretmenler_atanan_dersler] FOREIGN KEY([ad_ID])REFERENCES[dbo].[atanan_dersler]([ad_ID]);" +
+                "ALTER TABLE[dbo].[ad_ogretmenler] CHECK CONSTRAINT[FK_ad_ogretmenler_atanan_dersler];" +
+                "ALTER TABLE[dbo].[ad_ogretmenler]  WITH CHECK ADD CONSTRAINT[FK_ad_ogretmenler_ogretmenler] FOREIGN KEY([ogretmen_kodu])REFERENCES[dbo].[ogretmenler]([ogretmen_kodu]);" +
+                "ALTER TABLE[dbo].[ad_ogretmenler] CHECK CONSTRAINT[FK_ad_ogretmenler_ogretmenler];" +
+                "ALTER TABLE[dbo].[ad_siniflar]  WITH CHECK ADD CONSTRAINT[FK_ad_siniflar_atanan_dersler] FOREIGN KEY([ad_ID])REFERENCES[dbo].[atanan_dersler]([ad_ID]);" +
+                "ALTER TABLE[dbo].[ad_siniflar] CHECK CONSTRAINT[FK_ad_siniflar_atanan_dersler];" +
+                "ALTER TABLE[dbo].[ad_siniflar]  WITH CHECK ADD CONSTRAINT[FK_ad_siniflar_siniflar] FOREIGN KEY([sinif_kodu])REFERENCES[dbo].[siniflar]([sinif_kodu]);" +
+                "ALTER TABLE[dbo].[ad_siniflar] CHECK CONSTRAINT[FK_ad_siniflar_siniflar];" +
+                "ALTER TABLE[dbo].[atanan_dersler]  WITH CHECK ADD CONSTRAINT[FK_atanan_dersler_dersler] FOREIGN KEY([ders_kodu])REFERENCES[dbo].[dersler]([ders_kodu]);" +
+                "ALTER TABLE[dbo].[atanan_dersler] CHECK CONSTRAINT[FK_atanan_dersler_dersler];";
+            cmd.ExecuteNonQuery();
         }
     }
 }

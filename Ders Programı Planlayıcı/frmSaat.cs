@@ -59,7 +59,17 @@ namespace Ders_Programı_Planlayıcı
 
         private void btnSil_Click(object sender, EventArgs e)
         {
+            if (dgwDersSaatleri.SelectedCells[0].RowIndex >= 0)
+            {
 
+            }
+            DataRow dr = frmAna.dtDersSaatleri.Rows[dgwDersSaatleri.SelectedCells[0].RowIndex];
+            dr.Delete();
+            frmAna.dtDersSaatleri.AcceptChanges();
+            frmAna.gunlukDersSayisi = frmAna.dtDersSaatleri.Rows.Count;
+            frmAna.frmParametre.cmbGunlukDersSayisi.SelectedIndex = frmAna.gunlukDersSayisi - 1;
+            
+            //dgwDersSaatleri.DataSource = frmAna.dtDersSaatleri;
         }
 
         private void btnTamam_Click(object sender, EventArgs e)

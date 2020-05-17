@@ -259,5 +259,15 @@ namespace Ders_Programı_Planlayıcı.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap yeni32px {
+            get {
+                object obj = ResourceManager.GetObject("yeni32px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

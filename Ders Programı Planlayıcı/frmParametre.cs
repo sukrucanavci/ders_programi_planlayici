@@ -125,14 +125,33 @@ namespace Ders_Programı_Planlayıcı
 
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = baglanti;
-            baglanti.Open();
+            try
+            {
+                baglanti.Open();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            //
+
+            frmAna.server = txtServerAdresi.Text;
+            frmAna.veritabani = txtVeritabaniAdi.Text;
+            frmAna.kullaniciAdi = txtKullaniciAdi.Text;
+            frmAna.sifre = txtSifre.Text;
+            frmAna.winAuto = rdoWinAuto.Checked;
+
+            //
 
             cmd.CommandText = "SELECT * FROM ders_saatleri";
             SqlDataAdapter sda = new SqlDataAdapter();
             sda.SelectCommand = cmd;
             frmAna.dtDersSaatleri.Clear();
+            frmAna.dtDersSaatleri.Columns.Clear();
             sda.Fill(frmAna.dtDersSaatleri);
             frmAna.gunlukDersSayisi = frmAna.dtDersSaatleri.Rows.Count;
+            cmbGunlukDersSayisi.SelectedIndex = frmAna.gunlukDersSayisi - 1;
 
             cmd.CommandText = "SELECT * FROM dersler";
             SqlDataReader dr = cmd.ExecuteReader();
@@ -220,7 +239,6 @@ namespace Ders_Programı_Planlayıcı
             }
             dr.Close();
 
-
             cmd.CommandText = "SELECT * FROM atanan_dersler";
             dr = cmd.ExecuteReader();
             AtananDers atananDers;
@@ -286,6 +304,7 @@ namespace Ders_Programı_Planlayıcı
                 case 0:
                     tabSihirbaz.SelectedIndex++;
                     btnTamam.Text = "Tamam";
+                    btnGeriDön.Visible = true;
                     break;
                 case 1:
                     if (!veriCekildi)
@@ -303,5 +322,13 @@ namespace Ders_Programı_Planlayıcı
             }
         }
 
+        private void btnGeriDön_Click(object sender, EventArgs e)
+        {
+            if (tabSihirbaz.SelectedIndex == 1)
+            {
+                tabSihirbaz.SelectedIndex = 0;
+                btnGeriDön.Visible = false;
+            }
+        }
     }
 }

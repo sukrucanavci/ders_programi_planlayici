@@ -72,6 +72,8 @@
             // 
             this.dgwDersSaatleri.AllowUserToAddRows = false;
             this.dgwDersSaatleri.AllowUserToDeleteRows = false;
+            this.dgwDersSaatleri.AllowUserToResizeColumns = false;
+            this.dgwDersSaatleri.AllowUserToResizeRows = false;
             this.dgwDersSaatleri.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgwDersSaatleri.BackgroundColor = System.Drawing.Color.White;
             this.dgwDersSaatleri.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -82,7 +84,7 @@
             this.dgwDersSaatleri.RowHeadersVisible = false;
             this.dgwDersSaatleri.RowHeadersWidth = 51;
             this.dgwDersSaatleri.RowTemplate.Height = 24;
-            this.dgwDersSaatleri.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgwDersSaatleri.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgwDersSaatleri.Size = new System.Drawing.Size(383, 353);
             this.dgwDersSaatleri.TabIndex = 6;
             // 

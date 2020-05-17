@@ -56,6 +56,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabSihirbaz = new System.Windows.Forms.TabControl();
+            this.btnGeriDön = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tpVeritabani.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -67,6 +68,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.btnGeriDön);
             this.panel1.Controls.Add(this.btnTamam);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 592);
@@ -155,7 +157,7 @@
             this.txtVeritabaniAdi.Name = "txtVeritabaniAdi";
             this.txtVeritabaniAdi.Size = new System.Drawing.Size(184, 22);
             this.txtVeritabaniAdi.TabIndex = 9;
-            this.txtVeritabaniAdi.Text = "okul";
+            this.txtVeritabaniAdi.Text = "okul2";
             // 
             // txtSifre
             // 
@@ -382,14 +384,26 @@
             // 
             // tabSihirbaz
             // 
-            this.tabSihirbaz.Controls.Add(this.tpParametreler);
             this.tabSihirbaz.Controls.Add(this.tpVeritabani);
+            this.tabSihirbaz.Controls.Add(this.tpParametreler);
             this.tabSihirbaz.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabSihirbaz.Location = new System.Drawing.Point(0, 0);
             this.tabSihirbaz.Name = "tabSihirbaz";
             this.tabSihirbaz.SelectedIndex = 0;
             this.tabSihirbaz.Size = new System.Drawing.Size(979, 592);
             this.tabSihirbaz.TabIndex = 3;
+            // 
+            // btnGeriDön
+            // 
+            this.btnGeriDön.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGeriDön.Location = new System.Drawing.Point(667, 10);
+            this.btnGeriDön.Name = "btnGeriDön";
+            this.btnGeriDön.Size = new System.Drawing.Size(147, 38);
+            this.btnGeriDön.TabIndex = 4;
+            this.btnGeriDön.Text = "Geri Dön";
+            this.btnGeriDön.UseVisualStyleBackColor = true;
+            this.btnGeriDön.Visible = false;
+            this.btnGeriDön.Click += new System.EventHandler(this.btnGeriDön_Click);
             // 
             // frmParametre
             // 
@@ -442,9 +456,10 @@
         private System.Windows.Forms.ComboBox cmbOgleArasiZamani;
         private System.Windows.Forms.Button btnDersSaatleriniDuzenle;
         private System.Windows.Forms.ComboBox cmbGunSayisi;
-        private System.Windows.Forms.ComboBox cmbGunlukDersSayisi;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl tabSihirbaz;
+        private System.Windows.Forms.Button btnGeriDön;
+        public System.Windows.Forms.ComboBox cmbGunlukDersSayisi;
     }
 }
