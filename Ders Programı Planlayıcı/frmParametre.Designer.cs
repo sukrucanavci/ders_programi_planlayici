@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnGeriDön = new System.Windows.Forms.Button();
             this.btnTamam = new System.Windows.Forms.Button();
             this.tpVeritabani = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -40,8 +41,8 @@
             this.txtKullaniciAdi = new System.Windows.Forms.TextBox();
             this.txtServerAdresi = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblSifre = new System.Windows.Forms.Label();
+            this.lblKullaniciAdi = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.tpParametreler = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -56,7 +57,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabSihirbaz = new System.Windows.Forms.TabControl();
-            this.btnGeriDön = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tpVeritabani.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -75,6 +75,18 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(979, 60);
             this.panel1.TabIndex = 1;
+            // 
+            // btnGeriDön
+            // 
+            this.btnGeriDön.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGeriDön.Location = new System.Drawing.Point(667, 10);
+            this.btnGeriDön.Name = "btnGeriDön";
+            this.btnGeriDön.Size = new System.Drawing.Size(147, 38);
+            this.btnGeriDön.TabIndex = 4;
+            this.btnGeriDön.Text = "Geri Dön";
+            this.btnGeriDön.UseVisualStyleBackColor = true;
+            this.btnGeriDön.Visible = false;
+            this.btnGeriDön.Click += new System.EventHandler(this.btnGeriDön_Click);
             // 
             // btnTamam
             // 
@@ -111,8 +123,8 @@
             this.panel3.Controls.Add(this.txtKullaniciAdi);
             this.panel3.Controls.Add(this.txtServerAdresi);
             this.panel3.Controls.Add(this.label6);
-            this.panel3.Controls.Add(this.label5);
-            this.panel3.Controls.Add(this.label4);
+            this.panel3.Controls.Add(this.lblSifre);
+            this.panel3.Controls.Add(this.lblKullaniciAdi);
             this.panel3.Controls.Add(this.label3);
             this.panel3.Location = new System.Drawing.Point(8, 6);
             this.panel3.Name = "panel3";
@@ -128,6 +140,7 @@
             this.rdoSqlServerAuto.TabIndex = 12;
             this.rdoSqlServerAuto.Text = "SQL Server Authentication";
             this.rdoSqlServerAuto.UseVisualStyleBackColor = true;
+            this.rdoSqlServerAuto.CheckedChanged += new System.EventHandler(this.rdoSqlServerAuto_CheckedChanged);
             // 
             // rdoWinAuto
             // 
@@ -161,6 +174,7 @@
             // 
             // txtSifre
             // 
+            this.txtSifre.Enabled = false;
             this.txtSifre.Location = new System.Drawing.Point(578, 101);
             this.txtSifre.Name = "txtSifre";
             this.txtSifre.PasswordChar = '*';
@@ -170,6 +184,7 @@
             // 
             // txtKullaniciAdi
             // 
+            this.txtKullaniciAdi.Enabled = false;
             this.txtKullaniciAdi.Location = new System.Drawing.Point(578, 58);
             this.txtKullaniciAdi.Name = "txtKullaniciAdi";
             this.txtKullaniciAdi.Size = new System.Drawing.Size(184, 22);
@@ -193,32 +208,34 @@
             this.label6.TabIndex = 5;
             this.label6.Text = "Veritabanı Adı";
             // 
-            // label5
+            // lblSifre
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(417, 104);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(37, 17);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Şifre";
+            this.lblSifre.AutoSize = true;
+            this.lblSifre.Enabled = false;
+            this.lblSifre.Location = new System.Drawing.Point(417, 104);
+            this.lblSifre.Name = "lblSifre";
+            this.lblSifre.Size = new System.Drawing.Size(37, 17);
+            this.lblSifre.TabIndex = 4;
+            this.lblSifre.Text = "Şifre";
             // 
-            // label4
+            // lblKullaniciAdi
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(417, 61);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(84, 17);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Kullanıcı Adı";
+            this.lblKullaniciAdi.AutoSize = true;
+            this.lblKullaniciAdi.Enabled = false;
+            this.lblKullaniciAdi.Location = new System.Drawing.Point(417, 61);
+            this.lblKullaniciAdi.Name = "lblKullaniciAdi";
+            this.lblKullaniciAdi.Size = new System.Drawing.Size(84, 17);
+            this.lblKullaniciAdi.TabIndex = 3;
+            this.lblKullaniciAdi.Text = "Kullanıcı Adı";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(21, 23);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(94, 17);
+            this.label3.Size = new System.Drawing.Size(100, 17);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Server Adresi";
+            this.label3.Text = "Sunucu Adresi";
             // 
             // tpParametreler
             // 
@@ -393,18 +410,6 @@
             this.tabSihirbaz.Size = new System.Drawing.Size(979, 592);
             this.tabSihirbaz.TabIndex = 3;
             // 
-            // btnGeriDön
-            // 
-            this.btnGeriDön.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGeriDön.Location = new System.Drawing.Point(667, 10);
-            this.btnGeriDön.Name = "btnGeriDön";
-            this.btnGeriDön.Size = new System.Drawing.Size(147, 38);
-            this.btnGeriDön.TabIndex = 4;
-            this.btnGeriDön.Text = "Geri Dön";
-            this.btnGeriDön.UseVisualStyleBackColor = true;
-            this.btnGeriDön.Visible = false;
-            this.btnGeriDön.Click += new System.EventHandler(this.btnGeriDön_Click);
-            // 
             // frmParametre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -436,16 +441,14 @@
         private System.Windows.Forms.Button btnTamam;
         private System.Windows.Forms.TabPage tpVeritabani;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.RadioButton rdoSqlServerAuto;
-        private System.Windows.Forms.RadioButton rdoWinAuto;
         private System.Windows.Forms.Button btnBaglanVerileriCek;
         private System.Windows.Forms.TextBox txtVeritabaniAdi;
         private System.Windows.Forms.TextBox txtSifre;
         private System.Windows.Forms.TextBox txtKullaniciAdi;
         private System.Windows.Forms.TextBox txtServerAdresi;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblSifre;
+        private System.Windows.Forms.Label lblKullaniciAdi;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tpParametreler;
         private System.Windows.Forms.Panel panel2;
@@ -461,5 +464,7 @@
         private System.Windows.Forms.TabControl tabSihirbaz;
         private System.Windows.Forms.Button btnGeriDön;
         public System.Windows.Forms.ComboBox cmbGunlukDersSayisi;
+        public System.Windows.Forms.RadioButton rdoSqlServerAuto;
+        public System.Windows.Forms.RadioButton rdoWinAuto;
     }
 }

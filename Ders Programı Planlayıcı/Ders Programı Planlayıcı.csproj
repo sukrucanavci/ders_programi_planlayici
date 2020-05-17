@@ -122,6 +122,12 @@
     <Compile Include="frmVeriler.Designer.cs">
       <DependentUpon>frmVeriler.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmYeniDBSunucuGirisi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmYeniDBSunucuGirisi.Designer.cs">
+      <DependentUpon>frmYeniDBSunucuGirisi.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmZamanTablosu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -185,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmVeriler.resx">
       <DependentUpon>frmVeriler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmYeniDBSunucuGirisi.resx">
+      <DependentUpon>frmYeniDBSunucuGirisi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmZamanTablosu.resx">
       <DependentUpon>frmZamanTablosu.cs</DependentUpon>

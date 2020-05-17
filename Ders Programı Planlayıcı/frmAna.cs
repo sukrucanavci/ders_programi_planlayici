@@ -1280,45 +1280,53 @@ namespace Ders_Programı_Planlayıcı
         {
             string girilenVeritabaniAdi = Interaction.InputBox("Veritabanı Adı", "Veritabanına Kaydet", veritabani, Screen.PrimaryScreen.Bounds.Width/2-250, Screen.PrimaryScreen.Bounds.Height/2-100);
 
+            SqlConnection baglanti = new SqlConnection();
+
+            if (winAuto)
+            {
+                baglanti.ConnectionString = @"Server=" + server + ";Database=" + veritabani + ";Integrated Security=true";
+            }
+            else
+            {
+                baglanti.ConnectionString = @"Server=" + server + ";Database=" + veritabani + ";User Id=" + kullaniciAdi + ";Password=" + sifre;
+            }
+
+            baglanti.Open();
+            if (baglanti.State != ConnectionState.Open)
+            {
+                return;
+            }
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = baglanti;
+
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(baglanti))
+            {
+                bulkCopy.DestinationTableName = "dbo.ders_saatleri";
+                try
+                {
+
+                    cmd.CommandText = "delete from ders_saatleri";
+                    cmd.ExecuteNonQuery();
+                    bulkCopy.WriteToServer(dtDersSaatleri);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+    
             try
             {
-                SqlConnection baglanti = new SqlConnection();
+                #region Delete
 
-                if (winAuto)
-                {
-                    baglanti.ConnectionString = @"Server=" + server + ";Database=" +
-                        veritabani + ";User Id=" + kullaniciAdi + ";Password=" + sifre;
-                }
-                else
-                {
-                    baglanti.ConnectionString = @"Server=" + server + ";Database=" +
-                        veritabani + ";Integrated Security=true";
-                }
-
-                baglanti.Open();
-                if (baglanti.State != ConnectionState.Open)
-                {
-                    return;
-                }
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = baglanti;
-
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(baglanti))
-                {
-                    bulkCopy.DestinationTableName = "dbo.ders_saatleri";
-                    try
-                    {
-
-                        cmd.CommandText = "delete from ders_saatleri";
-                        cmd.ExecuteNonQuery();
-                        bulkCopy.WriteToServer(dtDersSaatleri);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-
+                cmd.CommandText = "delete from ad_siniflar";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from ad_ogretmenler";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from ad_derslikler";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "delete from atanan_dersler";
+                cmd.ExecuteNonQuery();
                 cmd.CommandText = "delete from siniflar";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = "delete from ogretmenler";
@@ -1327,6 +1335,8 @@ namespace Ders_Programı_Planlayıcı
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = "delete from dersler";
                 cmd.ExecuteNonQuery();
+
+                #endregion
 
                 foreach (Sinif sinif in siniflar)
                 {
@@ -1430,15 +1440,6 @@ namespace Ders_Programı_Planlayıcı
                     cmd.Parameters.Clear();
                 }
 
-                cmd.CommandText = "delete from atanan_dersler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from ad_siniflar";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from ad_ogretmenler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from ad_derslikler";
-                cmd.ExecuteNonQuery();
-
                 foreach (AtananDers ad in atananDersler)
                 {
                     cmd.CommandText = "insert into atanan_dersler(ders_kodu, dagilim_sekli) values(@ders_kodu,@dagilim_sekli)";
@@ -1479,6 +1480,7 @@ namespace Ders_Programı_Planlayıcı
                 }
 
                 MessageBox.Show("Veritabanındaki değişiklikler tamamlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             }
             catch (Exception ex)
             {
@@ -1488,87 +1490,11 @@ namespace Ders_Programı_Planlayıcı
 
         private void tsbYeni_Click(object sender, EventArgs e)
         {
-            string girilenVeritabaniAdi = "";
-            bool kontrol = true;
 
-            while (kontrol)
+            using (frmYeniDBSunucuGirisi frmSunucuGirisi = new frmYeniDBSunucuGirisi())
             {
-                if (girilenVeritabaniAdi.Length < 3)
-                {
-                    girilenVeritabaniAdi = Interaction.InputBox("Veritabanı Adı", "Yeni Oluştur", "",
-                        Screen.PrimaryScreen.Bounds.Width / 2 - 250, Screen.PrimaryScreen.Bounds.Height / 2 - 100);
-
-                    DialogResult result = MessageBox.Show("Veritabanı adının uzunluğu 3'ten küçük olamaz!", "Uyarı", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
-                    if (result == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    kontrol = false;
-                }
+                frmSunucuGirisi.ShowDialog();
             }
-
-            SqlConnection baglanti = new SqlConnection("Server = localhost; database = master; integrated security = true");
-            baglanti.Open();
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = baglanti;
-
-            cmd.CommandText = "CREATE DATABASE " + girilenVeritabaniAdi;
-            cmd.ExecuteNonQuery();
-            baglanti.Close();
-
-            baglanti.ConnectionString = "Server = localhost; database = " + girilenVeritabaniAdi + "; integrated security = true";
-            baglanti.Open();
-
-            cmd.CommandText = "CREATE TABLE ad_derslikler (ad_ID int NOT NULL,derslik_kodu nvarchar(10) NOT NULL )";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE ad_ogretmenler (ad_ID int NOT NULL,ogretmen_kodu nvarchar(10) NOT NULL )";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE ad_siniflar (ad_ID int NOT NULL,sinif_kodu nvarchar(10) NOT NULL )";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE atanan_dersler ( ad_ID  int  IDENTITY(1, 1) NOT NULL, ders_kodu  nvarchar(10) NOT NULL, " +
-                "dagilim_sekli nvarchar(50) NOT NULL, CONSTRAINT[PK_atanan_dersler] PRIMARY KEY CLUSTERED ([ad_ID] ASC))";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE ders_saatleri(ders_saati int NOT NULL, baslangic time(7) NULL,bitis time(7) NULL)";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE dersler (ders_kodu nvarchar(10) NOT NULL, ad nvarchar(50) NOT NULL," +
-                "dagilim_sekli nvarchar(50) NULL,zaman nvarchar(40) NULL,CONSTRAINT[PK_dersler] PRIMARY KEY CLUSTERED(ders_kodu ASC))";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE derslikler(derslik_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL," +
-                "zaman nvarchar(40) NULL,CONSTRAINT[PK_derslikler] PRIMARY KEY CLUSTERED(derslik_kodu ASC))";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE ogretmenler(ogretmen_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL," +
-                "soyad nvarchar(50) NOT NULL,zaman nvarchar(40) NULL,CONSTRAINT[PK_ogretmenler] PRIMARY KEY CLUSTERED(ogretmen_kodu ASC))";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "CREATE TABLE siniflar(sinif_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL,zaman nvarchar(40) NULL," +
-                "CONSTRAINT[PK_siniflar] PRIMARY KEY CLUSTERED(sinif_kodu ASC))";
-            cmd.ExecuteNonQuery();
-
-            cmd.CommandText = "ALTER TABLE [dbo].[ad_derslikler]  WITH CHECK ADD  CONSTRAINT [FK_ad_derslikler_atanan_dersler] FOREIGN KEY([ad_ID])REFERENCES[dbo].[atanan_dersler]([ad_ID]);" +
-                "ALTER TABLE[dbo].[ad_derslikler] CHECK CONSTRAINT[FK_ad_derslikler_atanan_dersler];" +
-                "ALTER TABLE[dbo].[ad_derslikler]  WITH CHECK ADD CONSTRAINT[FK_ad_derslikler_derslikler] FOREIGN KEY([derslik_kodu])REFERENCES[dbo].[derslikler]([derslik_kodu]);" +
-                "ALTER TABLE[dbo].[ad_derslikler] CHECK CONSTRAINT[FK_ad_derslikler_derslikler];" +
-                "ALTER TABLE[dbo].[ad_ogretmenler]  WITH CHECK ADD CONSTRAINT[FK_ad_ogretmenler_atanan_dersler] FOREIGN KEY([ad_ID])REFERENCES[dbo].[atanan_dersler]([ad_ID]);" +
-                "ALTER TABLE[dbo].[ad_ogretmenler] CHECK CONSTRAINT[FK_ad_ogretmenler_atanan_dersler];" +
-                "ALTER TABLE[dbo].[ad_ogretmenler]  WITH CHECK ADD CONSTRAINT[FK_ad_ogretmenler_ogretmenler] FOREIGN KEY([ogretmen_kodu])REFERENCES[dbo].[ogretmenler]([ogretmen_kodu]);" +
-                "ALTER TABLE[dbo].[ad_ogretmenler] CHECK CONSTRAINT[FK_ad_ogretmenler_ogretmenler];" +
-                "ALTER TABLE[dbo].[ad_siniflar]  WITH CHECK ADD CONSTRAINT[FK_ad_siniflar_atanan_dersler] FOREIGN KEY([ad_ID])REFERENCES[dbo].[atanan_dersler]([ad_ID]);" +
-                "ALTER TABLE[dbo].[ad_siniflar] CHECK CONSTRAINT[FK_ad_siniflar_atanan_dersler];" +
-                "ALTER TABLE[dbo].[ad_siniflar]  WITH CHECK ADD CONSTRAINT[FK_ad_siniflar_siniflar] FOREIGN KEY([sinif_kodu])REFERENCES[dbo].[siniflar]([sinif_kodu]);" +
-                "ALTER TABLE[dbo].[ad_siniflar] CHECK CONSTRAINT[FK_ad_siniflar_siniflar];" +
-                "ALTER TABLE[dbo].[atanan_dersler]  WITH CHECK ADD CONSTRAINT[FK_atanan_dersler_dersler] FOREIGN KEY([ders_kodu])REFERENCES[dbo].[dersler]([ders_kodu]);" +
-                "ALTER TABLE[dbo].[atanan_dersler] CHECK CONSTRAINT[FK_atanan_dersler_dersler];";
-            cmd.ExecuteNonQuery();
         }
     }
 }
