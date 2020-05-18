@@ -230,15 +230,15 @@ namespace Ders_Programı_Planlayıcı
         /// <summary>
         /// Ders bloklarını sınıfa göre tutan matris
         /// </summary>
-        public DersBlogu[,] dbSinif;
+        public static DersBlogu[,] dbSinif;
         /// <summary>
         /// Ders bloklarını öğretmene göre tutan matris
         /// </summary>
-        public DersBlogu[,] dbOgretmen;
+        public static DersBlogu[,] dbOgretmen;
         /// <summary>
         /// Ders bloklarını dersliğe göre tutan matris
         /// </summary>
-        public DersBlogu[,] dbDerslik;
+        public static DersBlogu[,] dbDerslik;
 
         #endregion
 
@@ -548,6 +548,9 @@ namespace Ders_Programı_Planlayıcı
             #endregion
         }
 
+        /// <summary>
+        /// TableLayoutPanel Sınıf
+        /// </summary>
         void TLPSinifWorker()
         {
             tlpSiniflar.Invoke((MethodInvoker)delegate {
@@ -561,7 +564,6 @@ namespace Ders_Programı_Planlayıcı
                 tlpSiniflar.RowStyles.Clear();
                 tlpSiniflar.RowCount = 1;
 
-                //int sutun = gunSayisi * GunlukDersSayisi + 1;
                 int sutun = gunSayisi * GunlukDersSayisi;
                 int w = tlpSiniflar.Width / sutun - 2;
                 for (int i = 0; i < sutun; i++)
@@ -648,6 +650,9 @@ namespace Ders_Programı_Planlayıcı
 
         }
 
+        /// <summary>
+        /// TableLayoutPanel Öğretmen
+        /// </summary>
         void TLPOgretmenWorker()
         {
             tlpOgretmenler.Invoke((MethodInvoker)delegate
@@ -748,6 +753,9 @@ namespace Ders_Programı_Planlayıcı
 
         }
 
+        /// <summary>
+        /// TableLayoutPanel Derslik
+        /// </summary>
         void TLPDerslikWorker()
         {
             tlpDerslikler.Invoke((MethodInvoker)delegate
@@ -1097,6 +1105,244 @@ namespace Ders_Programı_Planlayıcı
         #region Üst Paneldeki kontrol nesnelerinin işlemleri
 
         frmVeriler frmVeriler;
+
+        private void tsbOnizle_Click(object sender, EventArgs e)
+        {
+            frmDersProgramiCiktisi fdpc = new frmDersProgramiCiktisi();
+            fdpc.ShowDialog();
+        }
+
+        private void tsbKaydet_Click(object sender, EventArgs e)
+        {
+            string girilenVeritabaniAdi = Interaction.InputBox("Veritabanı Adı", "Veritabanına Kaydet", "", Screen.PrimaryScreen.Bounds.Width / 2 - 250, Screen.PrimaryScreen.Bounds.Height / 2 - 100);
+            if (girilenVeritabaniAdi.Length < 3)
+            {
+                return;
+            }
+            SqlConnection baglanti = new SqlConnection();
+
+            if (winAuto)
+            {
+                baglanti.ConnectionString = @"Server=" + server + ";Database=" + girilenVeritabaniAdi + ";Integrated Security=true";
+            }
+            else
+            {
+                baglanti.ConnectionString = @"Server=" + server + ";Database=" + girilenVeritabaniAdi + ";User Id=" + kullaniciAdi + ";Password=" + sifre;
+            }
+
+            baglanti.Open();
+            if (baglanti.State != ConnectionState.Open)
+            {
+                return;
+            }
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = baglanti;
+
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(baglanti))
+            {
+                bulkCopy.DestinationTableName = "dbo.ders_saatleri";
+                try
+                {
+
+                    cmd.CommandText = "delete from ders_saatleri";
+                    cmd.ExecuteNonQuery();
+                    bulkCopy.WriteToServer(dtDersSaatleri);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            #region Delete
+
+            cmd.CommandText = "delete from parametreler";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from ad_siniflar";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from ad_ogretmenler";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from ad_derslikler";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from atanan_dersler";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from siniflar";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from ogretmenler";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from derslikler";
+            cmd.ExecuteNonQuery();
+            cmd.CommandText = "delete from dersler";
+            cmd.ExecuteNonQuery();
+
+            #endregion
+
+            cmd.CommandText = "insert into parametreler values(" + gunSayisi + "," + gunlukDersSayisi + ")";
+            cmd.ExecuteNonQuery();
+
+            foreach (Sinif sinif in siniflar)
+            {
+                cmd.CommandText = "insert into siniflar values(@sinif_kodu,@ad,@zaman)";
+                cmd.Parameters.AddWithValue("@sinif_kodu", sinif.kod);
+                cmd.Parameters.AddWithValue("@ad", sinif.ad);
+                string zaman = "";
+                for (int i = 0; i < gunSayisi; i++)
+                {
+                    for (int j = 0; j < gunlukDersSayisi; j++)
+                    {
+                        if (sinif.uygunZamanlar[i, j] == false)
+                        {
+                            zaman += "0";
+                        }
+                        else
+                        {
+                            zaman += "1";
+                        }
+                    }
+                }
+                cmd.Parameters.AddWithValue("@zaman", zaman);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+
+            foreach (Ogretmen ogretmen in ogretmenler)
+            {
+                cmd.CommandText = "insert into ogretmenler values(@ogretmen_kodu,@ad,@soyad,@zaman)";
+                cmd.Parameters.AddWithValue("@ogretmen_kodu", ogretmen.kod);
+                cmd.Parameters.AddWithValue("@ad", ogretmen.ad);
+                cmd.Parameters.AddWithValue("@soyad", ogretmen.soyad);
+                string zaman = "";
+                for (int i = 0; i < gunSayisi; i++)
+                {
+                    for (int j = 0; j < gunlukDersSayisi; j++)
+                    {
+                        if (ogretmen.uygunZamanlar[i, j] == false)
+                        {
+                            zaman += "0";
+                        }
+                        else
+                        {
+                            zaman += "1";
+                        }
+                    }
+                }
+                cmd.Parameters.AddWithValue("@zaman", zaman);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+
+            foreach (Derslik derslik in derslikler)
+            {
+                cmd.CommandText = "insert into derslikler values(@derslik_kodu,@ad,@zaman)";
+                cmd.Parameters.AddWithValue("@derslik_kodu", derslik.kod);
+                cmd.Parameters.AddWithValue("@ad", derslik.ad);
+                string zaman = "";
+                for (int i = 0; i < gunSayisi; i++)
+                {
+                    for (int j = 0; j < gunlukDersSayisi; j++)
+                    {
+                        if (derslik.uygunZamanlar[i, j] == false)
+                        {
+                            zaman += "0";
+                        }
+                        else
+                        {
+                            zaman += "1";
+                        }
+                    }
+                }
+                cmd.Parameters.AddWithValue("@zaman", zaman);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+
+            foreach (Ders ders in dersler)
+            {
+                cmd.CommandText = "insert into dersler values(@ders_kodu,@ad,@dagilim_sekli,@zaman)";
+                cmd.Parameters.AddWithValue("@ders_kodu", ders.kod);
+                cmd.Parameters.AddWithValue("@ad", ders.ad);
+                cmd.Parameters.AddWithValue("@dagilim_sekli", ders.dagilimSekli);
+                string zaman = "";
+                for (int i = 0; i < gunSayisi; i++)
+                {
+                    for (int j = 0; j < gunlukDersSayisi; j++)
+                    {
+                        if (ders.uygunZamanlar[i, j] == false)
+                        {
+                            zaman += "0";
+                        }
+                        else
+                        {
+                            zaman += "1";
+                        }
+                    }
+                }
+                cmd.Parameters.AddWithValue("@zaman", zaman);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+
+            foreach (AtananDers ad in atananDersler)
+            {
+                cmd.CommandText = "insert into atanan_dersler(ders_kodu, dagilim_sekli) values(@ders_kodu,@dagilim_sekli)";
+                cmd.Parameters.AddWithValue("@ders_kodu", ad.ders.kod);
+                cmd.Parameters.AddWithValue("@dagilim_sekli", ad.dagilimSekli);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+
+                cmd.CommandText = "select max(ad_ID) from atanan_dersler";
+                int ad_ID = Convert.ToInt16(cmd.ExecuteScalar());
+
+                foreach (Sinif sinif in ad.siniflar)
+                {
+                    cmd.CommandText = "insert into ad_siniflar values(@ad_ID, @sinif_kodu)";
+                    cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
+                    cmd.Parameters.AddWithValue("@sinif_kodu", sinif.kod);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+
+                foreach (Ogretmen ogretmen in ad.ogretmenler)
+                {
+                    cmd.CommandText = "insert into ad_ogretmenler values(@ad_ID, @ogretmen_kodu)";
+                    cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
+                    cmd.Parameters.AddWithValue("@ogretmen_kodu", ogretmen.kod);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+
+                foreach (Derslik derslik in ad.derslikler)
+                {
+                    cmd.CommandText = "insert into ad_derslikler values(@ad_ID, @derslik_kodu)";
+                    cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
+                    cmd.Parameters.AddWithValue("@derslik_kodu", derslik.kod);
+                    cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                }
+            }
+
+            MessageBox.Show("Veritabanındaki değişiklikler tamamlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void tsbYeni_Click(object sender, EventArgs e)
+        {
+
+            using (frmYeniDBSunucuGirisi frmSunucuGirisi = new frmYeniDBSunucuGirisi())
+            {
+                frmSunucuGirisi.ShowDialog();
+            }
+        }
+
         private void tsbDersler_Click(object sender, EventArgs e)
         {
             frmVeriler = new frmVeriler(frmVeriler.Islem.Ders);
@@ -1270,231 +1516,6 @@ namespace Ders_Programı_Planlayıcı
             }
         }
 
-        private void tsbOnizle_Click(object sender, EventArgs e)
-        {
-            frmDersProgramiCiktisi fdpc = new frmDersProgramiCiktisi();
-            fdpc.ShowDialog();
-        }
 
-        private void tsbKaydet_Click(object sender, EventArgs e)
-        {
-            string girilenVeritabaniAdi = Interaction.InputBox("Veritabanı Adı", "Veritabanına Kaydet", veritabani, Screen.PrimaryScreen.Bounds.Width/2-250, Screen.PrimaryScreen.Bounds.Height/2-100);
-
-            SqlConnection baglanti = new SqlConnection();
-
-            if (winAuto)
-            {
-                baglanti.ConnectionString = @"Server=" + server + ";Database=" + veritabani + ";Integrated Security=true";
-            }
-            else
-            {
-                baglanti.ConnectionString = @"Server=" + server + ";Database=" + veritabani + ";User Id=" + kullaniciAdi + ";Password=" + sifre;
-            }
-
-            baglanti.Open();
-            if (baglanti.State != ConnectionState.Open)
-            {
-                return;
-            }
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = baglanti;
-
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(baglanti))
-            {
-                bulkCopy.DestinationTableName = "dbo.ders_saatleri";
-                try
-                {
-
-                    cmd.CommandText = "delete from ders_saatleri";
-                    cmd.ExecuteNonQuery();
-                    bulkCopy.WriteToServer(dtDersSaatleri);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-    
-            try
-            {
-                #region Delete
-
-                cmd.CommandText = "delete from ad_siniflar";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from ad_ogretmenler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from ad_derslikler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from atanan_dersler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from siniflar";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from ogretmenler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from derslikler";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "delete from dersler";
-                cmd.ExecuteNonQuery();
-
-                #endregion
-
-                foreach (Sinif sinif in siniflar)
-                {
-                    cmd.CommandText = "insert into siniflar values(@sinif_kodu,@ad,@zaman)";
-                    cmd.Parameters.AddWithValue("@sinif_kodu", sinif.kod);
-                    cmd.Parameters.AddWithValue("@ad", sinif.ad);
-                    string zaman = "";
-                    for (int i = 0; i < gunSayisi; i++)
-                    {
-                        for (int j = 0; j < gunlukDersSayisi; j++)
-                        {
-                            if (sinif.uygunZamanlar[i, j] == false)
-                            {
-                                zaman += "0";
-                            }
-                            else
-                            {
-                                zaman += "1";
-                            }
-                        }
-                    }
-                    cmd.Parameters.AddWithValue("@zaman", zaman);
-                    cmd.ExecuteNonQuery();
-                    cmd.Parameters.Clear();
-                }
-
-                foreach (Ogretmen ogretmen in ogretmenler)
-                {
-                    cmd.CommandText = "insert into ogretmenler values(@ogretmen_kodu,@ad,@soyad,@zaman)";
-                    cmd.Parameters.AddWithValue("@ogretmen_kodu", ogretmen.kod);
-                    cmd.Parameters.AddWithValue("@ad", ogretmen.ad);
-                    cmd.Parameters.AddWithValue("@soyad", ogretmen.soyad);
-                    string zaman = "";
-                    for (int i = 0; i < gunSayisi; i++)
-                    {
-                        for (int j = 0; j < gunlukDersSayisi; j++)
-                        {
-                            if (ogretmen.uygunZamanlar[i, j] == false)
-                            {
-                                zaman += "0";
-                            }
-                            else
-                            {
-                                zaman += "1";
-                            }
-                        }
-                    }
-                    cmd.Parameters.AddWithValue("@zaman", zaman);
-                    cmd.ExecuteNonQuery();
-                    cmd.Parameters.Clear();
-                }
-
-                foreach (Derslik derslik in derslikler)
-                {
-                    cmd.CommandText = "insert into derslikler values(@derslik_kodu,@ad,@zaman)";
-                    cmd.Parameters.AddWithValue("@derslik_kodu", derslik.kod);
-                    cmd.Parameters.AddWithValue("@ad", derslik.ad);
-                    string zaman = "";
-                    for (int i = 0; i < gunSayisi; i++)
-                    {
-                        for (int j = 0; j < gunlukDersSayisi; j++)
-                        {
-                            if (derslik.uygunZamanlar[i, j] == false)
-                            {
-                                zaman += "0";
-                            }
-                            else
-                            {
-                                zaman += "1";
-                            }
-                        }
-                    }
-                    cmd.Parameters.AddWithValue("@zaman", zaman);
-                    cmd.ExecuteNonQuery();
-                    cmd.Parameters.Clear();
-                }
-
-                foreach (Ders ders in dersler)
-                {
-                    cmd.CommandText = "insert into dersler values(@ders_kodu,@ad,@dagilim_sekli,@zaman)";
-                    cmd.Parameters.AddWithValue("@ders_kodu", ders.kod);
-                    cmd.Parameters.AddWithValue("@ad", ders.ad);
-                    cmd.Parameters.AddWithValue("@dagilim_sekli", ders.dagilimSekli);
-                    string zaman = "";
-                    for (int i = 0; i < gunSayisi; i++)
-                    {
-                        for (int j = 0; j < gunlukDersSayisi; j++)
-                        {
-                            if (ders.uygunZamanlar[i, j] == false)
-                            {
-                                zaman += "0";
-                            }
-                            else
-                            {
-                                zaman += "1";
-                            }
-                        }
-                    }
-                    cmd.Parameters.AddWithValue("@zaman", zaman);
-                    cmd.ExecuteNonQuery();
-                    cmd.Parameters.Clear();
-                }
-
-                foreach (AtananDers ad in atananDersler)
-                {
-                    cmd.CommandText = "insert into atanan_dersler(ders_kodu, dagilim_sekli) values(@ders_kodu,@dagilim_sekli)";
-                    cmd.Parameters.AddWithValue("@ders_kodu", ad.ders.kod);
-                    cmd.Parameters.AddWithValue("@dagilim_sekli", ad.dagilimSekli);
-                    cmd.ExecuteNonQuery();
-                    cmd.Parameters.Clear();
-
-                    cmd.CommandText = "select max(ad_ID) from atanan_dersler";
-                    int ad_ID = Convert.ToInt16(cmd.ExecuteScalar());
-
-                    foreach (Sinif sinif in ad.siniflar)
-                    {
-                        cmd.CommandText = "insert into ad_siniflar values(@ad_ID, @sinif_kodu)";
-                        cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
-                        cmd.Parameters.AddWithValue("@sinif_kodu", sinif.kod);
-                        cmd.ExecuteNonQuery();
-                        cmd.Parameters.Clear();
-                    }
-
-                    foreach (Ogretmen ogretmen in ad.ogretmenler)
-                    {
-                        cmd.CommandText = "insert into ad_ogretmenler values(@ad_ID, @ogretmen_kodu)";
-                        cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
-                        cmd.Parameters.AddWithValue("@ogretmen_kodu", ogretmen.kod);
-                        cmd.ExecuteNonQuery();
-                        cmd.Parameters.Clear();
-                    }
-
-                    foreach (Derslik derslik in ad.derslikler)
-                    {
-                        cmd.CommandText = "insert into ad_siniflar values(@ad_ID, @sinif_kodu)";
-                        cmd.Parameters.AddWithValue("@ad_ID", ad_ID);
-                        cmd.Parameters.AddWithValue("@sinif_kodu", derslik.kod);
-                        cmd.ExecuteNonQuery();
-                        cmd.Parameters.Clear();
-                    }
-                }
-
-                MessageBox.Show("Veritabanındaki değişiklikler tamamlandı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void tsbYeni_Click(object sender, EventArgs e)
-        {
-
-            using (frmYeniDBSunucuGirisi frmSunucuGirisi = new frmYeniDBSunucuGirisi())
-            {
-                frmSunucuGirisi.ShowDialog();
-            }
-        }
     }
 }

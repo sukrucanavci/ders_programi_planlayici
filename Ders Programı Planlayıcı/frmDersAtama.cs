@@ -148,7 +148,7 @@ namespace Ders_Programı_Planlayıcı
             List<Ogretmen> ogretmenler = new List<Ogretmen>();
             List<Sinif> siniflar = new List<Sinif>();
             List<Derslik> derslikler = new List<Derslik>();
-            int atananDersUzunlugu = int.Parse(cmbDagilim.Text);
+            int atananDersUzunlugu = int.Parse(cmbDagilim.Text);//BUG
 
             foreach (var item in lstOgretmenler.SelectedItems)
                 foreach (var ogrtmn in frmAna.ogretmenler)

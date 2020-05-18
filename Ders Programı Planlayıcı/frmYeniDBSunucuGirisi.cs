@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Ders_Programı_Planlayıcı
@@ -66,6 +59,9 @@ namespace Ders_Programı_Planlayıcı
                 return;
             }
 
+            cmd.CommandText = "CREATE TABLE parametreler (gun_sayisi int NOT NULL,gunluk_ders_sayisi int NOT NULL )";
+            cmd.ExecuteNonQuery();
+
             cmd.CommandText = "CREATE TABLE ad_derslikler (ad_ID int NOT NULL,derslik_kodu nvarchar(10) NOT NULL )";
             cmd.ExecuteNonQuery();
 
@@ -75,7 +71,7 @@ namespace Ders_Programı_Planlayıcı
             cmd.CommandText = "CREATE TABLE ad_siniflar (ad_ID int NOT NULL,sinif_kodu nvarchar(10) NOT NULL )";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "CREATE TABLE atanan_dersler ( ad_ID  int  IDENTITY(1, 1) NOT NULL, ders_kodu  nvarchar(10) NOT NULL, " +
+            cmd.CommandText = "CREATE TABLE atanan_dersler (ad_ID int IDENTITY(1, 1) NOT NULL, ders_kodu  nvarchar(10) NOT NULL, " +
                 "dagilim_sekli nvarchar(50) NOT NULL, CONSTRAINT[PK_atanan_dersler] PRIMARY KEY CLUSTERED ([ad_ID] ASC))";
             cmd.ExecuteNonQuery();
 

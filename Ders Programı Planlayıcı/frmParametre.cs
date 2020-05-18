@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Ders_Programı_Planlayıcı
@@ -142,6 +140,8 @@ namespace Ders_Programı_Planlayıcı
 
             //
 
+
+
             cmd.CommandText = "SELECT * FROM ders_saatleri";
             SqlDataAdapter sda = new SqlDataAdapter();
             sda.SelectCommand = cmd;
@@ -150,6 +150,12 @@ namespace Ders_Programı_Planlayıcı
             sda.Fill(frmAna.dtDersSaatleri);
             frmAna.gunlukDersSayisi = frmAna.dtDersSaatleri.Rows.Count;
             cmbGunlukDersSayisi.SelectedIndex = frmAna.gunlukDersSayisi - 1;
+
+            cmd.CommandText = "select max(gun_sayisi) from parametreler";
+            frmAna.gunSayisi = Convert.ToInt32(cmd.ExecuteScalar());
+
+            cmd.CommandText = "select max(gunluk_ders_sayisi) from parametreler";
+            frmAna.gunlukDersSayisi = Convert.ToInt32(cmd.ExecuteScalar());
 
             cmd.CommandText = "SELECT * FROM dersler";
             SqlDataReader dr = cmd.ExecuteReader();
@@ -295,6 +301,8 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
+        #region Butonlar
+
         private void btnTamam_Click(object sender, EventArgs e)
         {
             switch (tabSihirbaz.SelectedIndex)
@@ -346,5 +354,7 @@ namespace Ders_Programı_Planlayıcı
                 txtSifre.Enabled = false;
             }
         }
+
+        #endregion
     }
 }

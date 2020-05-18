@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -16,100 +12,365 @@ namespace Ders_Programı_Planlayıcı
         public frmDersProgramiCiktisi()
         {
             InitializeComponent();
-            Olustur();
         }
 
-        void Olustur()
+        private void btnOlustur_Click(object sender, EventArgs e)
         {
             Word.Application wordApp = new Word.Application();
             wordApp.Visible = true;
-            Word.Document objDoc;
+            Word.Document doc;
             object objMissing = System.Reflection.Missing.Value;
             object dokumanSonu = "\\endofdoc";
+            doc = wordApp.Documents.Add(ref objMissing);
 
-            //wordApp.Selection.Font.Size = 12;
-            //wordApp.Selection.Font.Name = "Arial";
-
-            #region Üst kısım
-
-            objDoc = wordApp.Documents.Add(ref objMissing);
-            Word.Paragraph p1 = objDoc.Content.Paragraphs.Add(ref objMissing);
-            p1.Range.Text = "HAFTALIK DERS PROGRAMI";
-            p1.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-            p1.Format.SpaceAfter = 12; //Punto cinsinden
-            p1.Range.InsertParagraphAfter();
-
-            object hedef = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Paragraph p2 = objDoc.Content.Paragraphs.Add(ref hedef);
-            string sinifAdi = " ";
-            p2.Range.Text = sinifAdi + " SINIFI";
-            p2.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-            p2.Format.SpaceAfter = 12;
-            p2.Range.InsertParagraphAfter();
-
-            hedef = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Paragraph p3 = objDoc.Content.Paragraphs.Add(ref hedef);
-            string sezonYili = "\t2019/2020 ";
-            string baslangicTarihi = "";
-            p3.Range.Text = sezonYili + " eğitim öğretim yılı, " + baslangicTarihi +
-                " tarihinden itibaren geçerli ders programınız aşağıdaki tabloda gösterilmiştir.";
-            p3.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
-            p3.Format.SpaceAfter = 0;
-            p3.Range.InsertParagraphAfter();
-
-            hedef = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Paragraph p4 = objDoc.Content.Paragraphs.Add(ref hedef);
-            p4.Range.Text = "\tTüm öğrencilerime derslerinde başarılar dilerim.";
-            p4.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
-            p4.Format.SpaceAfter = 12;
-            p4.Range.InsertParagraphAfter();
-
-            hedef = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Paragraph p5 = objDoc.Content.Paragraphs.Add(ref hedef);
-            string isim = "ŞÜKRÜ CAN AVCI";
-            p5.Range.Text = isim;
-            p5.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
-            p5.Format.SpaceAfter = 0;
-            p5.Range.InsertParagraphAfter();
-
-            hedef = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Paragraph p6 = objDoc.Content.Paragraphs.Add(ref hedef);
-            string unvan = "OKUL MÜDÜRÜ";
-            p6.Range.Text = unvan;
-            p6.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
-            p6.Format.SpaceAfter = 12;
-            p6.Range.InsertParagraphAfter();
-
-            #endregion
-
-            #region Ders programı
-
-
-            Word.Range wordRange = objDoc.Bookmarks.get_Item(ref dokumanSonu).Range;
-            Word.Table tablo = objDoc.Tables.Add(wordRange, frmAna.gunSayisi + 1, frmAna.gunlukDersSayisi + 1, ref objMissing, ref objMissing);
-            tablo.Range.ParagraphFormat.SpaceAfter = 12;
-            tablo.Range.Font.Size = 10;
-            tablo.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
-            tablo.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
-
-            for (int i = 0; i < frmAna.gunlukDersSayisi; i++)
+            for (int i = 0; i < frmAna.dbSinif.GetLength(0); i++)
             {
-                tablo.Cell(1, i + 2).Range.Text = (i + 1).ToString();
+                int sayac = 0;
 
-                for (int j = 0; j < frmAna.gunSayisi; j++)
+                #region Üst başlık ve açıklama paragrafı
+
+                Word.Paragraph p1 = doc.Content.Paragraphs.Add(ref objMissing);
+                p1.Range.Text = txtBaslik.Text;
+                p1.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                p1.Format.SpaceAfter = 12; //Punto cinsinden
+                p1.Range.InsertParagraphAfter();
+
+                object hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Paragraph p2 = doc.Content.Paragraphs.Add(ref hedef);
+                string sinifAdi = frmAna.siniflar[i].ad;
+                p2.Range.Text = sinifAdi + " SINIFI";
+                p2.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                p2.Format.SpaceAfter = 12;
+                p2.Range.InsertParagraphAfter();
+
+                hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Paragraph p3 = doc.Content.Paragraphs.Add(ref hedef);
+                p3.Range.Text = txtAciklama.Text;
+                p3.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+                p3.Format.SpaceAfter = 0;
+                p3.Range.InsertParagraphAfter();
+
+                hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Paragraph p4 = doc.Content.Paragraphs.Add(ref hedef);
+                p4.Range.Text = txtOgrencilereMesaj.Text;
+                p4.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+                p4.Format.SpaceAfter = 12;
+                p4.Range.InsertParagraphAfter();
+
+                hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Paragraph p5 = doc.Content.Paragraphs.Add(ref hedef);
+                string isim = txtSorumlu.Text;
+                p5.Range.Text = isim;
+                p5.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
+                p5.Format.SpaceAfter = 0;
+                p5.Range.InsertParagraphAfter();
+
+                hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Paragraph p6 = doc.Content.Paragraphs.Add(ref hedef);
+                string unvan = txtUnvan.Text;
+                p6.Range.Text = unvan;
+                p6.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
+                p6.Format.SpaceAfter = 12;
+                p6.Range.InsertParagraphAfter();
+
+                #endregion
+
+                #region Ders programı tablosu
+
+                Word.Range wordRange = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Table tablo = doc.Tables.Add(wordRange, frmAna.gunSayisi + 1, frmAna.gunlukDersSayisi + 1, ref objMissing, ref objMissing);
+                tablo.Range.ParagraphFormat.SpaceAfter = 0;
+                tablo.Range.Font.Size = 8;
+                tablo.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                tablo.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+
+
+                for (int s = 0; s < frmAna.gunlukDersSayisi; s++)
                 {
-                    tablo.Cell(j + 2, i + 2).Range.Text = "A";
+                    string sutun = (s + 1).ToString() + "\n";
+                    sutun += frmAna.dtDersSaatleri.Rows[s][1].ToString() + "\n" + frmAna.dtDersSaatleri.Rows[s][2].ToString();
+                    tablo.Cell(1, s + 2).Range.Text = sutun;
                 }
+
+                for (int g = 0; g < frmAna.gunSayisi; g++)
+                {
+                    tablo.Cell(g + 2, 1).Range.Text = frmAna.secilenGunler[g];
+                }
+
+                for (int g = 0; g < frmAna.gunSayisi; g++)
+                {
+
+                    for (int s = 0; s < frmAna.gunlukDersSayisi;)
+                    {
+                        if (frmAna.dbSinif[i, sayac] == null)
+                        {
+                            sayac++;
+                            tablo.Cell(g + 2, s + 2).Range.Text = "\n\n";
+                            s++;
+                            continue;
+                        }
+
+                        int uzunluk = frmAna.dbSinif[i, sayac].uzunluk;
+
+                        for (int u = 0; u < uzunluk; u++)
+                        {
+                            string text = frmAna.dbSinif[i, sayac].atananDers.ders.kod + "\n";
+                            foreach (Ogretmen ogretmen in frmAna.dbSinif[i, sayac].atananDers.ogretmenler)
+                            {
+                                text += ogretmen.kod + " ";
+                            }
+                            text += "\n";
+                            foreach (Derslik derslik in frmAna.dbSinif[i, sayac].atananDers.derslikler)
+                            {
+                                text += derslik.kod + " ";
+                            }
+
+                            tablo.Cell(g + 2, s + 2).Range.Text = text;
+                            s++;
+                        }
+                        sayac += uzunluk;
+                    }
+                }
+
+
+
+
+                #endregion
+
+                #region Ders Adı - Toplam Ders Saati - Öğretmen Adı Tablosu
+
+                int dersSayisi = 0;
+
+                SortedList<string, int> dersler = new SortedList<string, int>();
+
+                foreach (AtananDers ad in frmAna.atananDersler)
+                {
+                    if (ad.siniflar.Contains(frmAna.siniflar[i]))
+                    {
+                        dersler.Add(ad.ders.ad, ad.tds);
+                        dersSayisi++;
+                    }
+                }
+
+                hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Paragraph bosluk = doc.Content.Paragraphs.Add(ref hedef);
+                bosluk.Range.Text = "";
+                bosluk.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+                bosluk.Format.SpaceAfter = 12;
+                bosluk.Range.InsertParagraphAfter();
+
+                Word.Range wordRange2 = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+                Word.Table tablo2 = doc.Tables.Add(wordRange2, dersSayisi + 1, 3, ref objMissing, ref objMissing);
+                tablo2.Range.ParagraphFormat.SpaceAfter = 0;
+                tablo2.Range.Font.Size = 8;
+                tablo2.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                tablo2.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+
+                tablo2.Cell(1, 1).Range.Text = "Dersin Adı";
+                tablo2.Cell(1, 2).Range.Text = "Toplam Ders Saati";
+                tablo2.Cell(1, 3).Range.Text = "Öğretmenin Adı";
+
+                for (int d = 0; d < dersSayisi; d++)
+                {
+                    tablo2.Cell(d + 2, 1).Range.Text = dersler.Keys[d];
+                    tablo2.Cell(d + 2, 2).Range.Text = dersler.Values[d].ToString();
+                    string ogretmenler = "";
+
+                    foreach (AtananDers ad in frmAna.atananDersler)
+                    {
+                        if (ad.ders.ad == dersler.Keys[d] && ad.siniflar.Contains(frmAna.siniflar[i]))
+                        {
+                            foreach (Ogretmen ogretmen in ad.ogretmenler)
+                            {
+                                ogretmenler += ogretmen.ad + " " + ogretmen.soyad + "\n";
+                            }
+                            break;
+                        }
+                    }
+                    ogretmenler = ogretmenler.Substring(0, ogretmenler.Length - 1);
+                    tablo2.Cell(d + 2, 3).Range.Text = ogretmenler;
+                }
+
+
+                #endregion
+
+                doc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+
             }
 
-            for (int j = 0; j < frmAna.gunSayisi; j++)
-            {
-                tablo.Cell(j + 2, 1).Range.Text = frmAna.secilenGunler[j];
-            }
+            //for (int i = 0; i < frmAna.dbOgretmen.GetLength(0); i++)
+            //{
+            //    int sayac = 0;
+
+            //    #region Üst başlık ve açıklama paragrafı
+
+            //    Word.Paragraph p1 = doc.Content.Paragraphs.Add(ref objMissing);
+            //    p1.Range.Text = "HAFTALIK DERS PROGRAMI";
+            //    p1.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+            //    p1.Format.SpaceAfter = 12; //Punto cinsinden
+            //    p1.Range.InsertParagraphAfter();
+
+            //    object hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Paragraph p2 = doc.Content.Paragraphs.Add(ref hedef);
+            //    string ogretmenAdSoyad = frmAna.ogretmenler[i].ad + " " + frmAna.ogretmenler[i].soyad;
+            //    p2.Range.Text = "Sayın " + ogretmenAdSoyad;
+            //    p2.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+            //    p2.Format.SpaceAfter = 12;
+            //    p2.Range.InsertParagraphAfter();
+
+            //    hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Paragraph p3 = doc.Content.Paragraphs.Add(ref hedef);
+            //    p3.Range.Text = txtAciklama.Text;
+            //    p3.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+            //    p3.Format.SpaceAfter = 0;
+            //    p3.Range.InsertParagraphAfter();
+
+            //    hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Paragraph p4 = doc.Content.Paragraphs.Add(ref hedef);
+            //    p4.Range.Text = "\t" + txtOgretmenlereMesaj.Text;
+            //    p4.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+            //    p4.Format.SpaceAfter = 12;
+            //    p4.Range.InsertParagraphAfter();
+
+            //    hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Paragraph p5 = doc.Content.Paragraphs.Add(ref hedef);
+            //    string isim = "ŞÜKRÜ CAN AVCI";
+            //    p5.Range.Text = isim;
+            //    p5.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
+            //    p5.Format.SpaceAfter = 0;
+            //    p5.Range.InsertParagraphAfter();
+
+            //    hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Paragraph p6 = doc.Content.Paragraphs.Add(ref hedef);
+            //    string unvan = "OKUL MÜDÜRÜ";
+            //    p6.Range.Text = unvan;
+            //    p6.Alignment = Word.WdParagraphAlignment.wdAlignParagraphRight;
+            //    p6.Format.SpaceAfter = 12;
+            //    p6.Range.InsertParagraphAfter();
+
+            //    #endregion
+
+            //    #region Ders programı tablosu
+
+            //    Word.Range wordRange = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Table tablo = doc.Tables.Add(wordRange, frmAna.gunSayisi + 1, frmAna.gunlukDersSayisi + 1, ref objMissing, ref objMissing);
+            //    tablo.Range.ParagraphFormat.SpaceAfter = 0;
+            //    tablo.Range.Font.Size = 8;
+            //    tablo.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+            //    tablo.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
 
 
-            #endregion
+            //    for (int s = 0; s < frmAna.gunlukDersSayisi; s++)
+            //    {
+            //        string sutun = (s + 1).ToString() + "\n";
+            //        sutun += frmAna.dtDersSaatleri.Rows[s][1].ToString() + "\n" + frmAna.dtDersSaatleri.Rows[s][2].ToString();
+            //        tablo.Cell(1, s + 2).Range.Text = sutun;
+            //    }
 
+            //    for (int g = 0; g < frmAna.gunSayisi; g++)
+            //    {
+            //        tablo.Cell(g + 2, 1).Range.Text = frmAna.secilenGunler[g];
+            //    }
+
+            //    for (int g = 0; g < frmAna.gunSayisi; g++)
+            //    {
+
+            //        for (int s = 0; s < frmAna.gunlukDersSayisi;)
+            //        {
+            //            if (frmAna.dbSinif[i, sayac] == null)
+            //            {
+            //                sayac++;
+            //                tablo.Cell(g + 2, s + 2).Range.Text = "\n\n";
+            //                s++;
+            //                continue;
+            //            }
+
+            //            int uzunluk = frmAna.dbSinif[i, sayac].uzunluk;
+
+            //            for (int u = 0; u < uzunluk; u++)
+            //            {
+            //                string text = frmAna.dbSinif[i, sayac].atananDers.ders.kod + "\n";
+            //                foreach (Ogretmen ogretmen in frmAna.dbSinif[i, sayac].atananDers.ogretmenler)
+            //                {
+            //                    text += ogretmen.kod + " ";
+            //                }
+            //                text += "\n";
+            //                foreach (Derslik derslik in frmAna.dbSinif[i, sayac].atananDers.derslikler)
+            //                {
+            //                    text += derslik.kod + " ";
+            //                }
+
+            //                tablo.Cell(g + 2, s + 2).Range.Text = text;
+            //                s++;
+            //            }
+            //            sayac += uzunluk;
+            //        }
+            //    }
+
+
+
+
+            //    #endregion
+
+            //    #region Ders Adı - Toplam Ders Saati - Öğretmen Adı Tablosu
+
+            //    int dersSayisi = 0;
+
+            //    SortedList<string, int> dersler = new SortedList<string, int>();
+
+            //    foreach (AtananDers ad in frmAna.atananDersler)
+            //    {
+            //        if (ad.siniflar.Contains(frmAna.siniflar[i]))
+            //        {
+            //            dersler.Add(ad.ders.ad, ad.tds);
+            //            dersSayisi++;
+            //        }
+            //    }
+
+            //    hedef = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Paragraph bosluk = doc.Content.Paragraphs.Add(ref hedef);
+            //    bosluk.Range.Text = "";
+            //    bosluk.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+            //    bosluk.Format.SpaceAfter = 12;
+            //    bosluk.Range.InsertParagraphAfter();
+
+            //    Word.Range wordRange2 = doc.Bookmarks.get_Item(ref dokumanSonu).Range;
+            //    Word.Table tablo2 = doc.Tables.Add(wordRange2, dersSayisi + 1, 3, ref objMissing, ref objMissing);
+            //    tablo2.Range.ParagraphFormat.SpaceAfter = 0;
+            //    tablo2.Range.Font.Size = 8;
+            //    tablo2.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+            //    tablo2.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+
+            //    tablo2.Cell(1, 1).Range.Text = "Dersin Adı";
+            //    tablo2.Cell(1, 2).Range.Text = "Toplam Ders Saati";
+            //    tablo2.Cell(1, 3).Range.Text = "Öğretmenin Adı";
+
+            //    for (int d = 0; d < dersSayisi; d++)
+            //    {
+            //        tablo2.Cell(d + 2, 1).Range.Text = dersler.Keys[d];
+            //        tablo2.Cell(d + 2, 2).Range.Text = dersler.Values[d].ToString();
+            //        string ogretmenler = "";
+
+            //        foreach (AtananDers ad in frmAna.atananDersler)
+            //        {
+            //            if (ad.ders.ad == dersler.Keys[d] && ad.siniflar.Contains(frmAna.siniflar[i]))
+            //            {
+            //                foreach (Ogretmen ogretmen in ad.ogretmenler)
+            //                {
+            //                    ogretmenler += ogretmen.ad + " " + ogretmen.soyad + "\n";
+            //                }
+            //                break;
+            //            }
+            //        }
+            //        ogretmenler = ogretmenler.Substring(0, ogretmenler.Length - 1);
+            //        tablo2.Cell(d + 2, 3).Range.Text = ogretmenler;
+            //    }
+
+
+            //    #endregion
+
+            //    doc.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+            //}
         }
     }
 }

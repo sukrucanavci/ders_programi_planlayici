@@ -266,8 +266,8 @@
             this.tsbYeni.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbYeni.Name = "tsbYeni";
             this.tsbYeni.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbYeni.Size = new System.Drawing.Size(60, 93);
-            this.tsbYeni.Text = "Yeni";
+            this.tsbYeni.Size = new System.Drawing.Size(131, 93);
+            this.tsbYeni.Text = "Yeni Veritabanı";
             this.tsbYeni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.tsbYeni.ToolTipText = "Yeni veritabanı oluşturur";
             this.tsbYeni.Click += new System.EventHandler(this.tsbYeni_Click);
@@ -290,8 +290,8 @@
             this.tsbOnizle.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOnizle.Name = "tsbOnizle";
             this.tsbOnizle.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbOnizle.Size = new System.Drawing.Size(75, 93);
-            this.tsbOnizle.Text = "Önizle";
+            this.tsbOnizle.Size = new System.Drawing.Size(80, 93);
+            this.tsbOnizle.Text = "Çıktı Al";
             this.tsbOnizle.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.tsbOnizle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.tsbOnizle.ToolTipText = "Oluşturulan ders programlarınızın çıktısını alır";
@@ -402,7 +402,7 @@
             this.tsbSonraKontrol.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSonraKontrol.Name = "tsbSonraKontrol";
             this.tsbSonraKontrol.Padding = new System.Windows.Forms.Padding(10);
-            this.tsbSonraKontrol.Size = new System.Drawing.Size(199, 93);
+            this.tsbSonraKontrol.Size = new System.Drawing.Size(199, 76);
             this.tsbSonraKontrol.Text = "Planlama Sonrası Kontrol";
             this.tsbSonraKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.tsbSonraKontrol.ToolTipText = "Otomatik ders planlamayı başlatır";
