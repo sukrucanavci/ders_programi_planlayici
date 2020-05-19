@@ -13,6 +13,15 @@ namespace Ders_Programı_Planlayıcı
 
         private void btnBaglan_Click(object sender, EventArgs e)
         {
+            if (txtGun.TextLength <= 0 || txtGunlukDers.TextLength <= 0)
+            {
+                MessageBox.Show("Veritabanının oluşturulabilmesi için tüm boşlukları doldurunuz!");
+                return;
+            }
+
+            //Haftalık Ders Saati
+            int hds = Convert.ToInt32(txtGun.Text) * Convert.ToInt32(txtGunlukDers);
+
             SqlConnection baglanti = new SqlConnection();
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = baglanti;
@@ -59,7 +68,7 @@ namespace Ders_Programı_Planlayıcı
                 return;
             }
 
-            cmd.CommandText = "CREATE TABLE parametreler (gun_sayisi int NOT NULL,gunluk_ders_sayisi int NOT NULL )";
+            cmd.CommandText = "CREATE TABLE parametreler ("+txtGun.Text+" int NOT NULL,"+txtGunlukDers.Text+" int NOT NULL )";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "CREATE TABLE ad_derslikler (ad_ID int NOT NULL,derslik_kodu nvarchar(10) NOT NULL )";
@@ -79,18 +88,18 @@ namespace Ders_Programı_Planlayıcı
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "CREATE TABLE dersler (ders_kodu nvarchar(10) NOT NULL, ad nvarchar(50) NOT NULL," +
-                "dagilim_sekli nvarchar(50) NULL,zaman nvarchar(40) NULL,CONSTRAINT[PK_dersler] PRIMARY KEY CLUSTERED(ders_kodu ASC))";
+                "dagilim_sekli nvarchar(50) NULL,zaman nvarchar("+ hds + ") NULL,CONSTRAINT[PK_dersler] PRIMARY KEY CLUSTERED(ders_kodu ASC))";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "CREATE TABLE derslikler(derslik_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL," +
-                "zaman nvarchar(40) NULL,CONSTRAINT[PK_derslikler] PRIMARY KEY CLUSTERED(derslik_kodu ASC))";
+                "zaman nvarchar(" + hds + ") NULL,CONSTRAINT[PK_derslikler] PRIMARY KEY CLUSTERED(derslik_kodu ASC))";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "CREATE TABLE ogretmenler(ogretmen_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL," +
-                "soyad nvarchar(50) NOT NULL,zaman nvarchar(40) NULL,CONSTRAINT[PK_ogretmenler] PRIMARY KEY CLUSTERED(ogretmen_kodu ASC))";
+                "soyad nvarchar(50) NOT NULL,zaman nvarchar(" + hds + ") NULL,CONSTRAINT[PK_ogretmenler] PRIMARY KEY CLUSTERED(ogretmen_kodu ASC))";
             cmd.ExecuteNonQuery();
 
-            cmd.CommandText = "CREATE TABLE siniflar(sinif_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL,zaman nvarchar(40) NULL," +
+            cmd.CommandText = "CREATE TABLE siniflar(sinif_kodu nvarchar(10) NOT NULL,ad nvarchar(50) NOT NULL,zaman nvarchar(" + hds + ") NULL," +
                 "CONSTRAINT[PK_siniflar] PRIMARY KEY CLUSTERED(sinif_kodu ASC))";
             cmd.ExecuteNonQuery();
 

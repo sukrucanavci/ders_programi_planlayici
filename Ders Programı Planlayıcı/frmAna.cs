@@ -256,7 +256,7 @@ namespace Ders_Programı_Planlayıcı
             tsbOnceKontrol.Text = "Planlama Öncesi\nKontrol";
             tsbPlanlama.Text = "Otomatik Planlamayı\nBaşlat";
             tsbSonraKontrol.Text = "Planlama Sonrası\nKontrol";
-
+            tsbYeni.Text = "Yeni Veritaabanı\nOluştur";
             //Ders saatleri
             dtDersSaatleri = new DataTable("ders_saatleri");
             dtDersSaatleri.Columns.AddRange(new DataColumn[] 
@@ -1516,6 +1516,12 @@ namespace Ders_Programı_Planlayıcı
             }
         }
 
-
+        private void frmAna_Shown(object sender, EventArgs e)
+        {
+            for (int i = tabControl1.TabPages.Count; i >= 0; i--)
+            {
+                tabControl1.SelectedIndex = i;
+            }
+        }
     }
 }

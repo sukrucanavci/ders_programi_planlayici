@@ -587,6 +587,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ders Programı Planlayıcı";
             this.Load += new System.EventHandler(this.frmAna_Load);
+            this.Shown += new System.EventHandler(this.frmAna_Shown);
             this.pnlAlt.ResumeLayout(false);
             this.pnlDersBilgi.ResumeLayout(false);
             this.pnlDersBilgi.PerformLayout();

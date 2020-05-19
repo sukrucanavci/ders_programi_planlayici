@@ -32,7 +32,7 @@ namespace Ders_Programı_Planlayıcı
             cmbOgleArasiZamani.SelectedIndex = 3;
         }
 
-        #region Parametreler
+        #region Parametre İşlemleri
 
         private void cmbGunSayisi_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -153,9 +153,11 @@ namespace Ders_Programı_Planlayıcı
 
             cmd.CommandText = "select max(gun_sayisi) from parametreler";
             frmAna.gunSayisi = Convert.ToInt32(cmd.ExecuteScalar());
+            cmbGunSayisi.Text = frmAna.gunSayisi.ToString();
 
             cmd.CommandText = "select max(gunluk_ders_sayisi) from parametreler";
             frmAna.gunlukDersSayisi = Convert.ToInt32(cmd.ExecuteScalar());
+            cmbGunlukDersSayisi.Text = frmAna.gunlukDersSayisi.ToString();
 
             cmd.CommandText = "SELECT * FROM dersler";
             SqlDataReader dr = cmd.ExecuteReader();

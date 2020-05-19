@@ -41,6 +41,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtUstVT = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtGun = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtGunlukDers = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // rdoSqlServerAuto
@@ -68,20 +72,20 @@
             // 
             // btnBaglan
             // 
-            this.btnBaglan.Location = new System.Drawing.Point(411, 142);
+            this.btnBaglan.Location = new System.Drawing.Point(411, 167);
             this.btnBaglan.Name = "btnBaglan";
             this.btnBaglan.Size = new System.Drawing.Size(383, 40);
-            this.btnBaglan.TabIndex = 21;
+            this.btnBaglan.TabIndex = 7;
             this.btnBaglan.Text = "Sunucuya Bağlan ve Veritabanını Oluştur";
             this.btnBaglan.UseVisualStyleBackColor = true;
             this.btnBaglan.Click += new System.EventHandler(this.btnBaglan_Click);
             // 
             // txtVeritabaniAdi
             // 
-            this.txtVeritabaniAdi.Location = new System.Drawing.Point(173, 58);
+            this.txtVeritabaniAdi.Location = new System.Drawing.Point(173, 100);
             this.txtVeritabaniAdi.Name = "txtVeritabaniAdi";
             this.txtVeritabaniAdi.Size = new System.Drawing.Size(184, 22);
-            this.txtVeritabaniAdi.TabIndex = 20;
+            this.txtVeritabaniAdi.TabIndex = 2;
             // 
             // txtSifre
             // 
@@ -90,7 +94,7 @@
             this.txtSifre.Name = "txtSifre";
             this.txtSifre.PasswordChar = '*';
             this.txtSifre.Size = new System.Drawing.Size(225, 22);
-            this.txtSifre.TabIndex = 19;
+            this.txtSifre.TabIndex = 6;
             // 
             // txtKullaniciAdi
             // 
@@ -98,20 +102,20 @@
             this.txtKullaniciAdi.Location = new System.Drawing.Point(569, 57);
             this.txtKullaniciAdi.Name = "txtKullaniciAdi";
             this.txtKullaniciAdi.Size = new System.Drawing.Size(225, 22);
-            this.txtKullaniciAdi.TabIndex = 18;
+            this.txtKullaniciAdi.TabIndex = 5;
             // 
             // txtServerAdresi
             // 
             this.txtServerAdresi.Location = new System.Drawing.Point(173, 19);
             this.txtServerAdresi.Name = "txtServerAdresi";
             this.txtServerAdresi.Size = new System.Drawing.Size(184, 22);
-            this.txtServerAdresi.TabIndex = 17;
+            this.txtServerAdresi.TabIndex = 0;
             this.txtServerAdresi.Text = "localhost";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 61);
+            this.label6.Location = new System.Drawing.Point(12, 103);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(147, 17);
             this.label6.TabIndex = 16;
@@ -149,26 +153,65 @@
             // txtUstVT
             // 
             this.txtUstVT.Enabled = false;
-            this.txtUstVT.Location = new System.Drawing.Point(173, 100);
+            this.txtUstVT.Location = new System.Drawing.Point(173, 57);
             this.txtUstVT.Name = "txtUstVT";
             this.txtUstVT.Size = new System.Drawing.Size(184, 22);
-            this.txtUstVT.TabIndex = 25;
+            this.txtUstVT.TabIndex = 1;
             this.txtUstVT.Text = "master";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 103);
+            this.label1.Location = new System.Drawing.Point(12, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(121, 17);
             this.label1.TabIndex = 24;
             this.label1.Text = "Üst Veritabanı Adı";
             // 
+            // txtGun
+            // 
+            this.txtGun.Enabled = false;
+            this.txtGun.Location = new System.Drawing.Point(173, 141);
+            this.txtGun.Name = "txtGun";
+            this.txtGun.Size = new System.Drawing.Size(184, 22);
+            this.txtGun.TabIndex = 3;
+            this.txtGun.Text = "5";
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(12, 141);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(155, 47);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "Haftalık Ders Günü Sayısı";
+            // 
+            // txtGunlukDers
+            // 
+            this.txtGunlukDers.Enabled = false;
+            this.txtGunlukDers.Location = new System.Drawing.Point(173, 185);
+            this.txtGunlukDers.Name = "txtGunlukDers";
+            this.txtGunlukDers.Size = new System.Drawing.Size(184, 22);
+            this.txtGunlukDers.TabIndex = 4;
+            this.txtGunlukDers.Text = "8";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 188);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(128, 17);
+            this.label4.TabIndex = 28;
+            this.label4.Text = "Günlük Ders Sayısı";
+            // 
             // frmYeniDBSunucuGirisi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(823, 203);
+            this.ClientSize = new System.Drawing.Size(814, 230);
+            this.Controls.Add(this.txtGunlukDers);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtGun);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.txtUstVT);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.rdoSqlServerAuto);
@@ -207,5 +250,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtUstVT;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtGun;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtGunlukDers;
+        private System.Windows.Forms.Label label4;
     }
 }
