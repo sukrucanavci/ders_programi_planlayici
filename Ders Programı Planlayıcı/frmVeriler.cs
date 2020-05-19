@@ -272,7 +272,7 @@ namespace Ders_Programı_Planlayıcı
 
                 default: break;
             }
-
+            VerileriYenile();
         }
 
         private void btnZamanTablosu_Click(object sender, EventArgs e)

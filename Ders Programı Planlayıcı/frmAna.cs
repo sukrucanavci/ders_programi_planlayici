@@ -14,21 +14,6 @@ namespace Ders_Programı_Planlayıcı
 {
     public partial class frmAna : Form
     {
-        #region Enums
-
-        public enum Gunler
-        {
-            Pazartesi,
-            Salı,
-            Çarşamba,
-            Perşembe,
-            Cuma,
-            Cumartesi,
-            Pazar
-        }
-
-        #endregion
-
         #region Listeler
 
         public static List<Sinif> siniflar = new List<Sinif>();
@@ -251,6 +236,14 @@ namespace Ders_Programı_Planlayıcı
             InitializeComponent();
         }
 
+        private void frmAna_Shown(object sender, EventArgs e)
+        {
+            for (int i = tabControl1.TabPages.Count; i >= 0; i--)
+            {
+                tabControl1.SelectedIndex = i;
+            }
+        }
+
         private void frmAna_Load(object sender, EventArgs e)
         {  
             tsbOnceKontrol.Text = "Planlama Öncesi\nKontrol";
@@ -280,12 +273,10 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         void AnaFonk()
         {
-            #region İlk
+            #region Matris İşlemleri
 
-            //Algoritmayı engelleyecek bir durumun olup olmadığını kontrol edilir, başarısızsa algoritma çalıştırılmaz
             if (!Kontrol()) { return; }
 
-            //doluluk
             foreach (var db in dersBloklari)
             {
                 int doluluk = 0;
@@ -343,9 +334,7 @@ namespace Ders_Programı_Planlayıcı
                 db.doluluk = doluluk;
             }
 
-            //dersBloklari.Sort((x, y) => y.uzunluk.CompareTo(x.uzunluk));
             dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
-            //Karistir(dersBloklari);
 
             gunler.Clear(); for (int gun = 0; gun < gunSayisi; gun++) { gunler.Add(gun); }
             saatler.Clear(); for (int saat = 0; saat < gunlukDersSayisi; saat++) { saatler.Add(saat); }
@@ -456,8 +445,8 @@ namespace Ders_Programı_Planlayıcı
                                                 dbDerslik[derslikler.IndexOf(derslik), i] = null;
                                             }
                                         }
-
-                                        Algoritma(eklenemeyenDB, true);
+                                        
+                                        Algoritma(eklenemeyenDB, false);
                                         yerlestirilen--;
                                         goto digerEklenemeyenBlogaGec;
                                     }
@@ -466,17 +455,16 @@ namespace Ders_Programı_Planlayıcı
                         }
                     digerEklenemeyenBlogaGec:;
                     }
-                    if (counter > 500)
+                    if (counter > dersBloklari.Count * 10)
                     {
                         break;
                     }
                 }
-                if (counter > 100)
+                if (counter > dersBloklari.Count * 10)
                 {
                     anafonktur++;
                     AnaFonk();
                     return;
-                    //break;
                 }
 
             }
@@ -875,13 +863,13 @@ namespace Ders_Programı_Planlayıcı
         /// Algoritma, ders bloklarını verilen kriterlere göre yerleştirir
         /// </summary>
         /// <param name="dersBlogu"></param>
-        bool Algoritma(DersBlogu dersBlogu, bool kisitlatlamayiKontrolEt)
+        bool Algoritma(DersBlogu dersBlogu, bool kisitlalamayiKontrolEt)
         {
             Karistir(gunler); Karistir(saatler);
 
             foreach (var gun in gunler)
             {
-                if (BlokDagilimKisitlamaKontrolu(dersBlogu, gun) && kisitlatlamayiKontrolEt)
+                if (BlokDagilimKisitlamaKontrolu(dersBlogu, gun) && kisitlalamayiKontrolEt)
                 {
                     dersBlogu.dksayac++;
                     if (dersBlogu.dksayac <= 5)
@@ -1463,7 +1451,24 @@ namespace Ders_Programı_Planlayıcı
                             if (tlpSiniflar.GetControlFromPosition(tlpCol.Column, 1).BackColor == Color.Lime &&
                                 tlpSiniflar.GetControlFromPosition(0, tlpRow.Row).BackColor == Color.Lime)
                             {
-                                tlpSiniflar.Controls.Add(seciliDB.sinifKartlar[0], tlpCol.Column, tlpRow.Row);
+                                int k = 0;
+                                for (int i = 0; i < siniflar.Count; i++)
+                                {
+                                    if (tlpSiniflar.GetControlFromPosition(0, i + 2).BackColor == Color.Lime)
+                                    {
+                                        for (; k < seciliDB.sinifKartlar.Count;)
+                                        {
+                                            tlpSiniflar.Controls.Add(seciliDB.sinifKartlar[k], tlpCol.Column, i + 2);
+                                            k++;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                foreach (var kart in seciliDB.sinifKartlar)
+                                {
+                                    kart.Show();
+                                }
 
                                 int gun = (tlpCol.Column - 1) / 8;
                                 int saat = (tlpCol.Column - 1) % 8;
@@ -1516,12 +1521,6 @@ namespace Ders_Programı_Planlayıcı
             }
         }
 
-        private void frmAna_Shown(object sender, EventArgs e)
-        {
-            for (int i = tabControl1.TabPages.Count; i >= 0; i--)
-            {
-                tabControl1.SelectedIndex = i;
-            }
-        }
+
     }
 }

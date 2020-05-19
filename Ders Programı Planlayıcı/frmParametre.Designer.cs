@@ -170,7 +170,7 @@
             this.txtVeritabaniAdi.Name = "txtVeritabaniAdi";
             this.txtVeritabaniAdi.Size = new System.Drawing.Size(184, 22);
             this.txtVeritabaniAdi.TabIndex = 9;
-            this.txtVeritabaniAdi.Text = "okul";
+            this.txtVeritabaniAdi.Text = "meb";
             // 
             // txtSifre
             // 

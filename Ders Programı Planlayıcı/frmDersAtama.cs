@@ -148,14 +148,12 @@ namespace Ders_Programı_Planlayıcı
             List<Ogretmen> ogretmenler = new List<Ogretmen>();
             List<Sinif> siniflar = new List<Sinif>();
             List<Derslik> derslikler = new List<Derslik>();
-            int atananDersUzunlugu = int.Parse(cmbDagilim.Text);//BUG
 
             foreach (var item in lstOgretmenler.SelectedItems)
                 foreach (var ogrtmn in frmAna.ogretmenler)
                     if (item.ToString() == ogrtmn.ad + " " + ogrtmn.soyad) 
                     { 
                         ogretmenler.Add(ogrtmn);
-                        ogrtmn.tds += atananDersUzunlugu;
                         break; 
                     }
 
@@ -164,14 +162,12 @@ namespace Ders_Programı_Planlayıcı
                     if (item.ToString() == snf.ad) 
                     { 
                         siniflar.Add(snf);
-                        snf.tds += atananDersUzunlugu;
                         break; 
                     }
 
             foreach (var drs in frmAna.dersler)
                 if (cmbDersler.Text == drs.ad) {
                     ders = drs;
-                    drs.tds += atananDersUzunlugu;
                     break; 
                 }
 
@@ -179,7 +175,6 @@ namespace Ders_Programı_Planlayıcı
                 foreach (var drslk in frmAna.derslikler)
                     if (item.ToString() == drslk.ad) {
                         derslikler.Add(drslk);
-                        drslk.tds += atananDersUzunlugu;
                         break; 
                     }
 

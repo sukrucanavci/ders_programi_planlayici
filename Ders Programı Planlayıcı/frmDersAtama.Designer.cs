@@ -29,26 +29,26 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
             this.cmbDersler = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
             this.lstSiniflar = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
             this.lstDerslikler = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
             this.lstOgretmenler = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnTamam = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnIptal = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.cmbDagilim = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -67,6 +67,14 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(271, 166);
             this.panel1.TabIndex = 2;
+            // 
+            // label9
+            // 
+            this.label9.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.derslik32px;
+            this.label9.Location = new System.Drawing.Point(4, -1);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(58, 62);
+            this.label9.TabIndex = 4;
             // 
             // cmbDersler
             // 
@@ -98,6 +106,14 @@
             this.panel2.Size = new System.Drawing.Size(271, 438);
             this.panel2.TabIndex = 0;
             // 
+            // label6
+            // 
+            this.label6.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ders32px;
+            this.label6.Location = new System.Drawing.Point(3, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(58, 62);
+            this.label6.TabIndex = 1;
+            // 
             // lstSiniflar
             // 
             this.lstSiniflar.FormattingEnabled = true;
@@ -127,6 +143,14 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(271, 438);
             this.panel3.TabIndex = 3;
+            // 
+            // label8
+            // 
+            this.label8.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.derslik32px;
+            this.label8.Location = new System.Drawing.Point(3, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 62);
+            this.label8.TabIndex = 3;
             // 
             // lstDerslikler
             // 
@@ -158,6 +182,14 @@
             this.panel4.Size = new System.Drawing.Size(271, 438);
             this.panel4.TabIndex = 1;
             // 
+            // label7
+            // 
+            this.label7.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ogretmen32px;
+            this.label7.Location = new System.Drawing.Point(3, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(58, 62);
+            this.label7.TabIndex = 2;
+            // 
             // lstOgretmenler
             // 
             this.lstOgretmenler.FormattingEnabled = true;
@@ -186,15 +218,15 @@
             this.btnTamam.Text = "Tamam";
             this.btnTamam.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnIptal
             // 
-            this.button1.BackColor = System.Drawing.Color.Transparent;
-            this.button1.Location = new System.Drawing.Point(843, 405);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(271, 41);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "İptal";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnIptal.BackColor = System.Drawing.Color.Transparent;
+            this.btnIptal.Location = new System.Drawing.Point(843, 405);
+            this.btnIptal.Name = "btnIptal";
+            this.btnIptal.Size = new System.Drawing.Size(271, 41);
+            this.btnIptal.TabIndex = 7;
+            this.btnIptal.Text = "İptal";
+            this.btnIptal.UseVisualStyleBackColor = false;
             // 
             // panel5
             // 
@@ -224,38 +256,6 @@
             this.cmbDagilim.Sorted = true;
             this.cmbDagilim.TabIndex = 6;
             // 
-            // label6
-            // 
-            this.label6.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ders32px;
-            this.label6.Location = new System.Drawing.Point(3, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 62);
-            this.label6.TabIndex = 1;
-            // 
-            // label7
-            // 
-            this.label7.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.ogretmen32px;
-            this.label7.Location = new System.Drawing.Point(3, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(58, 62);
-            this.label7.TabIndex = 2;
-            // 
-            // label8
-            // 
-            this.label8.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.derslik32px;
-            this.label8.Location = new System.Drawing.Point(3, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(58, 62);
-            this.label8.TabIndex = 3;
-            // 
-            // label9
-            // 
-            this.label9.Image = global::Ders_Programı_Planlayıcı.Properties.Resources.derslik32px;
-            this.label9.Location = new System.Drawing.Point(4, -1);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(58, 62);
-            this.label9.TabIndex = 4;
-            // 
             // frmDersAtama
             // 
             this.AcceptButton = this.btnTamam;
@@ -263,7 +263,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1130, 468);
             this.Controls.Add(this.panel5);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnIptal);
             this.Controls.Add(this.btnTamam);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
@@ -298,7 +298,7 @@
         private System.Windows.Forms.ListBox lstSiniflar;
         private System.Windows.Forms.ListBox lstOgretmenler;
         private System.Windows.Forms.Button btnTamam;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnIptal;
         private System.Windows.Forms.ComboBox cmbDersler;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label5;

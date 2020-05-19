@@ -23,7 +23,7 @@ namespace Ders_Programı_Planlayıcı
             #endregion
         }
 
-        bool veriCekildi = false;
+        public static bool veriCekildi = false;
 
         private void frmParametre_Load(object sender, EventArgs e)
         {
@@ -299,6 +299,9 @@ namespace Ders_Programı_Planlayıcı
             baglanti.Close();
             veriCekildi = true;
             MessageBox.Show("İşlem tamamlandı!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            cmbGunSayisi.Enabled = false;
+            cmbGunlukDersSayisi.Enabled = false;
         }
 
         #endregion

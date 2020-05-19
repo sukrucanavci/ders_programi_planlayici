@@ -109,8 +109,8 @@
 
         #endregion
         private System.Windows.Forms.Button btnGuncelle;
-        private System.Windows.Forms.Button btnSil;
         private System.Windows.Forms.Button btnTamam;
         private System.Windows.Forms.DataGridView dgwDersSaatleri;
+        public System.Windows.Forms.Button btnSil;
     }
 }

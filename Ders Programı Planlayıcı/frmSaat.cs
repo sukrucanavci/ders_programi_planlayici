@@ -19,6 +19,10 @@ namespace Ders_Programı_Planlayıcı
         private void frmSaat_Load(object sender, EventArgs e)
         {
             dgwDersSaatleri.DataSource = frmAna.dtDersSaatleri;
+            if (frmParametre.veriCekildi == true)
+            {
+                btnSil.Enabled = false;
+            }
         }
 
         private void btnGuncelle_Click(object sender, EventArgs e)
