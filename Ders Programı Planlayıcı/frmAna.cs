@@ -273,7 +273,7 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         void AnaFonk()
         {
-            #region Matris İşlemleri
+            #region Kontrol ve Fabrika Ayarı İşlemleri
 
             if (!Kontrol()) { return; }
 
@@ -346,6 +346,10 @@ namespace Ders_Programı_Planlayıcı
                 db.gun = -1;
                 db.saat = -1;
                 db.dksayac = 0;
+                foreach (Ogretmen ogretmen in db.atananDers.ogretmenler)
+                {
+                    ogretmen.oksayac = 0;
+                }
                 foreach (var kart in db.sinifKartlar)
                 {
                     kart.eklendi = false;
@@ -359,6 +363,8 @@ namespace Ders_Programı_Planlayıcı
                     kart.eklendi = false;
                 }
             }
+
+            #endregion
 
             while (dersBloklari.Any(db => db.eklendi == false))
             {
@@ -388,7 +394,7 @@ namespace Ders_Programı_Planlayıcı
 
                 foreach (var dersBlogu in dersBloklari)
                 {
-                    Algoritma(dersBlogu, true);
+                    Algoritma(dersBlogu, true, true);
                 }
 
                 while (dersBloklari.Any(db => db.eklendi == false))
@@ -410,7 +416,7 @@ namespace Ders_Programı_Planlayıcı
                                     if (hedefDersBlogu == null) { continue; }
                                     int hgun = hedefDersBlogu.gun;
                                     int hsaat = hedefDersBlogu.saat;
-                                    if (Algoritma(hedefDersBlogu, true))
+                                    if (Algoritma(hedefDersBlogu, true, true))
                                     {
                                         for (int i = hsaat; i < hsaat + hedefDersBlogu.uzunluk; i++)
                                         {
@@ -446,7 +452,7 @@ namespace Ders_Programı_Planlayıcı
                                             }
                                         }
                                         
-                                        Algoritma(eklenemeyenDB, false);
+                                        Algoritma(eklenemeyenDB, false, false);
                                         yerlestirilen--;
                                         goto digerEklenemeyenBlogaGec;
                                     }
@@ -471,8 +477,6 @@ namespace Ders_Programı_Planlayıcı
 
             lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
             lblTur.Text = counter.ToString();
-
-            #endregion
 
             #region TableLayoutPanel İşlemleri
 
@@ -843,6 +847,12 @@ namespace Ders_Programı_Planlayıcı
 
         }
 
+        /// <summary>
+        /// Atanan dersin yerleştirilen ders bloklarının bulunduğu günlerini kontrol eder, eğer günler çakışırsa true döndürür 
+        /// </summary>
+        /// <param name="dersBlogu"></param>
+        /// <param name="gun"></param>
+        /// <returns></returns>
         bool BlokDagilimKisitlamaKontrolu(DersBlogu dersBlogu, int gun)
         {
             if (dersBlogu.atananDers.ders.kisitlama == Ders.DagilimKisitlamasi.bloklarTumGunlereDagitilmali)
@@ -851,6 +861,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     if (db.atananDers.dersBloklari.Any(drsblg => drsblg.gun == gun))
                     {
+                        dersBlogu.dksayac++;
                         return true;
                     }
                 }
@@ -860,22 +871,76 @@ namespace Ders_Programı_Planlayıcı
         }
 
         /// <summary>
+        /// Eğer öğretmenlerden birinin alacağı max ders günü geçilirse true döndürür
+        /// </summary>
+        /// <param name="dersBlogu"></param>
+        /// <param name="gun"></param>
+        /// <returns></returns>
+        bool OgretmenGunKisitlamaKontrolu(DersBlogu dersBlogu, int gun)
+        {
+            bool flag = false;
+
+            foreach (Ogretmen ogretmen in dersBlogu.atananDers.ogretmenler)
+            {
+                if (ogretmen.maxDersGunu == gunSayisi)
+                {
+                    break;
+                }
+
+                List<int> gunIndex = new List<int>();
+
+                for (int i = 0; i < ogretmen.bosSaatler.GetLength(0); i++)
+                {
+                    for (int j = 0; j < ogretmen.bosSaatler.GetLength(1); j++)
+                    {
+                        if (ogretmen.bosSaatler[i,j] == false)
+                        {
+                            gunIndex.Add(i);
+                            break;
+                        }
+                    }
+                }
+                if (gunIndex.Contains(gun))
+                {
+                    break;
+                }
+                if (gunIndex.Count >= ogretmen.maxDersGunu)
+                {
+                    ogretmen.oksayac++;
+                    if (ogretmen.oksayac <= 5)
+                    {
+                        flag = true;
+                        return flag;
+                    }
+                }
+            }
+
+            return flag;
+        }
+
+        /// <summary>
         /// Algoritma, ders bloklarını verilen kriterlere göre yerleştirir
         /// </summary>
         /// <param name="dersBlogu"></param>
-        bool Algoritma(DersBlogu dersBlogu, bool kisitlalamayiKontrolEt)
+        /// <param name="kisitlalamayiKontrolEt">Ders bloğunun günlere dağılım kontrolü</param>
+        bool Algoritma(DersBlogu dersBlogu, bool kisitlalamayiKontrolEt, bool ogretmenMaxGunKontrol)
         {
-            Karistir(gunler); Karistir(saatler);
+            Karistir(gunler);
+            Karistir(saatler);
 
             foreach (var gun in gunler)
             {
                 if (BlokDagilimKisitlamaKontrolu(dersBlogu, gun) && kisitlalamayiKontrolEt)
                 {
-                    dersBlogu.dksayac++;
                     if (dersBlogu.dksayac <= 5)
                     {
                         continue;
                     }
+                }
+
+                if (OgretmenGunKisitlamaKontrolu(dersBlogu, gun) && ogretmenMaxGunKontrol)
+                {
+                    continue;
                 }
 
                 foreach (var saat in saatler)

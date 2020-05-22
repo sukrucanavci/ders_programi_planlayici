@@ -22,7 +22,7 @@ namespace Ders_Programı_Planlayıcı
         public List<LabelKart> derslikKartlar = new List<LabelKart>();
 
         /// <summary>
-        /// Dağılım kısıtlaması sayacı
+        /// Kart dağılım kısıtlaması sayacı
         /// </summary>
         public int dksayac = 0;
 

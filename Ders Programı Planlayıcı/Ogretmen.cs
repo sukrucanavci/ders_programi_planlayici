@@ -10,10 +10,15 @@ namespace Ders_Programı_Planlayıcı
         public string kod;
         public Color renk;
         public int tds; //Toplam Ders Saati
-        public int maxDersGunu = frmAna.gunSayisi;
+        public int maxDersGunu; //Öğretmenin alacağı en fazla ders günü
 
         public bool[,] uygunZamanlar;
         public bool[,] bosSaatler;
+
+        /// <summary>
+        /// Öğretmen max gün kısıtlama sayacı
+        /// </summary>
+        public int oksayac = 0;
 
         public Ogretmen(string ad, string soyad, string kod, Color renk)
         {
@@ -21,6 +26,7 @@ namespace Ders_Programı_Planlayıcı
             this.soyad = soyad;
             this.kod = kod;
             this.renk = renk;
+            maxDersGunu = frmAna.gunSayisi;
 
             uygunZamanlar = new bool[frmAna.gunSayisi, frmAna.gunlukDersSayisi];
             bosSaatler = new bool[frmAna.gunSayisi, frmAna.gunlukDersSayisi];
