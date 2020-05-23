@@ -1112,10 +1112,15 @@ namespace Ders_Programı_Planlayıcı
         bool OgleArasiKontrol(DersBlogu dersBlogu, int saat)
         {
             if (ogleArasiVar && !ogleArasiBlokDersleriBolebilir)
-                for (int s = saat; s < saat + dersBlogu.uzunluk; s++)
+            {
+                for (int s = saat; s < saat + dersBlogu.uzunluk - 1 ; s++)
+                {
                     if (s == ogleArasiKacinciDerstenSonra)
+                    {
                         return true;
-
+                    }
+                }
+            }
             return false;
         }
 
