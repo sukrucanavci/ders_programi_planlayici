@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ders_Programı_Planlayıcı
 {
@@ -44,6 +45,7 @@ namespace Ders_Programı_Planlayıcı
                     tds += saat;
                 }
 
+                ders.tds += tds - otds;
                 foreach (var ogretmen in ogretmenler)
                 {
                     ogretmen.tds += tds - otds;
@@ -58,13 +60,13 @@ namespace Ders_Programı_Planlayıcı
                 }
 
                 dersBloklari.Clear();
-                //Varsa önceden oluşturulan eski ders bloklarını temizle
-                for (int i = 0; i < frmAna.dersBloklari.Count; i++)
+
+                foreach (var db in frmAna.dersBloklari.ToList())
                 {
-                    if (frmAna.dersBloklari[i].atananDers == this)
+                    if (db.atananDers == this)
                     {
-                        frmAna.dersBloklari.Remove(frmAna.dersBloklari[i]);
-                        
+                        frmAna.dersBloklari.Remove(db);
+
                     }
                 }
 

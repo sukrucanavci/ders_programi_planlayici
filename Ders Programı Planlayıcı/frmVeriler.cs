@@ -210,29 +210,158 @@ namespace Ders_Programı_Planlayıcı
                 case Islem.Ders:
                     if (lvwDersler.SelectedItems.Count < 1) { return; }
                     kod = lvwDersler.SelectedItems[0].SubItems[1].Text;
-                    frmAna.dersler.RemoveAll(ders => ders.kod == kod);
-                    frmAna.atananDersler.RemoveAll(atananDers => atananDers.ders.kod == kod);
+                    foreach (DersBlogu db in frmAna.dersBloklari.ToList())
+                    {
+                        if (db.atananDers.ders.kod == kod)
+                        {
+                            frmAna.dersBloklari.Remove(db);
+                        }
+                    }
+                    foreach (AtananDers ad in frmAna.atananDersler.ToList())
+                    {
+                        if (ad.ders.kod == kod)
+                        {
+                            foreach (var item in ad.derslikler)
+                            {
+                                item.tds -= ad.tds;
+                            }
+                            foreach (var item in ad.siniflar)
+                            {
+                                item.tds -= ad.tds;
+                            }
+                            foreach (var item in ad.ogretmenler)
+                            {
+                                item.tds -= ad.tds;
+                            }
+                            frmAna.atananDersler.Remove(ad);
+                        }
+                    }
+                    foreach (Ders ders in frmAna.dersler.ToList())
+                    {
+                        if (ders.kod == kod)
+                        {
+                            frmAna.dersler.Remove(ders);
+                        }
+                    }
                     break;
 
                 case Islem.Sinif:
                     if (lvwSiniflar.SelectedItems.Count < 1) { return; }
                     kod = lvwSiniflar.SelectedItems[0].SubItems[1].Text;
-                    frmAna.siniflar.RemoveAll(sinif => sinif.kod == kod);
-                    frmAna.atananDersler.RemoveAll(atananDers => atananDers.siniflar.Any(sinif => sinif.kod == kod));
+                    foreach (AtananDers ad in frmAna.atananDersler.ToList())
+                    {
+                        foreach (Sinif sinif in ad.siniflar.ToList())
+                        {
+                            if (sinif.kod == kod)
+                            {
+                                ad.ders.tds -= ad.tds;
+                                foreach (var item in ad.derslikler)
+                                {
+                                    item.tds -= ad.tds;
+                                }
+                                foreach (var item in ad.ogretmenler)
+                                {
+                                    item.tds -= ad.tds;
+                                }
+                                foreach (DersBlogu db in frmAna.dersBloklari.ToList())
+                                {
+                                    if (db.atananDers == ad)
+                                    {
+                                        frmAna.dersBloklari.Remove(db);
+                                    }
+                                }
+                                frmAna.atananDersler.Remove(ad);
+                                frmAna.siniflar.Remove(sinif);
+                                break;
+                            }
+                        }
+                    }
+                    foreach (var item in frmAna.siniflar.ToList())
+                    {
+                        if (item.kod == kod)
+                        {
+                            frmAna.siniflar.Remove(item);
+                        }
+                    }
                     break;
 
                 case Islem.Derslik:
                     if (lvwDerslikler.SelectedItems.Count < 1) { return; }
                     kod = lvwDerslikler.SelectedItems[0].SubItems[1].Text;
-                    frmAna.derslikler.RemoveAll(derslik => derslik.kod == kod);
-                    frmAna.atananDersler.RemoveAll(atananDers => atananDers.derslikler.Any(derslik => derslik.kod == kod));
+                    foreach (AtananDers ad in frmAna.atananDersler.ToList())
+                    {
+                        foreach (Derslik derslik in ad.derslikler.ToList())
+                        {
+                            if (derslik.kod == kod)
+                            {
+                                ad.ders.tds -= ad.tds;
+                                foreach (var item in ad.siniflar)
+                                {
+                                    item.tds -= ad.tds;
+                                }
+                                foreach (var item in ad.ogretmenler)
+                                {
+                                    item.tds -= ad.tds;
+                                }
+                                foreach (DersBlogu db in frmAna.dersBloklari.ToList())
+                                {
+                                    if (db.atananDers == ad)
+                                    {
+                                        frmAna.dersBloklari.Remove(db);
+                                    }
+                                }
+                                frmAna.atananDersler.Remove(ad);
+                                break;
+                            }
+                        }
+                    }
+                    foreach (var item in frmAna.derslikler.ToList())
+                    {
+                        if (item.kod == kod)
+                        {
+                            frmAna.derslikler.Remove(item);
+                        }
+                    }
                     break;
 
                 case Islem.Ogretmen:
                     if (lvwOgretmenler.SelectedItems.Count < 1) { return; }
                     kod = lvwOgretmenler.SelectedItems[0].SubItems[2].Text;
-                    frmAna.ogretmenler.RemoveAll(ogretmen => ogretmen.kod == kod);
-                    frmAna.atananDersler.RemoveAll(atananDers => atananDers.ogretmenler.Any(ogretmen => ogretmen.kod == kod));
+                    foreach (AtananDers ad in frmAna.atananDersler.ToList())
+                    {
+                        foreach (Ogretmen ogretmen in ad.ogretmenler.ToList())
+                        {
+                            if (ogretmen.kod == kod)
+                            {
+                                ad.ders.tds -= ad.tds;
+                                foreach (var item in ad.derslikler)
+                                {
+                                    item.tds -= ad.tds;
+                                }
+                                foreach (var item in ad.siniflar)
+                                {
+                                    item.tds -= ad.tds;
+                                }
+                                foreach (DersBlogu db in frmAna.dersBloklari.ToList())
+                                {
+                                    if (db.atananDers == ad)
+                                    {
+                                        frmAna.dersBloklari.Remove(db);
+                                    }
+                                }
+                                frmAna.atananDersler.Remove(ad);
+                                
+                                break;
+                            }
+                        }
+                    }
+                    foreach (var item in frmAna.ogretmenler.ToList())
+                    {
+                        if (item.kod == kod)
+                        {
+                            frmAna.ogretmenler.Remove(item);
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -322,19 +451,6 @@ namespace Ders_Programı_Planlayıcı
                     Ders secilenDers = frmAna.dersler.Where(drs => drs.kod == lvwDersler.SelectedItems[0].SubItems[1].Text).First();
                     frmKisitlamaDers frmKD = new frmKisitlamaDers(secilenDers); frmKD.ShowDialog();
                     break;
-
-                //case Islem.Sinif:
-                //    if (lvwSiniflar.SelectedItems.Count < 1) { return; }
-                //    Sinif secilenSinif = frmAna.siniflar.Where(snf => snf.kod == lvwSiniflar.SelectedItems[0].SubItems[1].Text).First();
-                //    frmKD = new frmKisitlamaDers(secilenSinif); frmKD.ShowDialog();
-                //    break;
-
-                //case Islem.Derslik:
-                //    if (lvwDerslikler.SelectedItems.Count < 1) { return; }
-                //    Derslik secilenDerslik = frmAna.derslikler.Where(drslik => drslik.kod == lvwDerslikler.SelectedItems[0].SubItems[1].Text).First();
-                //    frmKD = new frmKisitlamaDers(secilenDerslik); frmKD.ShowDialog();
-                //    break;
-
                 case Islem.Ogretmen:
                     if (lvwOgretmenler.SelectedItems.Count < 1) { return; }
                     Ogretmen secilenOgretmen = frmAna.ogretmenler.Where(ogr => ogr.kod == lvwOgretmenler.SelectedItems[0].SubItems[2].Text).First();

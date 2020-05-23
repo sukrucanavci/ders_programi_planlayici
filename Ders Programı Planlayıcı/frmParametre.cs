@@ -81,7 +81,7 @@ namespace Ders_Programı_Planlayıcı
 
         private void cmbOgleArasiZamani_SelectedIndexChanged(object sender, EventArgs e)
         {
-            frmAna.ogleArasiKacinciDerstenSonra = cmbOgleArasiZamani.SelectedIndex + 1;
+            frmAna.ogleArasiKacinciDerstenSonra = cmbOgleArasiZamani.SelectedIndex;
         }
 
         private void chkDerslerOgleArasindaBolunebilir_CheckedChanged(object sender, EventArgs e)

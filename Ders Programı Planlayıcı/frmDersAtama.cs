@@ -47,7 +47,7 @@ namespace Ders_Programı_Planlayıcı
             btnTamam.Click += new EventHandler(Guncelle);
             void Guncelle(object sender, EventArgs e)
             {
-                int oncekiUzunluk = atananDers.tds;
+                //int oncekiUzunluk = atananDers.tds;
                 atananDers.siniflar.Clear();
                 atananDers.ogretmenler.Clear();
                 atananDers.derslikler.Clear();

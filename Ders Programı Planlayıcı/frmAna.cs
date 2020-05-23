@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.Word;
 using Microsoft.VisualBasic;
 
 namespace Ders_Programı_Planlayıcı
@@ -174,11 +173,11 @@ namespace Ders_Programı_Planlayıcı
         public static bool winAuto;
 
         public static bool ogleArasiVar = false;
-        public static bool ogleArasiBlokDersleriBolebilir = true;
-        public static int ogleArasiKacinciDerstenSonra = 4;
+        public static bool ogleArasiBlokDersleriBolebilir = false;
+        public static int ogleArasiKacinciDerstenSonra = 0;
 
-        public static int gunSayisi = 5;
-        private static int GunlukDersSayisi = 8;
+        public static int gunSayisi = 0;
+        private static int GunlukDersSayisi = 0;
         public static int gunlukDersSayisi
         {
             get { return GunlukDersSayisi; }
@@ -227,7 +226,7 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
-        public static DataTable dtDersSaatleri;
+        public static System.Data.DataTable dtDersSaatleri;
         public static frmParametre frmParametre = new frmParametre();
         public static DersBlogu seciliDB = null;
 
@@ -249,9 +248,9 @@ namespace Ders_Programı_Planlayıcı
             tsbOnceKontrol.Text = "Planlama Öncesi\nKontrol";
             tsbPlanlama.Text = "Otomatik Planlamayı\nBaşlat";
             tsbSonraKontrol.Text = "Planlama Sonrası\nKontrol";
-            tsbYeni.Text = "Yeni Veritaabanı\nOluştur";
+            tsbYeni.Text = "Yeni Veritabanı\nOluştur";
             //Ders saatleri
-            dtDersSaatleri = new DataTable("ders_saatleri");
+            dtDersSaatleri = new System.Data.DataTable("ders_saatleri");
             dtDersSaatleri.Columns.AddRange(new DataColumn[] 
             {
                 new DataColumn("Ders Saati"),
@@ -277,6 +276,7 @@ namespace Ders_Programı_Planlayıcı
 
             if (!Kontrol()) { return; }
 
+            //doluluk
             foreach (var db in dersBloklari)
             {
                 int doluluk = 0;
@@ -451,7 +451,7 @@ namespace Ders_Programı_Planlayıcı
                                                 dbDerslik[derslikler.IndexOf(derslik), i] = null;
                                             }
                                         }
-                                        
+
                                         Algoritma(eklenemeyenDB, false, false);
                                         yerlestirilen--;
                                         goto digerEklenemeyenBlogaGec;
@@ -459,6 +459,7 @@ namespace Ders_Programı_Planlayıcı
                                 }
                             }
                         }
+
                     digerEklenemeyenBlogaGec:;
                     }
                     if (counter > dersBloklari.Count * 10)
@@ -469,7 +470,7 @@ namespace Ders_Programı_Planlayıcı
                 if (counter > dersBloklari.Count * 10)
                 {
                     anafonktur++;
-                    AnaFonk();
+                    //AnaFonk();
                     return;
                 }
 
@@ -859,10 +860,16 @@ namespace Ders_Programı_Planlayıcı
             {
                 foreach (var db in dersBlogu.atananDers.dersBloklari)
                 {
-                    if (db.atananDers.dersBloklari.Any(drsblg => drsblg.gun == gun))
+                    foreach (DersBlogu dbOther in db.atananDers.dersBloklari)
                     {
-                        dersBlogu.dksayac++;
-                        return true;
+                        if (dbOther.gun == gun)
+                        {
+                            dersBlogu.dksayac++;
+                            if (dersBlogu.dksayac <= 5)
+                            {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -878,16 +885,21 @@ namespace Ders_Programı_Planlayıcı
         /// <returns></returns>
         bool OgretmenGunKisitlamaKontrolu(DersBlogu dersBlogu, int gun)
         {
-            bool flag = false;
+            List<int> gunIndex;
 
             foreach (Ogretmen ogretmen in dersBlogu.atananDers.ogretmenler)
             {
+                if (ogretmen.maxDersGunu*gunlukDersSayisi < ogretmen.tds)
+                {
+                    break;
+                }
+
                 if (ogretmen.maxDersGunu == gunSayisi)
                 {
                     break;
                 }
 
-                List<int> gunIndex = new List<int>();
+                gunIndex = new List<int>();
 
                 for (int i = 0; i < ogretmen.bosSaatler.GetLength(0); i++)
                 {
@@ -895,27 +907,35 @@ namespace Ders_Programı_Planlayıcı
                     {
                         if (ogretmen.bosSaatler[i,j] == false)
                         {
-                            gunIndex.Add(i);
+                            if (!gunIndex.Contains(i))
+                            {
+                                gunIndex.Add(i);
+                            }
                             break;
                         }
                     }
                 }
-                if (gunIndex.Contains(gun))
+                if (!gunIndex.Contains(gun) && gunIndex.Count == ogretmen.maxDersGunu)
                 {
-                    break;
-                }
-                if (gunIndex.Count >= ogretmen.maxDersGunu)
-                {
+                    //return true;
                     ogretmen.oksayac++;
-                    if (ogretmen.oksayac <= 5)
+                    if (ogretmen.oksayac <= 500)
                     {
-                        flag = true;
-                        return flag;
+                        return true;
+                    }
+                }
+                if (gunIndex.Count > ogretmen.maxDersGunu)
+                {
+                    //return true;
+                    ogretmen.oksayac++;
+                    if (ogretmen.oksayac <= 500)
+                    {
+                        return true;
                     }
                 }
             }
 
-            return flag;
+            return false;
         }
 
         /// <summary>
@@ -932,12 +952,8 @@ namespace Ders_Programı_Planlayıcı
             {
                 if (BlokDagilimKisitlamaKontrolu(dersBlogu, gun) && kisitlalamayiKontrolEt)
                 {
-                    if (dersBlogu.dksayac <= 5)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
-
                 if (OgretmenGunKisitlamaKontrolu(dersBlogu, gun) && ogretmenMaxGunKontrol)
                 {
                     continue;
@@ -963,12 +979,10 @@ namespace Ders_Programı_Planlayıcı
                         dbDerslik[derslikler.IndexOf(derslik), s] = dersBlogu;
                     }
 
-                    //dersBlogu.atananDers.ders.tds += dersBlogu.uzunluk;
                     dersBlogu.eklendi = true;
                     dersBlogu.gun = gun;
                     dersBlogu.saat = saat;
 
-                    //boş saatleri doldurma
                     for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
                     {
                         foreach (var derslik in dersBlogu.atananDers.derslikler)
@@ -987,6 +1001,8 @@ namespace Ders_Programı_Planlayıcı
             return false;
         }
 
+        Random rnd = new Random();
+
         /// <summary>
         /// Verilen listeyi karıştırır
         /// </summary>
@@ -994,7 +1010,6 @@ namespace Ders_Programı_Planlayıcı
         /// <param name="list">List nesnesi</param>
         void Karistir<T>(IList<T> list)
         {
-            Random rnd = new Random();
             int n = list.Count;
             while (n > 1)
             {
@@ -1004,20 +1019,6 @@ namespace Ders_Programı_Planlayıcı
                 list[k] = list[n];
                 list[n] = value;
             }
-
-            //RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-            //int n = list.Count;
-            //while (n > 1)
-            //{
-            //    byte[] box = new byte[1];
-            //    do provider.GetBytes(box);
-            //    while (!(box[0] < n * (Byte.MaxValue / n)));
-            //    int k = (box[0] % n);
-            //    n--;
-            //    T value = list[k];
-            //    list[k] = list[n];
-            //    list[n] = value;
-            //}
         }
 
         /// <summary>
@@ -1031,13 +1032,32 @@ namespace Ders_Programı_Planlayıcı
         {
             for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
             {
-                if (dersBlogu.atananDers.ders.uygunZamanlar[gun, i] == true &&
-                    !dersBlogu.atananDers.derslikler.Any(d => d.bosSaatler[gun, i] == false) &&
-                    !dersBlogu.atananDers.ogretmenler.Any(d => d.bosSaatler[gun, i] == false) &&
-                    !dersBlogu.atananDers.siniflar.Any(d => d.bosSaatler[gun, i] == false))
-                    continue;
-                else
+                if (!dersBlogu.atananDers.ders.uygunZamanlar[gun, i])
+                {
                     return false;
+                }
+                foreach (Derslik derslik in dersBlogu.atananDers.derslikler)
+                {
+                    if (!derslik.bosSaatler[gun, i])
+                    {
+                        return false;
+                    }
+                }
+                foreach (Ogretmen ogretmen in dersBlogu.atananDers.ogretmenler)
+                {
+                    if (!ogretmen.bosSaatler[gun, i])
+                    {
+                        return false;
+                    }
+                }
+                foreach (Sinif sinif in dersBlogu.atananDers.siniflar)
+                {
+                    if (!sinif.bosSaatler[gun, i])
+                    {
+                        return false;
+                    }
+                }
+
             }
             return true;
         }
@@ -1053,13 +1073,32 @@ namespace Ders_Programı_Planlayıcı
         {
             for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
             {
-                if (dersBlogu.atananDers.ders.uygunZamanlar[gun, i] == true &&
-                    !dersBlogu.atananDers.derslikler.Any(d => d.uygunZamanlar[gun, i] == false) &&
-                    !dersBlogu.atananDers.ogretmenler.Any(d => d.uygunZamanlar[gun, i] == false) &&
-                    !dersBlogu.atananDers.siniflar.Any(d => d.uygunZamanlar[gun, i] == false))
-                    continue;
-                else
+                if (!dersBlogu.atananDers.ders.uygunZamanlar[gun, i])
+                {
                     return false;
+                }
+                foreach (Derslik derslik in dersBlogu.atananDers.derslikler)
+                {
+                    if (!derslik.uygunZamanlar[gun, i])
+                    {
+                        return false;
+                    }
+                }
+                foreach (Ogretmen ogretmen in dersBlogu.atananDers.ogretmenler)
+                {
+                    if (!ogretmen.uygunZamanlar[gun, i])
+                    {
+                        return false;
+                    }
+                }
+                foreach (Sinif sinif in dersBlogu.atananDers.siniflar)
+                {
+                    if (!sinif.uygunZamanlar[gun, i])
+                    {
+                        return false;
+                    }
+                }
+
             }
             return true;
         }
@@ -1074,7 +1113,7 @@ namespace Ders_Programı_Planlayıcı
         {
             if (ogleArasiVar && !ogleArasiBlokDersleriBolebilir)
                 for (int s = saat; s < saat + dersBlogu.uzunluk; s++)
-                    if (s == ogleArasiKacinciDerstenSonra + 1)
+                    if (s == ogleArasiKacinciDerstenSonra)
                         return true;
 
             return false;
@@ -1086,8 +1125,6 @@ namespace Ders_Programı_Planlayıcı
         /// <returns>asd</returns>
         bool Kontrol()
         {
-            bool donusDegeri = true;
-
             foreach (var sinif in siniflar)
             {
                 int uygunSaatSayisi = 0;
@@ -1105,7 +1142,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     MessageBox.Show(sinif.ad + " sınıfının " + uygunSaatSayisi
                         + " saat uygun zamanı var ama toplam " + sinif.tds + " saatlik ders atanmış!");
-                    donusDegeri = false;
+                    return false;
                 }
             }
 
@@ -1126,7 +1163,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     MessageBox.Show(derslik.ad + " dersliğinin " + uygunSaatSayisi
                         + " saat uygun zamanı var ama toplam " + derslik.tds + " saatlik ders atanmış!");
-                    donusDegeri = false;
+                    return false;
                 }
             }
 
@@ -1147,11 +1184,11 @@ namespace Ders_Programı_Planlayıcı
                 {
                     MessageBox.Show(ogretmen.ad + " " + ogretmen.soyad + " adlı öğretmenin " + uygunSaatSayisi
                         + " saat uygun zamanı var ama toplam " + ogretmen.tds + " saatlik ders atanmış!");
-                    donusDegeri = false;
+                    return false;
                 }
             }
 
-            return donusDegeri;
+            return true;
         }
 
 
@@ -1440,7 +1477,14 @@ namespace Ders_Programı_Planlayıcı
         private void tsbPlanlama_Click(object sender, EventArgs e)
         {
             //Hide();
-            AnaFonk();
+            while (true)
+            {
+                AnaFonk();
+                if (!dersBloklari.Any(db => db.eklendi == false))
+                {
+                    break;
+                }
+            }
             lblAnaTur.Text = anafonktur.ToString();
             anafonktur = 0;
             //Show();
@@ -1482,7 +1526,7 @@ namespace Ders_Programı_Planlayıcı
                     {
                         try
                         {
-                            tlpCol = tlpSiniflar.GetCellPosition(tlpSiniflar.GetChildAtPoint(new Point(e.X, 35)));
+                            tlpCol = tlpSiniflar.GetCellPosition(tlpSiniflar.GetChildAtPoint(new System.Drawing.Point(e.X, 35)));
                         }
                         catch (Exception)
                         {
@@ -1497,7 +1541,7 @@ namespace Ders_Programı_Planlayıcı
                     {
                         try
                         {
-                            tlpRow = tlpSiniflar.GetCellPosition(tlpSiniflar.GetChildAtPoint(new Point(5, e.Y)));
+                            tlpRow = tlpSiniflar.GetCellPosition(tlpSiniflar.GetChildAtPoint(new System.Drawing.Point(5, e.Y)));
                         }
                         catch (Exception)
                         {
