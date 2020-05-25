@@ -226,6 +226,7 @@ namespace Ders_Programı_Planlayıcı
 
         #endregion
 
+        Random rnd = new Random();
         public static System.Data.DataTable dtDersSaatleri;
         public static frmParametre frmParametre = new frmParametre();
         public static DersBlogu seciliDB = null;
@@ -249,6 +250,7 @@ namespace Ders_Programı_Planlayıcı
             tsbPlanlama.Text = "Otomatik Planlamayı\nBaşlat";
             tsbSonraKontrol.Text = "Planlama Sonrası\nKontrol";
             tsbYeni.Text = "Yeni Veritabanı\nOluştur";
+            tsbVeritabani.Text = "Veritabanı ve\nParametre";
             //Ders saatleri
             dtDersSaatleri = new System.Data.DataTable("ders_saatleri");
             dtDersSaatleri.Columns.AddRange(new DataColumn[] 
@@ -272,11 +274,11 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         void AnaFonk()
         {
-            #region Kontrol ve Fabrika Ayarı İşlemleri
+            #region Kontrol ve Yenileme İşlemleri
 
             if (!Kontrol()) { return; }
 
-            //doluluk
+            //Doluluk kontrolü; bu kontrole göre ders bloklarının yerleştirmede öncelik sırası belirlenir
             foreach (var db in dersBloklari)
             {
                 int doluluk = 0;
@@ -331,15 +333,18 @@ namespace Ders_Programı_Planlayıcı
                     }
                 }
 
-                db.doluluk = doluluk;
+                db.doluluk = doluluk + db.uzunluk;
             }
-
+            
+            //Ders bloklarının doluluğa göre büyükten küçüğe sıralanması
             dersBloklari.Sort((x, y) => y.doluluk.CompareTo(x.doluluk));
 
+            //Günleri ve saatleri yenileme
             gunler.Clear(); for (int gun = 0; gun < gunSayisi; gun++) { gunler.Add(gun); }
             saatler.Clear(); for (int saat = 0; saat < gunlukDersSayisi; saat++) { saatler.Add(saat); }
 
             int counter = 0;
+            //Kısıtlama sayaçlarının ve "eklendi" değerlerinin sıfırlanması
             foreach (var db in dersBloklari) 
             {
                 db.eklendi = false;
@@ -400,6 +405,7 @@ namespace Ders_Programı_Planlayıcı
                 while (dersBloklari.Any(db => db.eklendi == false))
                 {
                     counter++;
+                    //Her döngüde eklenemeyen ders blokları listenir ve dönülür
                     foreach (var eklenemeyenDB in dersBloklari.Where(db => db.eklendi == false))
                     {
                         foreach (var gun in gunler.ToList())
@@ -452,7 +458,7 @@ namespace Ders_Programı_Planlayıcı
                                             }
                                         }
 
-                                        Algoritma(eklenemeyenDB, false, false);
+                                        Algoritma(eklenemeyenDB, false, true);
                                         yerlestirilen--;
                                         goto digerEklenemeyenBlogaGec;
                                     }
@@ -469,6 +475,7 @@ namespace Ders_Programı_Planlayıcı
                 }
                 if (counter > dersBloklari.Count * 10)
                 {
+                    //KONTROL EDİLMESİ GEREK - WHILE DONGUSUNE DAHİL DEĞİL - KAÇ KEZ UĞRUYOR BURAYA?
                     anafonktur++;
                     //AnaFonk();
                     return;
@@ -479,16 +486,28 @@ namespace Ders_Programı_Planlayıcı
             lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
             lblTur.Text = counter.ToString();
 
-            #region TableLayoutPanel İşlemleri
+            #region TableLayoutPanel ve DataGridView İşlemleri
 
-            Thread t1 = new Thread(TLPSinifWorker);
-            t1.Start();
+            if (dbSinif != null)
+            {
+                Thread t1 = new Thread(TLPSinifWorker);
+                t1.Start();
+            }
 
-            Thread t2 = new Thread(TLPOgretmenWorker);
-            t2.Start();
+            if (dbOgretmen != null)
+            {
+                Thread t2 = new Thread(TLPOgretmenWorker);
+                t2.Start();
+            }
 
-            Thread t3 = new Thread(TLPDerslikWorker);
-            t3.Start();
+            if (dbDerslik != null)
+            {
+                Thread t3 = new Thread(TLPDerslikWorker);
+                t3.Start();
+            }
+
+            Thread t4 = new Thread(DGWDersCizelgesiWorker);
+            t4.Start();
 
             #endregion
 
@@ -510,7 +529,7 @@ namespace Ders_Programı_Planlayıcı
 
             #endregion
 
-            #region ListView İşlemleri
+            #region ListView İşlemleri - Başarısız İstekler
 
             lvwBasarisizlar.Items.Clear();
 
@@ -848,6 +867,63 @@ namespace Ders_Programı_Planlayıcı
 
         }
 
+        void DGWDersCizelgesiWorker()
+        {
+            dgwDersCizelgesi.Invoke((MethodInvoker)delegate {
+
+                DataGridViewTextBoxColumn column;
+
+                //column = new DataGridViewTextBoxColumn();
+                //column.HeaderText = "";
+                //dgwDersCizelgesi.Columns.Add(column);
+
+                foreach (Ders ders in dersler)
+                {
+                    column = new DataGridViewTextBoxColumn();
+                    column.HeaderText = ders.kod;
+                    dgwDersCizelgesi.Columns.Add(column);
+                }
+                column = new DataGridViewTextBoxColumn();
+                column.HeaderText = "Toplam";
+                dgwDersCizelgesi.Columns.Add(column);
+
+                DataGridViewRow row;
+                DataGridViewCell cell;
+
+                foreach (Sinif sinif in siniflar)
+                {
+                    row = new DataGridViewRow();
+                    row.Height = 30;
+                    row.HeaderCell.Value = sinif.kod;
+
+                    for (int i = 0; i < dgwDersCizelgesi.Columns.Count - 1; i++)
+                    {
+                        int tds = 0;
+                        foreach (AtananDers ad in atananDersler)
+                        {
+                            if (ad.ders.kod == dersler[i].kod && ad.siniflar.Contains(sinif))
+                            {
+                                tds += ad.tds;
+                            }
+                        }
+
+                        cell = new DataGridViewTextBoxCell();
+                        cell.Value = tds.ToString();
+                        cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        row.Cells.Add(cell);
+                    }
+
+                    cell = new DataGridViewTextBoxCell();
+                    cell.Value = sinif.tds.ToString();
+                    cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    row.Cells.Add(cell);
+
+                    dgwDersCizelgesi.Rows.Add(row);
+                }
+
+            });
+        }
+
         /// <summary>
         /// Atanan dersin yerleştirilen ders bloklarının bulunduğu günlerini kontrol eder, eğer günler çakışırsa true döndürür 
         /// </summary>
@@ -905,7 +981,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     for (int j = 0; j < ogretmen.bosSaatler.GetLength(1); j++)
                     {
-                        if (ogretmen.bosSaatler[i,j] == false)
+                        if (ogretmen.bosSaatler[i,j] == false && ogretmen.uygunZamanlar[i,j] == true)
                         {
                             if (!gunIndex.Contains(i))
                             {
@@ -919,7 +995,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     //return true;
                     ogretmen.oksayac++;
-                    if (ogretmen.oksayac <= 500)
+                    if (ogretmen.oksayac <= dersBloklari.Count * 100)
                     {
                         return true;
                     }
@@ -928,7 +1004,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     //return true;
                     ogretmen.oksayac++;
-                    if (ogretmen.oksayac <= 500)
+                    if (ogretmen.oksayac <= dersBloklari.Count * 100)
                     {
                         return true;
                     }
@@ -1000,8 +1076,6 @@ namespace Ders_Programı_Planlayıcı
             }
             return false;
         }
-
-        Random rnd = new Random();
 
         /// <summary>
         /// Verilen listeyi karıştırır
@@ -1195,6 +1269,7 @@ namespace Ders_Programı_Planlayıcı
 
             return true;
         }
+
 
 
         #region Üst Paneldeki kontrol nesnelerinin işlemleri
