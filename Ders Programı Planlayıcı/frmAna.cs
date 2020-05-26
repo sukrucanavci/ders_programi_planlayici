@@ -515,7 +515,11 @@ namespace Ders_Programı_Planlayıcı
 
             int sutun = gunSayisi * GunlukDersSayisi + 1;
             int w = tlpSiniflar.Width / sutun;
+
             flpSiniflar.Controls.Clear(); //BUG OLABİLİR
+            flpOgretmenler.Controls.Clear();
+            flpDerslikler.Controls.Clear();
+
             foreach (var db in dersBloklari)
             {
                 if (db.eklendi == false)
@@ -871,6 +875,9 @@ namespace Ders_Programı_Planlayıcı
         {
             dgwDersCizelgesi.Invoke((MethodInvoker)delegate {
 
+                dgwDersCizelgesi.Columns.Clear();
+                dgwDersCizelgesi.Rows.Clear();
+
                 DataGridViewTextBoxColumn column;
 
                 //column = new DataGridViewTextBoxColumn();
@@ -881,6 +888,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     column = new DataGridViewTextBoxColumn();
                     column.HeaderText = ders.kod;
+                    column.ToolTipText = ders.ad;
                     dgwDersCizelgesi.Columns.Add(column);
                 }
                 column = new DataGridViewTextBoxColumn();
@@ -895,20 +903,32 @@ namespace Ders_Programı_Planlayıcı
                     row = new DataGridViewRow();
                     row.Height = 30;
                     row.HeaderCell.Value = sinif.kod;
+                    row.HeaderCell.ToolTipText = sinif.ad;
 
                     for (int i = 0; i < dgwDersCizelgesi.Columns.Count - 1; i++)
                     {
                         int tds = 0;
+                        string tiptext = "";
+
                         foreach (AtananDers ad in atananDersler)
                         {
                             if (ad.ders.kod == dersler[i].kod && ad.siniflar.Contains(sinif))
                             {
                                 tds += ad.tds;
+                                foreach (Ogretmen ogretmen in ad.ogretmenler)
+                                {
+                                    tiptext += ogretmen.ad + " " + ogretmen.soyad + "\n";
+                                }
+                                foreach (Derslik derslik in ad.derslikler)
+                                {
+                                    tiptext += derslik.ad + " ";
+                                }
                             }
                         }
 
                         cell = new DataGridViewTextBoxCell();
                         cell.Value = tds.ToString();
+                        cell.ToolTipText = tiptext;
                         cell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                         row.Cells.Add(cell);
                     }
@@ -1599,6 +1619,9 @@ namespace Ders_Programı_Planlayıcı
                 if (ctl is null)
                 {
                     tlpSiniflar.ResumeLayout();
+                    tlpOgretmenler.ResumeLayout();
+                    tlpDerslikler.ResumeLayout();
+
                     TableLayoutPanelCellPosition tlpCol = new TableLayoutPanelCellPosition();
                     TableLayoutPanelCellPosition tlpRow = new TableLayoutPanelCellPosition();
 
@@ -1654,6 +1677,49 @@ namespace Ders_Programı_Planlayıcı
                                     }
                                 }
 
+                                int col = tlpCol.Column;
+                                string rowText = tlpSiniflar.GetControlFromPosition(0, tlpRow.Row).Text;
+
+                                k = 0;
+                                for (int i = 0; i < ogretmenler.Count; i++)
+                                {
+                                    if (seciliDB.atananDers.ogretmenler.Any(ogr => ogr.kod == tlpOgretmenler.GetControlFromPosition(0, i+2).Text))
+                                    {
+                                        for (; k < seciliDB.ogretmenKartlar.Count;)
+                                        {
+                                            tlpOgretmenler.Controls.Add(seciliDB.ogretmenKartlar[k], col, i + 2);
+                                            k++;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                k = 0;
+                                for (int i = 0; i < derslikler.Count; i++)
+                                {
+                                    if (seciliDB.atananDers.derslikler.Any(ogr => ogr.kod == tlpDerslikler.GetControlFromPosition(0, i + 2).Text))
+                                    {
+                                        for (; k < seciliDB.derslikKartlar.Count;)
+                                        {
+                                            tlpDerslikler.Controls.Add(seciliDB.derslikKartlar[k], col, i + 2);
+                                            k++;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                                foreach (var kart in seciliDB.ogretmenKartlar)
+                                {
+                                    kart.Show();
+                                }
+
+                                foreach (var kart in seciliDB.derslikKartlar)
+                                {
+                                    kart.Show();
+                                }
+
                                 foreach (var kart in seciliDB.sinifKartlar)
                                 {
                                     kart.Show();
@@ -1686,8 +1752,10 @@ namespace Ders_Programı_Planlayıcı
                         MessageBox.Show(ex.Message);
                     }
 
-                    //seciliDB.kartlar[0].Margin = new Padding(0);
+
                     tlpSiniflar.SuspendLayout();
+                    tlpOgretmenler.SuspendLayout();
+                    tlpDerslikler.SuspendLayout();
                 }
             }
 
