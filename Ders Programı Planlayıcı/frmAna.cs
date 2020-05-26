@@ -549,8 +549,15 @@ namespace Ders_Programı_Planlayıcı
                         if (dersBlogu.gun == gun && dersBlogu.atananDers.ders.kisitlama == 
                             Ders.DagilimKisitlamasi.bloklarTumGunlereDagitilmali)
                         {
+                            string siniflar = "";
+
+                            foreach (var sinif in atananDers.siniflar)
+                            {
+                                siniflar += sinif.kod + " "; 
+                            }
+
                             item = new ListViewItem(new string[] {
-                                atananDers.ders.ad, "Ders Kartlarının Günlere Dağılımı:" + atananDers.ders.kisitlama
+                                atananDers.ders.ad, "Ders kartlarının günlere dağılımı: Başarısız - Sınıf Kodları: " + siniflar
                             }, 0, Color.Black, Color.White, default);
 
                             lvwBasarisizlar.Items.Add(item);
@@ -559,6 +566,37 @@ namespace Ders_Programı_Planlayıcı
                     guns.Add(dersBlogu.gun);
                 }
                 guns.Clear();
+            }
+
+            List<int> gunIndex;
+
+            foreach (Ogretmen ogr in ogretmenler)
+            {
+                gunIndex = new List<int>();
+
+                for (int i = 0; i < ogr.bosSaatler.GetLength(0); i++)
+                {
+                    for (int j = 0; j < ogr.bosSaatler.GetLength(1); j++)
+                    {
+                        if (ogr.bosSaatler[i, j] == false && ogr.uygunZamanlar[i, j] == true)
+                        {
+                            if (!gunIndex.Contains(i))
+                            {
+                                gunIndex.Add(i);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (ogr.maxDersGunu < gunIndex.Count)
+                {
+                    item = new ListViewItem(new string[] {
+                                ogr.ad + " " + ogr.soyad, "Öğretmenin ders alabileceği gün sayısı sınırı aşıldı : " + ogr.maxDersGunu + "<" + gunIndex.Count
+                            }, 0, Color.Black, Color.White, default);
+
+                    lvwBasarisizlar.Items.Add(item);
+                }
             }
 
             #endregion
@@ -1015,7 +1053,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     //return true;
                     ogretmen.oksayac++;
-                    if (ogretmen.oksayac <= dersBloklari.Count * 100)
+                    if (ogretmen.oksayac <= dersBloklari.Count * 10)
                     {
                         return true;
                     }
@@ -1024,7 +1062,7 @@ namespace Ders_Programı_Planlayıcı
                 {
                     //return true;
                     ogretmen.oksayac++;
-                    if (ogretmen.oksayac <= dersBloklari.Count * 100)
+                    if (ogretmen.oksayac <= dersBloklari.Count * 10)
                     {
                         return true;
                     }
