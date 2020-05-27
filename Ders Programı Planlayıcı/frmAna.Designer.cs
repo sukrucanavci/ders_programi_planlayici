@@ -159,9 +159,10 @@
             // 
             this.flpSiniflar.AutoScroll = true;
             this.flpSiniflar.BackColor = System.Drawing.Color.White;
-            this.flpSiniflar.Location = new System.Drawing.Point(506, 6);
+            this.flpSiniflar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpSiniflar.Location = new System.Drawing.Point(500, 0);
             this.flpSiniflar.Name = "flpSiniflar";
-            this.flpSiniflar.Size = new System.Drawing.Size(504, 130);
+            this.flpSiniflar.Size = new System.Drawing.Size(882, 139);
             this.flpSiniflar.TabIndex = 14;
             // 
             // pnlDersBilgi
@@ -433,6 +434,7 @@
             this.lblTur.TabIndex = 3;
             this.lblTur.Text = "TUR";
             this.lblTur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTur.Visible = false;
             // 
             // lblBasari
             // 
@@ -443,6 +445,7 @@
             this.lblBasari.TabIndex = 4;
             this.lblBasari.Text = "0/0";
             this.lblBasari.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBasari.Visible = false;
             // 
             // lblAnaTur
             // 
@@ -453,6 +456,7 @@
             this.lblAnaTur.TabIndex = 5;
             this.lblAnaTur.Text = "anafonktur";
             this.lblAnaTur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAnaTur.Visible = false;
             // 
             // lblMax
             // 
@@ -464,6 +468,7 @@
             this.lblMax.TabIndex = 6;
             this.lblMax.Text = "0";
             this.lblMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblMax.Visible = false;
             // 
             // tpDersCizelgesi
             // 

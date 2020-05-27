@@ -5,12 +5,12 @@ namespace Ders_Programı_Planlayıcı
 {
     public partial class frmZamanTablosu : Form
     {
-        public bool[,] zamanMatrisi = new bool[frmAna.gunSayisi, frmAna.gunlukDersSayisi];
 
-        public frmZamanTablosu(bool[,] zamanMatrisi)
+        public frmZamanTablosu(string isim, bool[,] zamanMatrisi)
         {
             InitializeComponent();
-            this.zamanMatrisi = zamanMatrisi;
+
+            this.Text += isim;
 
             DataGridViewImageColumn column;
             for (int saat = 1; saat <= frmAna.gunlukDersSayisi; saat++)
@@ -22,6 +22,7 @@ namespace Ders_Programı_Planlayıcı
 
             DataGridViewRow row;
             DataGridViewCell cell;
+
             for (int gun = 0; gun < zamanMatrisi.GetLength(0); gun++)
             {
                 row = new DataGridViewRow();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -27,9 +26,9 @@ namespace Ders_Programı_Planlayıcı
             db = dersBlogu;
 
             Size = new Size(Width * dersBlogu.uzunluk, 30);
-            Margin = new Padding(0);
-            Dock = DockStyle.Fill;
-            //BorderStyle = BorderStyle.FixedSingle;
+            Margin = new Padding(1);
+            Dock = DockStyle.None;
+            BorderStyle = BorderStyle.FixedSingle;
             Text = db.atananDers.ders.kod;
 
             Label lab = new Label()

@@ -276,8 +276,8 @@ namespace Ders_Programı_Planlayıcı
         {
             #region Kontrol ve Yenileme İşlemleri
 
-            if (!Kontrol()) { return; }
-
+            if (!SaatKontrolu()) { return; }
+            
             //Doluluk kontrolü; bu kontrole göre ders bloklarının yerleştirmede öncelik sırası belirlenir
             foreach (var db in dersBloklari)
             {
@@ -371,7 +371,7 @@ namespace Ders_Programı_Planlayıcı
 
             #endregion
 
-            while (dersBloklari.Any(db => db.eklendi == false))
+            while (dersBloklari.Any(db => db.eklendi == false && db.yerlestirilemez == false))
             {
                 foreach (var db in dersBloklari) { db.eklendi = false; }
 
@@ -399,14 +399,17 @@ namespace Ders_Programı_Planlayıcı
 
                 foreach (var dersBlogu in dersBloklari)
                 {
-                    Algoritma(dersBlogu, true, true);
+                    if (!dersBlogu.yerlestirilemez)
+                    {
+                        Algoritma(dersBlogu, true, true);
+                    }
                 }
 
-                while (dersBloklari.Any(db => db.eklendi == false))
+                while (dersBloklari.Any(db => db.eklendi == false && db.yerlestirilemez == false))
                 {
                     counter++;
                     //Her döngüde eklenemeyen ders blokları listenir ve dönülür
-                    foreach (var eklenemeyenDB in dersBloklari.Where(db => db.eklendi == false))
+                    foreach (var eklenemeyenDB in dersBloklari.Where(db => db.eklendi == false && db.yerlestirilemez == false))
                     {
                         foreach (var gun in gunler.ToList())
                         {
@@ -522,9 +525,8 @@ namespace Ders_Programı_Planlayıcı
 
             foreach (var db in dersBloklari)
             {
-                if (db.eklendi == false)
+                if (db.yerlestirilemez && !db.eklendi)
                 {
-                    db.kart1.genislik = w * db.uzunluk;
                     flpSiniflar.Controls.Add(db.kart1);
                     flpOgretmenler.Controls.Add(db.kart2);
                     flpDerslikler.Controls.Add(db.kart3);
@@ -1132,6 +1134,7 @@ namespace Ders_Programı_Planlayıcı
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -1203,6 +1206,10 @@ namespace Ders_Programı_Planlayıcı
         /// <returns></returns>
         bool UygunZamanlariKontrolEt(DersBlogu dersBlogu, int gun, int saat)
         {
+            if (saat + dersBlogu.uzunluk > gunlukDersSayisi)
+            {
+                return false;
+            }
             for (int i = saat; i < saat + dersBlogu.uzunluk; i++)
             {
                 if (!dersBlogu.atananDers.ders.uygunZamanlar[gun, i])
@@ -1259,8 +1266,7 @@ namespace Ders_Programı_Planlayıcı
         /// <summary>
         /// Ön kontrolleri gerçekleştirir. Eğer algoritmanın çalışmasına engel bir durum yoksa true, varsa false döndürür
         /// </summary>
-        /// <returns>asd</returns>
-        bool Kontrol()
+        bool SaatKontrolu()
         {
             foreach (var sinif in siniflar)
             {
@@ -1327,8 +1333,6 @@ namespace Ders_Programı_Planlayıcı
 
             return true;
         }
-
-
 
         #region Üst Paneldeki kontrol nesnelerinin işlemleri
 
@@ -1602,7 +1606,7 @@ namespace Ders_Programı_Planlayıcı
 
         private void tsbKontrol_Click(object sender, EventArgs e)
         {
-            if (Kontrol())
+            if (SaatKontrolu())
             {
                 MessageBox.Show("Kontrol başarılı");
             }
@@ -1615,10 +1619,34 @@ namespace Ders_Programı_Planlayıcı
         private void tsbPlanlama_Click(object sender, EventArgs e)
         {
             //Hide();
+            foreach (DersBlogu db in dersBloklari)
+            {
+                bool yerlesebilir = false;
+
+                for (int i = 0; i < gunSayisi; i++)
+                {
+                    for (int j = 0; j < gunlukDersSayisi; j++)
+                    {
+                        if (UygunZamanlariKontrolEt(db, i, j))
+                        {
+                            yerlesebilir = true;
+                        }
+                    }
+                }
+                if (!yerlesebilir)
+                {
+                    db.yerlestirilemez = true;
+                }
+                else
+                {
+                    db.yerlestirilemez = false;
+                }
+            }
+
             while (true)
             {
                 AnaFonk();
-                if (!dersBloklari.Any(db => db.eklendi == false))
+                if (!dersBloklari.Any(db => db.eklendi == false && db.yerlestirilemez == false))
                 {
                     break;
                 }
@@ -1709,13 +1737,13 @@ namespace Ders_Programı_Planlayıcı
                                         for (; k < seciliDB.sinifKartlar.Count;)
                                         {
                                             tlpSiniflar.Controls.Add(seciliDB.sinifKartlar[k], tlpCol.Column, i + 2);
+                                            dbSinif[i, tlpCol.Column - 1] = seciliDB;
                                             k++;
                                             break;
                                         }
                                     }
                                 }
 
-                                int col = tlpCol.Column;
                                 string rowText = tlpSiniflar.GetControlFromPosition(0, tlpRow.Row).Text;
 
                                 k = 0;
@@ -1725,7 +1753,8 @@ namespace Ders_Programı_Planlayıcı
                                     {
                                         for (; k < seciliDB.ogretmenKartlar.Count;)
                                         {
-                                            tlpOgretmenler.Controls.Add(seciliDB.ogretmenKartlar[k], col, i + 2);
+                                            tlpOgretmenler.Controls.Add(seciliDB.ogretmenKartlar[k], tlpCol.Column, i + 2);
+                                            dbOgretmen[i, tlpCol.Column - 1] = seciliDB;
                                             k++;
                                             break;
                                         }
@@ -1740,7 +1769,8 @@ namespace Ders_Programı_Planlayıcı
                                     {
                                         for (; k < seciliDB.derslikKartlar.Count;)
                                         {
-                                            tlpDerslikler.Controls.Add(seciliDB.derslikKartlar[k], col, i + 2);
+                                            tlpDerslikler.Controls.Add(seciliDB.derslikKartlar[k], tlpCol.Column, i + 2);
+                                            dbDerslik[i, tlpCol.Column - 1] = seciliDB;
                                             k++;
                                             break;
                                         }

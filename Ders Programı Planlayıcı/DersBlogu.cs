@@ -26,6 +26,9 @@ namespace Ders_Programı_Planlayıcı
         /// </summary>
         public int dksayac = 0;
 
+
+        public bool yerlestirilemez = false;
+
         /// <summary>
         /// Tablolara yerleştirilecek ders kartları
         /// </summary>
