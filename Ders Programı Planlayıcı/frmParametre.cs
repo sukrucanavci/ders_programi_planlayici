@@ -44,6 +44,7 @@ namespace Ders_Programı_Planlayıcı
             }
             else if (frmAna.gunSayisi < secilenGunSayisi)
             {
+                frmAna.secilenGunler.Clear();
                 frmAna.secilenGunler.AddRange(frmAna.haftaninGunleri.GetRange(frmAna.gunSayisi, secilenGunSayisi - frmAna.gunSayisi));
             }
 
@@ -326,7 +327,7 @@ namespace Ders_Programı_Planlayıcı
                             return;
                         }
                     }
-                    Close();
+                    Hide();
                     break;
                 default:
                     break;
@@ -361,5 +362,10 @@ namespace Ders_Programı_Planlayıcı
         }
 
         #endregion
+
+        private void frmParametre_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Application.Exit();
+        }
     }
 }

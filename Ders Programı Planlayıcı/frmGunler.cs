@@ -19,9 +19,10 @@ namespace Ders_Programı_Planlayıcı
 
         private void frmGunler_Load(object sender, EventArgs e)
         {
+            ListViewItem lvwItem;
             for (int i = 0; i < frmAna.secilenGunler.Count; i++)
             {
-                ListViewItem lvwItem = new ListViewItem((i + 1).ToString());
+                lvwItem = new ListViewItem((i + 1).ToString());
                 lvwItem.SubItems.Add(frmAna.secilenGunler[i]);
                 lvwGunler.Items.Add(lvwItem);
             }

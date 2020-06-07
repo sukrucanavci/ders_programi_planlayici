@@ -170,7 +170,6 @@
             this.txtVeritabaniAdi.Name = "txtVeritabaniAdi";
             this.txtVeritabaniAdi.Size = new System.Drawing.Size(184, 22);
             this.txtVeritabaniAdi.TabIndex = 9;
-            this.txtVeritabaniAdi.Text = "okul";
             // 
             // txtSifre
             // 
@@ -423,6 +422,7 @@
             this.Name = "frmParametre";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Kurulum Sihirbazı";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmParametre_FormClosing);
             this.Load += new System.EventHandler(this.frmParametre_Load);
             this.panel1.ResumeLayout(false);
             this.tpVeritabani.ResumeLayout(false);

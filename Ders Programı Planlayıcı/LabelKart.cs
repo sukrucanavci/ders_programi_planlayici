@@ -28,7 +28,7 @@ namespace Ders_Programı_Planlayıcı
             Size = new Size(Width * dersBlogu.uzunluk, 30);
             Margin = new Padding(1);
             Dock = DockStyle.None;
-            BorderStyle = BorderStyle.FixedSingle;
+            //BorderStyle = BorderStyle.FixedSingle;
             Text = db.atananDers.ders.kod;
 
             Label lab = new Label()
