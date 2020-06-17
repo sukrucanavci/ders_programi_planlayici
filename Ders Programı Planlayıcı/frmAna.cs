@@ -1680,7 +1680,7 @@ namespace Ders_Programı_Planlayıcı
         private void tsbPlanlama_Click(object sender, EventArgs e)
         {
             DialogResult dg = MessageBox.Show("Otomatik ders planlama başlatılsın mı? Bu işlem uzun sürebilir!", "Ders Planlamasını Başlat", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dg != DialogResult.OK)
+            if (dg == DialogResult.No)
             {
                 return;
             }
