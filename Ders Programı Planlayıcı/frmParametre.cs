@@ -108,6 +108,12 @@ namespace Ders_Programı_Planlayıcı
 
         private void btnBaglanVerileriCek_Click(object sender, EventArgs e)
         {
+            if (txtServerAdresi.Text.Length < 1 || txtVeritabaniAdi.Text.Length < 1)
+            {
+                MessageBox.Show("Sunucu adresini ve veritabanı adını girmeden veri çekemezsiniz!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             SqlConnection baglanti = new SqlConnection();
 
             if (rdoWinAuto.Checked)

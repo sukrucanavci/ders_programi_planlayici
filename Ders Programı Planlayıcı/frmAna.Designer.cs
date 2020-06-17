@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.pnlAlt = new System.Windows.Forms.Panel();
             this.flpDerslikler = new System.Windows.Forms.FlowLayoutPanel();
             this.lvwBasarisizlar = new System.Windows.Forms.ListView();
@@ -59,10 +62,6 @@
             this.tsbPlanlama = new System.Windows.Forms.ToolStripButton();
             this.tsbSonraKontrol = new System.Windows.Forms.ToolStripButton();
             this.tabMenu = new System.Windows.Forms.TabControl();
-            this.lblTur = new System.Windows.Forms.Label();
-            this.lblBasari = new System.Windows.Forms.Label();
-            this.lblAnaTur = new System.Windows.Forms.Label();
-            this.lblMax = new System.Windows.Forms.Label();
             this.tpDersCizelgesi = new System.Windows.Forms.TabPage();
             this.dgwDersCizelgesi = new System.Windows.Forms.DataGridView();
             this.tpDerslikler = new System.Windows.Forms.TabPage();
@@ -72,6 +71,7 @@
             this.tpSiniflar = new System.Windows.Forms.TabPage();
             this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.statusStrip1.SuspendLayout();
             this.pnlAlt.SuspendLayout();
             this.pnlDersBilgi.SuspendLayout();
             this.tpAnaMenu.SuspendLayout();
@@ -88,11 +88,33 @@
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Location = new System.Drawing.Point(10, 653);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel2,
+            this.toolStripStatusLabel1,
+            this.toolStripStatusLabel3});
+            this.statusStrip1.Location = new System.Drawing.Point(10, 649);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1382, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1382, 26);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(106, 20);
+            this.toolStripStatusLabel2.Text = "Şükrü Can Avcı";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(244, 20);
+            this.toolStripStatusLabel1.Text = "İletişim: sukrucanavci@outlook.com";
+            // 
+            // toolStripStatusLabel3
+            // 
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(284, 20);
+            this.toolStripStatusLabel3.Text = "https://www.linkedin.com/in/sukrucanavci";
             // 
             // pnlAlt
             // 
@@ -103,7 +125,7 @@
             this.pnlAlt.Controls.Add(this.flpSiniflar);
             this.pnlAlt.Controls.Add(this.pnlDersBilgi);
             this.pnlAlt.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlAlt.Location = new System.Drawing.Point(10, 514);
+            this.pnlAlt.Location = new System.Drawing.Point(10, 510);
             this.pnlAlt.Name = "pnlAlt";
             this.pnlAlt.Size = new System.Drawing.Size(1382, 139);
             this.pnlAlt.TabIndex = 2;
@@ -275,7 +297,7 @@
             this.tsbYeni.Size = new System.Drawing.Size(131, 93);
             this.tsbYeni.Text = "Yeni Veritabanı";
             this.tsbYeni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbYeni.ToolTipText = "Yeni veritabanı oluşturur";
+            this.tsbYeni.ToolTipText = "Yeni veritabanı oluştur";
             this.tsbYeni.Click += new System.EventHandler(this.tsbYeni_Click);
             // 
             // tsbKaydet
@@ -287,7 +309,7 @@
             this.tsbKaydet.Size = new System.Drawing.Size(79, 93);
             this.tsbKaydet.Text = "Kaydet";
             this.tsbKaydet.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbKaydet.ToolTipText = "Verileri veritabanında günceller";
+            this.tsbKaydet.ToolTipText = "Verileri veritabanında kaydeder veya günceller";
             this.tsbKaydet.Click += new System.EventHandler(this.tsbKaydet_Click);
             // 
             // tsbOnizle
@@ -300,7 +322,7 @@
             this.tsbOnizle.Text = "Çıktı Al";
             this.tsbOnizle.TextDirection = System.Windows.Forms.ToolStripTextDirection.Horizontal;
             this.tsbOnizle.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbOnizle.ToolTipText = "Oluşturulan ders programlarınızın çıktısını alır";
+            this.tsbOnizle.ToolTipText = "Ders programının word programında çıktısını al";
             this.tsbOnizle.Click += new System.EventHandler(this.tsbOnizle_Click);
             // 
             // tsbVeritabani
@@ -311,7 +333,7 @@
             this.tsbVeritabani.Size = new System.Drawing.Size(170, 93);
             this.tsbVeritabani.Text = "Veritabanı ve Parametre";
             this.tsbVeritabani.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbVeritabani.ToolTipText = "Veritabanında veri çekmek için pencere açar";
+            this.tsbVeritabani.ToolTipText = "Başlangıçtaki kurulum sihirbazı ekranına dön";
             this.tsbVeritabani.Click += new System.EventHandler(this.tsbVeritabani_Click);
             // 
             // toolStripSeparator1
@@ -383,8 +405,7 @@
             this.tsbOnceKontrol.Size = new System.Drawing.Size(195, 93);
             this.tsbOnceKontrol.Text = "Planlama Öncesi Kontrol";
             this.tsbOnceKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbOnceKontrol.ToolTipText = "Otomatik planlama öncesinde verilerin doğruluğu hakkınnda ön kontrol gerçekleştir" +
-    "ir";
+            this.tsbOnceKontrol.ToolTipText = "Otomatik planlama öncesinde zaman durumlarını kontrol edin";
             this.tsbOnceKontrol.Click += new System.EventHandler(this.tsbKontrol_Click);
             // 
             // tsbPlanlama
@@ -411,7 +432,7 @@
             this.tsbSonraKontrol.Size = new System.Drawing.Size(199, 76);
             this.tsbSonraKontrol.Text = "Planlama Sonrası Kontrol";
             this.tsbSonraKontrol.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.tsbSonraKontrol.ToolTipText = "Otomatik ders planlamayı başlatır";
+            this.tsbSonraKontrol.ToolTipText = "Planlama sonrasında başarısız istekleri listeler";
             this.tsbSonraKontrol.Click += new System.EventHandler(this.tsbSonraKontrol_Click);
             // 
             // tabMenu
@@ -423,52 +444,6 @@
             this.tabMenu.SelectedIndex = 0;
             this.tabMenu.Size = new System.Drawing.Size(1382, 131);
             this.tabMenu.TabIndex = 0;
-            // 
-            // lblTur
-            // 
-            this.lblTur.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblTur.Location = new System.Drawing.Point(507, -5);
-            this.lblTur.Margin = new System.Windows.Forms.Padding(0);
-            this.lblTur.Name = "lblTur";
-            this.lblTur.Size = new System.Drawing.Size(100, 23);
-            this.lblTur.TabIndex = 3;
-            this.lblTur.Text = "TUR";
-            this.lblTur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblTur.Visible = false;
-            // 
-            // lblBasari
-            // 
-            this.lblBasari.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblBasari.Location = new System.Drawing.Point(638, -5);
-            this.lblBasari.Name = "lblBasari";
-            this.lblBasari.Size = new System.Drawing.Size(303, 23);
-            this.lblBasari.TabIndex = 4;
-            this.lblBasari.Text = "0/0";
-            this.lblBasari.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblBasari.Visible = false;
-            // 
-            // lblAnaTur
-            // 
-            this.lblAnaTur.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblAnaTur.Location = new System.Drawing.Point(967, -5);
-            this.lblAnaTur.Name = "lblAnaTur";
-            this.lblAnaTur.Size = new System.Drawing.Size(100, 23);
-            this.lblAnaTur.TabIndex = 5;
-            this.lblAnaTur.Text = "anafonktur";
-            this.lblAnaTur.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblAnaTur.Visible = false;
-            // 
-            // lblMax
-            // 
-            this.lblMax.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblMax.Location = new System.Drawing.Point(286, -5);
-            this.lblMax.Margin = new System.Windows.Forms.Padding(0);
-            this.lblMax.Name = "lblMax";
-            this.lblMax.Size = new System.Drawing.Size(100, 23);
-            this.lblMax.TabIndex = 6;
-            this.lblMax.Text = "0";
-            this.lblMax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblMax.Visible = false;
             // 
             // tpDersCizelgesi
             // 
@@ -604,10 +579,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1402, 685);
-            this.Controls.Add(this.lblMax);
-            this.Controls.Add(this.lblAnaTur);
-            this.Controls.Add(this.lblBasari);
-            this.Controls.Add(this.lblTur);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pnlAlt);
             this.Controls.Add(this.statusStrip1);
@@ -616,9 +587,11 @@
             this.Padding = new System.Windows.Forms.Padding(10);
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Ders Programı Planlayıcı";
+            this.Text = "Ders Programı Planlayıcı 1.0";
             this.Load += new System.EventHandler(this.frmAna_Load);
             this.Shown += new System.EventHandler(this.frmAna_Shown);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.pnlAlt.ResumeLayout(false);
             this.pnlDersBilgi.ResumeLayout(false);
             this.pnlDersBilgi.PerformLayout();
@@ -656,10 +629,6 @@
         private System.Windows.Forms.ToolStripButton tsbSonraKontrol;
         private System.Windows.Forms.TabControl tabMenu;
         private System.Windows.Forms.ToolStripButton tsbVeritabani;
-        private System.Windows.Forms.Label lblTur;
-        private System.Windows.Forms.Label lblBasari;
-        private System.Windows.Forms.Label lblAnaTur;
-        private System.Windows.Forms.Label lblMax;
         private System.Windows.Forms.TabPage tpDersCizelgesi;
         private System.Windows.Forms.TabPage tpDerslikler;
         private System.Windows.Forms.TabPage tpOgretmenler;
@@ -681,6 +650,9 @@
         public DBLayoutPanel tlpDerslikler;
         public System.Windows.Forms.FlowLayoutPanel flpDerslikler;
         private System.Windows.Forms.DataGridView dgwDersCizelgesi;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
     }
 }
 

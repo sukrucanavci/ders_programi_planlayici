@@ -13,7 +13,7 @@ namespace Ders_Programı_Planlayıcı
 {
     public partial class frmAna : Form
     {
-        #region Listeler
+        #region Lists
 
         public static List<Sinif> siniflar = new List<Sinif>();
         public static List<Derslik> derslikler = new List<Derslik>();
@@ -151,6 +151,8 @@ namespace Ders_Programı_Planlayıcı
             "2+1",
             "4",
             "2+2",
+            "2+1+1",
+            "5",
             "3+2",
             "2+2+1",
             "3+3",
@@ -348,7 +350,7 @@ namespace Ders_Programı_Planlayıcı
             foreach (var db in dersBloklari) 
             {
                 db.eklendi = false;
-                db.gun = -1;
+                db.gun = -100;
                 db.saat = -1;
                 db.dksayac = 0;
                 foreach (Ogretmen ogretmen in db.atananDers.ogretmenler)
@@ -480,14 +482,10 @@ namespace Ders_Programı_Planlayıcı
                 {
                     //KONTROL EDİLMESİ GEREK - WHILE DONGUSUNE DAHİL DEĞİL - KAÇ KEZ UĞRUYOR BURAYA?
                     anafonktur++;
-                    //AnaFonk();
                     return;
                 }
 
             }
-
-            lblBasari.Text = "  " + yerlestirilen + "/" + dersBloklari.Count;
-            lblTur.Text = counter.ToString();
 
             #region TableLayoutPanel ve DataGridView İşlemleri
 
@@ -535,7 +533,7 @@ namespace Ders_Programı_Planlayıcı
 
             #endregion
 
-            #region ListView İşlemleri - Başarısız İstekler
+            #region ListView İşlemleri - Başarısız Özel İstekler
 
             lvwBasarisizlar.Items.Clear();
 
@@ -548,8 +546,7 @@ namespace Ders_Programı_Planlayıcı
                 {  
                     foreach (var gun in guns)
                     {
-                        if (dersBlogu.gun == gun && dersBlogu.atananDers.ders.kisitlama == 
-                            Ders.DagilimKisitlamasi.bloklarTumGunlereDagitilmali)
+                        if (dersBlogu.gun == gun && dersBlogu.atananDers.ders.kisitlama == Ders.DagilimKisitlamasi.bloklarTumGunlereDagitilmali)
                         {
                             string siniflar = "";
 
@@ -564,6 +561,37 @@ namespace Ders_Programı_Planlayıcı
 
                             lvwBasarisizlar.Items.Add(item);
                         }
+                        else if ((dersBlogu.gun == gun || dersBlogu.gun == gun-1 || dersBlogu.gun == gun+1) && dersBlogu.atananDers.ders.kisitlama == Ders.DagilimKisitlamasi.ikiBlokArasindaEnAz1GunAraVerilmeli)
+                        {
+                            string siniflar = "";
+
+                            foreach (var sinif in atananDers.siniflar)
+                            {
+                                siniflar += sinif.kod + " ";
+                            }
+
+                            item = new ListViewItem(new string[] {
+                                atananDers.ders.ad, "Ders kartlarının günlere dağılımı: Başarısız - Sınıf Kodları: " + siniflar
+                            }, 0, Color.Black, Color.White, default);
+
+                            lvwBasarisizlar.Items.Add(item);
+                        }
+                        else if ((dersBlogu.gun == gun || dersBlogu.gun == gun - 1 || dersBlogu.gun == gun + 1 || dersBlogu.gun == gun - 2 || dersBlogu.gun == gun + 2) && dersBlogu.atananDers.ders.kisitlama == Ders.DagilimKisitlamasi.ikiBlokArasindaEnAz2GunAraVerilmeli)
+                        {
+                            string siniflar = "";
+
+                            foreach (var sinif in atananDers.siniflar)
+                            {
+                                siniflar += sinif.kod + " ";
+                            }
+
+                            item = new ListViewItem(new string[] {
+                                atananDers.ders.ad, "Ders kartlarının günlere dağılımı: Başarısız - Sınıf Kodları: " + siniflar
+                            }, 0, Color.Black, Color.White, default);
+
+                            lvwBasarisizlar.Items.Add(item);
+                        }
+
                     }
                     guns.Add(dersBlogu.gun);
                 }
@@ -996,12 +1024,46 @@ namespace Ders_Programı_Planlayıcı
             {
                 foreach (var db in dersBlogu.atananDers.dersBloklari)
                 {
-                    foreach (DersBlogu dbOther in db.atananDers.dersBloklari)
+                    foreach (DersBlogu hedefDB in db.atananDers.dersBloklari)
                     {
-                        if (dbOther.gun == gun)
+                        if (hedefDB.gun == gun)
                         {
                             dersBlogu.dksayac++;
-                            if (dersBlogu.dksayac <= 5)
+                            if (dersBlogu.dksayac <= 500)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (dersBlogu.atananDers.ders.kisitlama == Ders.DagilimKisitlamasi.ikiBlokArasindaEnAz1GunAraVerilmeli)
+            {
+                foreach (var db in dersBlogu.atananDers.dersBloklari)
+                {
+                    foreach (DersBlogu hedefDB in db.atananDers.dersBloklari)
+                    {
+                        if (hedefDB.gun == gun || hedefDB.gun == (gun-1) || hedefDB.gun == (gun+1))
+                        {
+                            dersBlogu.dksayac++;
+                            if (dersBlogu.dksayac <= 500)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (dersBlogu.atananDers.ders.kisitlama == Ders.DagilimKisitlamasi.ikiBlokArasindaEnAz2GunAraVerilmeli)
+            {
+                foreach (var db in dersBlogu.atananDers.dersBloklari)
+                {
+                    foreach (DersBlogu hedefDB in db.atananDers.dersBloklari)
+                    {
+                        if (hedefDB.gun == gun || hedefDB.gun == (gun - 1) || hedefDB.gun == (gun + 1) || hedefDB.gun == (gun - 2) || hedefDB.gun == (gun + 2))
+                        {
+                            dersBlogu.dksayac++;
+                            if (dersBlogu.dksayac <= 500)
                             {
                                 return true;
                             }
@@ -1568,7 +1630,6 @@ namespace Ders_Programı_Planlayıcı
 
         private void tsbYeni_Click(object sender, EventArgs e)
         {
-
             using (frmYeniDBSunucuGirisi frmSunucuGirisi = new frmYeniDBSunucuGirisi())
             {
                 frmSunucuGirisi.ShowDialog();
@@ -1608,17 +1669,22 @@ namespace Ders_Programı_Planlayıcı
         {
             if (SaatKontrolu())
             {
-                MessageBox.Show("Kontrol başarılı");
+                MessageBox.Show("Zaman kontrolü: BAŞARILI", "Kontrol", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Kontrol başarısız");
+                MessageBox.Show("Zaman kontrolü: BAŞARISIZ", "Kontrol", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void tsbPlanlama_Click(object sender, EventArgs e)
         {
-            //Hide();
+            DialogResult dg = MessageBox.Show("Otomatik ders planlama başlatılsın mı? Bu işlem uzun sürebilir!", "Ders Planlamasını Başlat", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dg != DialogResult.OK)
+            {
+                return;
+            }
+
             foreach (DersBlogu db in dersBloklari)
             {
                 bool yerlesebilir = false;
@@ -1651,9 +1717,8 @@ namespace Ders_Programı_Planlayıcı
                     break;
                 }
             }
-            lblAnaTur.Text = anafonktur.ToString();
+
             anafonktur = 0;
-            //Show();
         }
 
         private void tsbSonraKontrol_Click(object sender, EventArgs e)

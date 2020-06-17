@@ -47,7 +47,23 @@ namespace Ders_Programı_Planlayıcı
             btnTamam.Click += new EventHandler(Guncelle);
             void Guncelle(object sender, EventArgs e)
             {
-                //int oncekiUzunluk = atananDers.tds;
+                try
+                {
+                    if (cmbDagilim.Text.Contains("*"))
+                    {
+                        Array.ConvertAll(cmbDagilim.Text.Split('*'), int.Parse);
+                    }
+                    else
+                    {
+                        Array.ConvertAll(cmbDagilim.Text.Split('+'), int.Parse);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Dağılım şeklinin giriş biçimi doğru değil!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 atananDers.siniflar.Clear();
                 atananDers.ogretmenler.Clear();
                 atananDers.derslikler.Clear();
@@ -177,6 +193,23 @@ namespace Ders_Programı_Planlayıcı
                         derslikler.Add(drslk);
                         break; 
                     }
+
+            try
+            {
+                if (cmbDagilim.Text.Contains("*"))
+                {
+                    Array.ConvertAll(cmbDagilim.Text.Split('*'), int.Parse);
+                }
+                else
+                {
+                    Array.ConvertAll(cmbDagilim.Text.Split('+'), int.Parse);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Dağılım şeklinin giriş biçimi doğru değil!", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             atananDers = new AtananDers(ders, ogretmenler, siniflar, derslikler, cmbDagilim.Text);
             Close();

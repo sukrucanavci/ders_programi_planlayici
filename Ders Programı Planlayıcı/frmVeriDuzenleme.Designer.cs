@@ -228,7 +228,6 @@
             this.Name = "frmVeriDuzenleme";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Load += new System.EventHandler(this.frmVeriDuzenleme_Load);
             this.grpRenk.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

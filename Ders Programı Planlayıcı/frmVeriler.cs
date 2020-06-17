@@ -414,28 +414,24 @@ namespace Ders_Programı_Planlayıcı
                     if (lvwDersler.SelectedItems.Count < 1) { return; }
                     Ders secilenDers = frmAna.dersler.Where(drs => drs.kod == lvwDersler.SelectedItems[0].SubItems[1].Text).First();
                     frmZamanTablosu = new frmZamanTablosu(secilenDers.ad, secilenDers.uygunZamanlar); frmZamanTablosu.ShowDialog();
-                    //secilenDers.uygunZamanlar = frmZamanTablosu.zamanMatrisi;
                     break;
 
                 case Islem.Sinif:
                     if (lvwSiniflar.SelectedItems.Count < 1) { return; }
                     Sinif secilenSinif = frmAna.siniflar.Where(snf => snf.kod == lvwSiniflar.SelectedItems[0].SubItems[1].Text).First();
                     frmZamanTablosu = new frmZamanTablosu(secilenSinif.ad, secilenSinif.uygunZamanlar); frmZamanTablosu.ShowDialog();
-                    //secilenSinif.uygunZamanlar = frmZamanTablosu.zamanMatrisi;
                     break;
 
                 case Islem.Derslik:
                     if (lvwDerslikler.SelectedItems.Count < 1) { return; }
                     Derslik secilenDerslik = frmAna.derslikler.Where(drslik => drslik.kod == lvwDerslikler.SelectedItems[0].SubItems[1].Text).First();
                     frmZamanTablosu = new frmZamanTablosu(secilenDerslik.ad, secilenDerslik.uygunZamanlar); frmZamanTablosu.ShowDialog();
-                    //secilenDerslik.uygunZamanlar = frmZamanTablosu.zamanMatrisi;
                     break;
 
                 case Islem.Ogretmen:
                     if (lvwOgretmenler.SelectedItems.Count < 1) { return; }
                     Ogretmen secilenOgretmen = frmAna.ogretmenler.Where(ogr => ogr.kod == lvwOgretmenler.SelectedItems[0].SubItems[2].Text).First();
                     frmZamanTablosu = new frmZamanTablosu(secilenOgretmen.ad + " " + secilenOgretmen.soyad, secilenOgretmen.uygunZamanlar); frmZamanTablosu.ShowDialog();
-                    //secilenOgretmen.uygunZamanlar = frmZamanTablosu.zamanMatrisi;
                     break;
 
                 default: break;

@@ -19,7 +19,6 @@ namespace Ders_Programı_Planlayıcı
                 return;
             }
 
-            //Haftalık Ders Saati
             int hds = Convert.ToInt32(txtGun.Text) * Convert.ToInt32(txtGunlukDers.Text);
 
             SqlConnection baglanti = new SqlConnection();
@@ -69,6 +68,9 @@ namespace Ders_Programı_Planlayıcı
             }
 
             cmd.CommandText = "CREATE TABLE parametreler (gun_sayisi int NOT NULL,gunluk_ders_sayisi int NOT NULL )";
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = "INSERT INTO parametreler VALUES("+ frmAna.gunSayisi+","+ frmAna.gunlukDersSayisi + ")";
             cmd.ExecuteNonQuery();
 
             cmd.CommandText = "CREATE TABLE ad_derslikler (ad_ID int NOT NULL,derslik_kodu nvarchar(10) NOT NULL )";

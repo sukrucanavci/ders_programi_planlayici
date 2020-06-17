@@ -95,12 +95,6 @@
     <Compile Include="frmGunler.Designer.cs">
       <DependentUpon>frmGunler.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPlanlamaIlıskileri.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPlanlamaIlıskileri.Designer.cs">
-      <DependentUpon>frmPlanlamaIlıskileri.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmSaat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,9 +173,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmKisitlamaOgretmen.resx">
       <DependentUpon>frmKisitlamaOgretmen.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPlanlamaIlıskileri.resx">
-      <DependentUpon>frmPlanlamaIlıskileri.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSaat.resx">
       <DependentUpon>frmSaat.cs</DependentUpon>

@@ -129,7 +129,7 @@
             // 
             this.label2.Location = new System.Drawing.Point(67, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 17);
+            this.label2.Size = new System.Drawing.Size(76, 17);
             this.label2.TabIndex = 0;
             this.label2.Text = "Sınıf";
             // 
@@ -167,7 +167,7 @@
             // 
             this.label3.Location = new System.Drawing.Point(67, 24);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 17);
+            this.label3.Size = new System.Drawing.Size(79, 17);
             this.label3.TabIndex = 0;
             this.label3.Text = "Derslik";
             // 
@@ -205,7 +205,7 @@
             // 
             this.label4.Location = new System.Drawing.Point(67, 24);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(71, 17);
+            this.label4.Size = new System.Drawing.Size(91, 17);
             this.label4.TabIndex = 0;
             this.label4.Text = "Öğretmen";
             // 

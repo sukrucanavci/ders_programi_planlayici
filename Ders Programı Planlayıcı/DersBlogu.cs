@@ -8,7 +8,7 @@ namespace Ders_Programı_Planlayıcı
 
         public bool eklendi;
 
-        public int gun = -1;
+        public int gun = -100;
         public int saat = -1;
         public int uzunluk;
         public int doluluk;
