@@ -27,7 +27,7 @@ namespace Ders_Programı_Planlayıcı
 
             if (rdoWinAuto.Checked)
             {
-                baglanti.ConnectionString = "Server = "+ txtServerAdresi.Text +"; database = "+ txtUstVT.Text +"; integrated security = true";
+                baglanti.ConnectionString = "Server = "+ txtServerAdresi.Text +"; integrated security = true";
             }
             else
             {
@@ -44,7 +44,7 @@ namespace Ders_Programı_Planlayıcı
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("x0001"+ ex.Message);
                 return;
             }
 
@@ -58,7 +58,7 @@ namespace Ders_Programı_Planlayıcı
 
             try
             {
-                baglanti.ConnectionString = "Server = localhost; database = " + txtVeritabaniAdi.Text + "; integrated security = true";
+                baglanti.ConnectionString = "Server = " + txtServerAdresi.Text + "; database = " + txtVeritabaniAdi.Text + "; integrated security = true";
                 baglanti.Open();
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace Ders_Programı_Planlayıcı
             cmd.ExecuteNonQuery();
 
             MessageBox.Show("Veritabanı başarılı bir şekilde oluşturuldu.");
-            Close();
+            Hide();
         }
 
         private void rdoSqlServerAuto_CheckedChanged(object sender, EventArgs e)
