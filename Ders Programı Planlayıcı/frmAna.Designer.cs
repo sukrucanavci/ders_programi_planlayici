@@ -30,9 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.pnlAlt = new System.Windows.Forms.Panel();
             this.flpDerslikler = new System.Windows.Forms.FlowLayoutPanel();
             this.lvwBasarisizlar = new System.Windows.Forms.ListView();
@@ -71,7 +68,6 @@
             this.tpSiniflar = new System.Windows.Forms.TabPage();
             this.tlpSiniflar = new Ders_Programı_Planlayıcı.DBLayoutPanel(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.statusStrip1.SuspendLayout();
             this.pnlAlt.SuspendLayout();
             this.pnlDersBilgi.SuspendLayout();
             this.tpAnaMenu.SuspendLayout();
@@ -88,33 +84,11 @@
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel2,
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel3});
-            this.statusStrip1.Location = new System.Drawing.Point(10, 649);
+            this.statusStrip1.Location = new System.Drawing.Point(10, 653);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1382, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1382, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(106, 20);
-            this.toolStripStatusLabel2.Text = "Şükrü Can Avcı";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(244, 20);
-            this.toolStripStatusLabel1.Text = "İletişim: sukrucanavci@outlook.com";
-            // 
-            // toolStripStatusLabel3
-            // 
-            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(284, 20);
-            this.toolStripStatusLabel3.Text = "https://www.linkedin.com/in/sukrucanavci";
             // 
             // pnlAlt
             // 
@@ -125,7 +99,7 @@
             this.pnlAlt.Controls.Add(this.flpSiniflar);
             this.pnlAlt.Controls.Add(this.pnlDersBilgi);
             this.pnlAlt.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlAlt.Location = new System.Drawing.Point(10, 510);
+            this.pnlAlt.Location = new System.Drawing.Point(10, 514);
             this.pnlAlt.Name = "pnlAlt";
             this.pnlAlt.Size = new System.Drawing.Size(1382, 139);
             this.pnlAlt.TabIndex = 2;
@@ -590,8 +564,6 @@
             this.Text = "Ders Programı Planlayıcı 1.0";
             this.Load += new System.EventHandler(this.frmAna_Load);
             this.Shown += new System.EventHandler(this.frmAna_Shown);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.pnlAlt.ResumeLayout(false);
             this.pnlDersBilgi.ResumeLayout(false);
             this.pnlDersBilgi.PerformLayout();
@@ -650,9 +622,6 @@
         public DBLayoutPanel tlpDerslikler;
         public System.Windows.Forms.FlowLayoutPanel flpDerslikler;
         private System.Windows.Forms.DataGridView dgwDersCizelgesi;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
     }
 }
 

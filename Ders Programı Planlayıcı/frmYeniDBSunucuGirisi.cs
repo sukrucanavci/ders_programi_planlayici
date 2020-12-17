@@ -122,7 +122,7 @@ namespace Ders_Programı_Planlayıcı
             cmd.ExecuteNonQuery();
 
             MessageBox.Show("Veritabanı başarılı bir şekilde oluşturuldu.");
-            Hide();
+            Close();
         }
 
         private void rdoSqlServerAuto_CheckedChanged(object sender, EventArgs e)

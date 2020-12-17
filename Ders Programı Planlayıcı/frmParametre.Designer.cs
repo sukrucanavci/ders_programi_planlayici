@@ -196,7 +196,7 @@
             this.txtServerAdresi.Name = "txtServerAdresi";
             this.txtServerAdresi.Size = new System.Drawing.Size(184, 22);
             this.txtServerAdresi.TabIndex = 6;
-            this.txtServerAdresi.Text = "localhost";
+            this.txtServerAdresi.Text = ".\\SQLEXPRESS";
             // 
             // label6
             // 
